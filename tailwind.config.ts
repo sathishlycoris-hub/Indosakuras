@@ -1,26 +1,3 @@
-// import defaultTheme from 'tailwindcss/defaultTheme';
-// import forms from '@tailwindcss/forms';
-
-// /** @type {import('tailwindcss').Config} */
-// export default {
-//     content: [
-//         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-//         './storage/framework/views/*.php',
-//         './resources/views/**/*.blade.php',
-//         './resources/js/**/*.tsx',
-//     ],
-
-//     theme: {
-//         extend: {
-//             fontFamily: {
-//                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-//             },
-//         },
-//     },
-
-//     plugins: [forms],
-// };
-
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
 import forms from "@tailwindcss/forms";
@@ -30,25 +7,47 @@ const config: Config = {
   darkMode: ["class"],
 
   content: [
-    // Laravel blade files
     "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
     "./storage/framework/views/*.php",
     "./resources/views/**/*.blade.php",
-
-    // Inertia + React (TSX)
     "./resources/js/**/*.{ts,tsx}",
   ],
 
   theme: {
+    /* -----------------------------
+     * BREAKPOINTS (media queries)
+     * ----------------------------- */
+    screens: {
+      sm: "640px",   // mobile landscape
+      md: "768px",   // tablet
+      lg: "1024px",  // laptop
+      xl: "1280px",  // desktop
+      "2xl": "1400px", // large desktop (design width)
+    },
+
+    /* -----------------------------
+     * CONTAINER (layout width)
+     * ----------------------------- */
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        md: "1.5rem",
+        lg: "2rem",
+      },
       screens: {
         "2xl": "1400px",
+        sm: "640px",   // mobile landscape
+        md: "768px",   // tablet
+        lg: "900px",  // laptop
+        xl: "1280px",  // desktop
       },
     },
 
     extend: {
+      /* -----------------------------
+       * FONTS
+       * ----------------------------- */
       fontFamily: {
         sans: [
           "Inter",
@@ -57,6 +56,27 @@ const config: Config = {
         ],
       },
 
+      /* -----------------------------
+       * RESPONSIVE TYPOGRAPHY TOKENS
+       * ----------------------------- */
+      fontSize: {
+        /* Body text */
+        body: ["1rem", { lineHeight: "1.75rem" }],
+        "body-lg": ["1.125rem", { lineHeight: "1.85rem" }],
+
+        /* Headings */
+        h1: ["2rem", { lineHeight: "2.5rem", letterSpacing: "-0.02em" }],
+        h2: ["1.75rem", { lineHeight: "2.25rem" }],
+        h3: ["1.5rem", { lineHeight: "2rem" }],
+
+        /* Fluid (optional, advanced) */
+        "fluid-sm": "clamp(0.875rem, 1vw, 1rem)",
+        "fluid-lg": "clamp(2rem, 4vw, 3rem)", 
+      },
+
+      /* -----------------------------
+       * COLORS (your existing system)
+       * ----------------------------- */
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -72,10 +92,6 @@ const config: Config = {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -90,32 +106,26 @@ const config: Config = {
           purple: "hsl(var(--accent-purple))",
           cyan: "hsl(var(--accent-cyan))",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-         footer: {
+
+        footer: {
           DEFAULT: "hsl(var(--footer-bg))",
           foreground: "hsl(var(--footer-foreground))",
           muted: "hsl(var(--footer-muted))",
         },
-
-        section: {
-          light: "hsl(var(--section-light))",
-          dark: "hsl(var(--section-dark))",
-        },
       },
 
+      /* -----------------------------
+       * RADIUS
+       * ----------------------------- */
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
 
+      /* -----------------------------
+       * ANIMATIONS
+       * ----------------------------- */
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -136,7 +146,6 @@ const config: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
       },
-      
     },
   },
 

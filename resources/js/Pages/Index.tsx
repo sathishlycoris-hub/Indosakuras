@@ -243,77 +243,65 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
         )}
       </Head>
       {/* Hero Section */}
-      <section className="relative hero-gradient text-primary-foreground overflow-hidden">
-        <div className="container mx-auto px-4 lg:px-8 py-24 lg:py-40">
+     {/* Hero Section with Background Image */}
+      <section className="relative text-primary-foreground overflow-hidden min-h-[500px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[700px] xl:min-h-[400px]">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <img 
+            src="/image/osaka.jpg" 
+            alt="Indo Sakura Software Japan" 
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
+        </div>
 
-          <div className="flex flex-col lg:flex-row items-start gap-10" data-aos="fade-right">
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-28 xl:py-36">
+          <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12">
 
+          
 
-            {/* LEFT COLUMN */}
-            <div className="flex-1">
+            {/* RIGHT COLUMN - Info Card */}
+           <div className="flex-1 w-full lg:w-auto flex flex-col items-center lg:items-start mt-6 lg:mt-0">
+  <div
+    className="
+      relative
+      rounded-xl
+      p-4 sm:p-5 md:p-6 lg:p-8
+      w-full max-w-md lg:max-w-lg
+      shadow-2xl
+      backdrop-blur-sm
+      border border-white/30
+      bg-black/40
+    "
+  >
+    {/* subtle inner overlay for readability */}
+    <div className="absolute inset-0 rounded-xl bg-black/30 pointer-events-none" />
 
+    {/* content */}
+    <div className="relative z-10">
+      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-white">
+        20 Years of Legacy <br className="hidden md:block" />
+        Delivering
+      </h2>
 
+      <p className="text-sm sm:text-base md:text-lg text-white/90 mb-3 sm:mb-4 leading-relaxed">
+        Since 2005, Indo-Sakura has been at the forefront of IT innovation,
+        delivering cutting-edge solutions that empower businesses worldwide.
+      </p>
 
-              <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-4">
-                20+ Years of Trusted <br className="hidden lg:block" /> Japanese IT Excellence
-              </h1>
-
-
-              <p className="text-primary-foreground/90 text-sm lg:text-base mb-6 max-w-xl leading-relaxed">
-                For over two decades, we’ve built resilient IT infrastructure, intelligent automation,
-                and collaborative global solutions powered by precision, passion, and a heart–driven
-                promise of quality.
-              </p>
-
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/contact"
-                  className="px-6 py-3 border border-primary-foreground rounded-full text-lg font-medium hover:scale-105 transition-all flex items-center"
-                >
-                  Get Started
-                  <span className="ml-2">→</span>
-                </Link>
-              </div>
-
-            </div>
-
-
-            {/* RIGHT COLUMN */}
-            <div className="flex-1 flex flex-col items-end">
-              <div className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-6 mb-4 shadow-lg w-full lg:w-auto">
-                <h2 className="text-3xl lg:text-4xl font-bold mb-2">Indo Sakura 20 Years of Innovation</h2>
-                <p className="text-primary-foreground/90 text-sm lg:text-base mb-6 max-w-xl leading-relaxed">Since 2005, Indo-Sakura has been at the forefront of IT innovation, delivering cutting-edge solutions that empower businesses worldwide.</p>
-                <p className="text-xl">India ✦ Japan ✦ USA ✦ UAE and beyond — Connected by Technology</p>
-              </div>
-
-
-              {/* <div className="bg-card text-card-foreground rounded-xl p-5 shadow-lg max-w-sm border border-border text-right">
-<h3 className="font-semibold mb-2 flex items-center gap-2 justify-end text-lg">
-Transforming businesses with Gen AI and Cybersecurity for a safer future
-</h3>
-<p className="text-sm  text-muted-foreground leading-snug">
-Fostering Japan-India synergies to boost Japanese businesses with cutting-edge IT solutions and digital transformation services.
-</p>
-</div> */}
-            </div>
+      <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white">
+        Japanese Quality ✦ Indian Capability ✦ Global Innovation
+      </p>
+    </div>
+  </div>
+</div>
 
 
           </div>
         </div>
 
-
-        {/* SERVICE FLOATING TAGS */}
-        {/* <div className="absolute bottom-0 right-8 flex flex-wrap gap-2 transform translate-y-1/2">
-<span className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-medium shadow-lg">
-AI Driven Development → 未来をやさしく導く、AIの創造力
-</span>
-<span className="bg-card text-card-foreground px-5 py-2 rounded-full text-sm font-medium shadow-lg border border-border">
-AI Driven → こころ動くスマートな技術
-•
-</span>
-</div> */}
-
-
+        {/* Decorative Elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 lg:h-24 bg-gradient-to-t from-background/20 to-transparent" />
       </section>
 
       {/* Service Banner */}
@@ -324,45 +312,62 @@ AI Driven → こころ動くスマートな技術
       </div> */}
 
       {/* Core Services */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 lg:px-8" data-aos="fade-up">
-
-          <div className="section-divider mb-8">
-            <h2 className="text-2xl font-semibold">Case Studies</h2>
+       {/* Case Studies Section */}
+      <section className="py-16 relative overflow-hidden">
+        {/* Dot pattern background */}
+        <div 
+           className="container absolute inset-0 opacity-15 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/image/dot.jpg)',
+            backgroundRepeat: 'repeat',
+            backgroundSize: '200px auto',
+            backgroundPosition: 'center top'
+          }}
+        />
+        
+        <div className="container mx-auto px-4 lg:px-8 relative z-10 pt-8">
+          {/* Header with line divider matching reference */} 
+          <div className="flex items-center gap-6 mb-10 section-divider">
+            <h2 className="text-2xl font-semibold text-foreground uppercase tracking-wide whitespace-nowrap">
+              CASE STUDIES
+            </h2>
+            {/* <div className="flex-1 h-px bg-gradient-to-r from-border via-border to-transparent"></div> */}
           </div>
 
-          <p className="text-muted-foreground mb-8">
-            We provide cutting-edge IT solutions and digital transformation services to businesses worldwide.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Case Study Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {caseStudies.map((study, index) => (
               <div
                 key={index}
-                className="rounded-lg overflow-hidden shadow-sm border border-border hover:shadow-lg transition-shadow bg-white"
+                className="group cursor-pointer"
               >
-                {/* Image */}
-                <img
-                  src={study.image}
-                  alt={study.title}
-                  className="w-full h-48 object-cover"
-                />
+                {/* Image Container */}
+                <div className="relative overflow-hidden rounded-lg mb-4">
+                  <img
+                    src={study.image}
+                    alt={study.title}
+                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
 
                 {/* Content */}
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+                <div>
+                  <h3 className="font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                     {study.title}
                   </h3>
-
-                  {/* Tags */}
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    {(study.tags ?? []).join(", ")}
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                    {study.tags.join(" • ")}
                   </p>
+                </div>
+
+                {/* Arrow indicator on hover */}
+                <div className="mt-3 flex items-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-sm font-medium">View Details</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
@@ -420,7 +425,7 @@ AI Driven → こころ動くスマートな技術
       </section>
 
       {/* Corporate Section */}
-      <section className="py-20 hero-gradient text-primary-foreground">
+      <section className="py-20 bg-accent-pink text-primary-foreground">
         <div className="container mx-auto px-4 lg:px-8">
 
           {/* LABEL */}
@@ -428,7 +433,7 @@ AI Driven → こころ動くスマートな技術
             <h2 className="text-2xl font-semibold text-white">Corporate Info</h2>
           </div>
 
-          <div className="grid lg:grid-cols-[65%_35%] gap-12">
+          <div className="container grid lg:grid-cols-[65%_35%] gap-12">
 
             {/* LEFT — WIDER CONTENT */}
             <div>
@@ -436,14 +441,14 @@ AI Driven → こころ動くスマートな技術
                 Delivering Excellence Across Continents
               </h2>
 
-              <p className="text-primary-foreground/80 mb-4 leading-relaxed">
+              <p className="mb-4 font-bold leading-relaxed">
                 With two decades of experience spanning Japan, India, and the USA, Indo-Sakura has
                 established itself as a trusted partner for businesses seeking innovative IT solutions.
                 Our global presence combined with local expertise enables us to deliver world-class
                 services tailored to diverse markets.
               </p>
 
-              <p className="text-primary-foreground/80 mb-8 leading-relaxed">
+              <p className="fontbold mb-8 leading-relaxed">
                 We serve 55 customers worldwide with a dedicated team of over 150 IT experts, focusing
                 on five key industry sectors where we bring deep domain knowledge and technical excellence.
               </p>
@@ -462,57 +467,57 @@ AI Driven → こころ動くスマートな技術
 
             {/* RIGHT — SMALLER CARDS */}
             <div className="grid grid-cols-2 gap-4" data-aos="zoom-in">
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">20</div>
                 <p className="font-medium text-primary-foreground/90">Years of Excellence</p>
                 <p className="text-sm text-primary-foreground/90">Japan, India, USA</p>
               </div>
 
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">155</div>
                 <p className="font-medium text-primary-foreground/90">Customers</p>
-                <p className="text-sm text-primary-foreground/0">Worldwide</p>
+                <p className="text-sm">Worldwide</p>
               </div>
 
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">130</div>
                 <p className="font-medium text-primary-foreground/90">IT Experts</p>
                 <p className="text-sm text-primary-foreground/90">Dedicated Team</p>
               </div>
 
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">8</div>
                 <p className="font-medium text-primary-foreground/90">Target Industry</p>
-                <p className="text-sm text-primary-foreground/90">Key Sectors</p>
+                <p className="">Key Sectors</p>
               </div>
             </div>
 
           </div>
 
           {/* FULL-WIDTH FEATURE CARDS (BOTTOM) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16" data-aos="zoom-in">
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+          <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16" data-aos="zoom-in">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <Globe className="w-6 h-6 mx-auto mb-3" />
               <p className="font-medium">Global Reach</p>
-              <p className="text-sm text-primary-foreground/70">Operations in 3 continents</p>
+              <p className="">Operations in 3 continents</p>
             </div>
 
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <Users className="w-6 h-6 mx-auto mb-3" />
               <p className="font-medium">Expert Team</p>
-              <p className="text-sm text-primary-foreground/70">150+ certified professionals</p>
+              <p className="">150+ certified professionals</p>
             </div>
 
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <CheckCircle className="w-6 h-6 mx-auto mb-3" />
               <p className="font-medium">Quality Focus</p>
-              <p className="text-sm text-primary-foreground/70">ISO certified processes</p>
+              <p className="">ISO certified processes</p>
             </div>
 
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <ArrowRight className="w-6 h-6 mx-auto mb-3" />
               <p className="font-medium">Growth Partner</p>
-              <p className="text-sm text-primary-foreground/70">Long-term client relationships</p>
+              <p className="">Long-term client relationships</p>
             </div>
           </div>
 
@@ -551,9 +556,9 @@ AI Driven → こころ動くスマートな技術
                     <Icon className="w-8 h-8" />
                   </div>
 
-                  <h3 className="font-semibold mb-2 text-lg">
+                  <h2 className="font-semibold mb-2 text-lg">
                     {service.title}
-                  </h3>
+                  </h2>
 
                   <div
                     className="text-muted-foreground mb-4 line-clamp-3 prose prose-sm max-w-none"

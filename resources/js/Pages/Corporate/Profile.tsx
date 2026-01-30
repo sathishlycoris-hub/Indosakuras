@@ -201,7 +201,7 @@ services and more, ensuring your business stays ahead in innovation.`
       </section> */}
 
       {/* Our Strengths */}
-      <section className="py-20 hero-gradient text-primary-foreground">
+      <section className="py-20 bg-accent-pink text-primary-foreground">
         <div className="container mx-auto px-4 lg:px-8" data-aos="fade-up">
 
           {/* LABEL */}
@@ -209,7 +209,7 @@ services and more, ensuring your business stays ahead in innovation.`
             <h2 className="text-3xl font-semibold text-white">Our Strengths</h2>
           </div>
 
-          <div className="grid lg:grid-cols-[65%_35%] gap-12">
+          <div className="container grid lg:grid-cols-[65%_35%] gap-12">
 
             {/* LEFT — CONTENT */}
             <div>
@@ -217,13 +217,13 @@ services and more, ensuring your business stays ahead in innovation.`
                 Combining Expertise for Innovation
               </h2>
 
-              <p className="text-primary-foreground/80 mb-4 leading-relaxed">
+              <p className="text-white mb-4 leading-relaxed">
                 Our engineers specialize in innovative IT solutions, ensuring high-quality performance
                 and optimal results with nearly 20 years of experience. We deliver tailored, effective
                 solutions that drive growth and success for businesses worldwide.
               </p>
 
-              <p className="text-primary-foreground/80 mb-8 leading-relaxed">
+              <p className="text-white mb-8 leading-relaxed">
                 We embrace cutting-edge technologies like GenAI, machine learning, and cloud services,
                 ensuring your business stays ahead in innovation while maintaining our bilingual
                 capabilities for seamless Japan-India collaboration.
@@ -242,28 +242,28 @@ services and more, ensuring your business stays ahead in innovation.`
 
             {/* RIGHT — STAT CARDS */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">19+</div>
-                <p className="font-medium text-primary-foreground/90">Years Experience</p>
-                <p className="text-primary-foreground/70">Japanese Companies</p>
+                <p className="font-medium text-white">Years Experience</p>
+                <p className="text-white">Japanese Companies</p>
               </div>
 
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">150+</div>
-                <p className="font-medium text-primary-foreground/90">IT Engineers</p>
-                <p className="text-primary-foreground/70">High Performing</p>
+                <p className="font-medium text-white">IT Engineers</p>
+                <p className="text-white">High Performing</p>
               </div>
 
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">2</div>
-                <p className="font-medium text-primary-foreground/90">Languages</p>
-                <p className="text-primary-foreground/70">Japanese & English</p>
+                <p className="font-medium text-white">Languages</p>
+                <p className="text-white">Japanese & English</p>
               </div>
 
-              <div className="bg-primary-foreground/15 rounded-xl p-5">
+              <div className="bg-primary rounded-xl p-5">
                 <div className="text-3xl font-bold mb-1">Hybrid</div>
-                <p className="font-medium text-primary-foreground/90">Development</p>
-                <p className="text-primary-foreground/70">Flexible & Cost-Effective</p>
+                <p className="font-medium text-white">Development</p>
+                <p className="text-white">Flexible & Cost-Effective</p>
               </div>
             </div>
 
@@ -271,45 +271,45 @@ services and more, ensuring your business stays ahead in innovation.`
 
           {/* FULL-WIDTH FEATURE CARDS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <Users className="w-6 h-6 mx-auto mb-3" />
 
               <p className="font-medium">Proven Excellence</p>
 
-              <p className="text-primary-foreground/70">
+              <p className="text-white">
                 High-quality performance
               </p>
 
-              <p className="mt-2 text-primary-foreground/80 leading-relaxed">
+              <p className="mt-2 text-white leading-relaxed">
                 Our engineers excel in delivering innovative IT solutions, ensuring
                 top-notch performance and quality for businesses.
               </p>
             </div>
 
 
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <Globe className="w-6 h-6 mx-auto mb-3" />
               <p className="font-medium">Bilingual Team</p>
-              <p className="text-primary-foreground/70">Seamless communication</p>
-              <p className="mt-2 text-primary-foreground/80 leading-relaxed">
+              <p className="text-white">Seamless communication</p>
+              <p className="mt-2 text-white leading-relaxed">
                 Ensure smooth communication between clients and teams through our bilingual capabilities, bridging language barriers for effective collaboration.
               </p>
             </div>
 
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <CheckCircle className="w-6 h-6 mx-auto mb-3" />
               <p className="font-medium">Cutting-Edge Tech</p>
-              <p className="text-primary-foreground/70">GenAI & Cloud services</p>
-              <p className="mt-2 text-primary-foreground/80 leading-relaxed">
+              <p className="text-white">GenAI & Cloud services</p>
+              <p className="mt-2 text-white leading-relaxed">
                We embrace the latest technologies like GenAI, machine learning, cloud services and more, ensuring your business stays ahead in innovation.
               </p>
             </div>
 
-            <div className="bg-primary-foreground/10 rounded-lg p-6 text-center">
+            <div className="bg-primary rounded-lg p-6 text-center">
               <ArrowRight className="w-6 h-6 mx-auto mb-3" />
               <p className="font-medium">Hybrid Model</p>
-              <p className="text-primary-foreground/70">On-site & offshore blend</p>
-              <p className="mt-2 text-primary-foreground/80 leading-relaxed">
+              <p className="text-white">On-site & offshore blend</p>
+              <p className="mt-2 text-white leading-relaxed">
                 Offer a blend of on-site and offshore models, providing flexibility, cost-efficiency, and high-quality results. This approach allows businesses to scale resources as needed.
               </p>
             </div>

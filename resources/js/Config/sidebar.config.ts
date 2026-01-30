@@ -51,7 +51,7 @@ export const sidebarItems: SidebarItem[] = [
     label: "News Event",
     icon: Newspaper,
     href: route("admin.newsevent.index"),
-    role: ["admin"],
+    role: ["admin"],  
   },
   {
     label: "Team",

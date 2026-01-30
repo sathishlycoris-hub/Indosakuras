@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             Service::select('title', 'slug')->orderBy('slug')->get(),
 
             'footerSolutions' => fn() =>
-            Solution::select('title', 'slug')->orderBy('slug')->get(),
+            Solution::select('title', 'slug')->orderBy('id')->get(),
         ]);
     }
 }

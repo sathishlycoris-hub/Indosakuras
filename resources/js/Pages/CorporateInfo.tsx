@@ -30,7 +30,7 @@ const CorporateInfo = () => {
 
       {/* Hero Section */}
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">
-        <div className="container mx-auto px-4 lg:px-8" data-aos="fade-left">
+        <div className="container mx-auto px-4 lg:px-8" data-aos="fade-right">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4">Company Information</h1>
         </div>
       </section>

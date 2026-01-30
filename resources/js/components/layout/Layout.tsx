@@ -17,7 +17,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <FlashMessage />
-      <main className="flex-1">{children}</main>
+     <main className="flex-1">{children}</main>
       <Footer />
       <FloatingActions />
       <CookieConsent />

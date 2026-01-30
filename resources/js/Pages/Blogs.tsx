@@ -50,7 +50,7 @@ export default function Blogs() {
       <Serviceshead />
 
       <section className="bg-primary py-20 text-white">
-        <div className="container mx-auto px-4" data-aos="fade-left">
+        <div className="container mx-auto px-4" data-aos="fade-right">
           <h1 className="text-4xl font-bold mb-4">
             {language === "en" ? "Blogs" : "ブログ"}
           </h1>

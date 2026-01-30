@@ -27,7 +27,7 @@ export default function Philosophy({
           className={`py-20 ${index % 2 === 0 ? "bg-section-light" : "bg-primary/5"
             }`}
         >
-          <div>
+          <div className="container">
             <h2 className="text-3xl font-bold text-center text-primary mb-2">
               {item.title}
             </h2>

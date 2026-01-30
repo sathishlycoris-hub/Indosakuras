@@ -261,7 +261,7 @@ export default function Show({ solution }: { solution: Solution }) {
                         <h2 className="text-2xl font-semibold">Case Studies</h2>
                     </div>
                     {solution.case_studies.map((c, i) => (
-                        <div data-aos="fade-left"
+                        <div data-aos="fade-right"
                             data-aos-delay={i * 90} key={i} className="bg-card border rounded-lg p-6">
                             <h3 className="font-semibold text-primary">{c.title}</h3>
                             <div

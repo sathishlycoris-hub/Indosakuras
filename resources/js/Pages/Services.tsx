@@ -231,7 +231,7 @@ function Services({
       {/* Hero Section */}
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">
 
-        <div className="container mx-auto px-4 relative z-10" data-aos="fade-left">
+        <div className="container mx-auto px-4 relative z-10" data-aos="fade-right">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4">
             {language === 'en' ? "Services" : "サービス"}
           </h1>

@@ -39,7 +39,6 @@ const Footer = () => {
 
   const resources = [
     { name: "Blog", path: "/services/blogs-index" },
-    // { name: "Documentation", path: "/services" },
     { name: "Support", path: "/contact" },
     { name: "Privacy Policy", path: "/corporate/policy" },
     { name: "Terms of Service", path: "/usage" },
@@ -47,109 +46,118 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#EFEFF4]">
-      <div className="container mx-auto px-4 lg:px-8 py-12">
+  <div className="container py-8 md:py-12">
 
-        {/* ================= TOP SECTION ================= */}
-        <div className="flex flex-col lg:flex-row justify-between gap-12 mb-12">
+    {/* ================= TOP SECTION ================= */}
+    <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-1 mb-8 md:mb-12">
 
-          {/* Logo */}
-          <div className="flex flex-col items-start">
-            <Link href="/" className="flex items-center mb-4">
-              <img
-                src="/image/indofooter.png"
-                alt="Indo-Sakura logo"
-                className="w-32 h-auto object-contain"
-              />
-            </Link>
+      {/* LEFT: ALL CONTENT */}
+      <div className="flex-1">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-3">
+
+          {/* Company */}
+          <div>
+            <h4 className="font-semibold text-black text-sm sm:text-base mb-3 sm:mb-4">
+              Company
+            </h4>
+            <ul className="space-y-1.5 sm:space-y-2">
+              {company.map((item) => (
+                <li key={item.path}>
+                  <Link
+                    href={item.path}
+                    className="text-xs sm:text-sm text-gray-700 hover:text-primary transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Links Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-16 flex-1">
-
-            {/* ===== Solutions (Dynamic) ===== */}
-            <div>
-              <h4 className="font-semibold text-black mb-4">Solutions</h4>
-              <ul className="space-y-2">
-                {solutions.map((solution) => (
-                  <li key={solution.slug}>
-                    <Link
-                      href={`/solutions/${solution.slug}`}
-                      className="text-sm hover:text-primary transition-colors"
-                    >
-                      {solution.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* ===== Services (Dynamic) ===== */}
-            <div>
-              <h4 className="font-semibold text-black mb-4">Services</h4>
-              <ul className="space-y-2">
-                {services.map((service) => (
-                  <li key={service.slug}>
-                    <Link
-                      href={`/services/${service.slug}`}
-                      className="text-sm hover:text-primary transition-colors"
-                    >
-                      {service.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* ===== Company ===== */}
-            <div>
-              <h4 className="font-semibold text-black mb-4">Company</h4>
-              <ul className="space-y-2">
-                {company.map((item) => (
-                  <li key={item.path}>
-                    <Link
-                      href={item.path}
-                      className="text-sm hover:text-primary transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* ===== Resources ===== */}
-            <div>
-              <h4 className="font-semibold text-black mb-4">Resources</h4>
-              <ul className="space-y-2">
-                {resources.map((item) => (
-                  <li key={item.path}>
-                    <Link
-                      href={item.path}
-                      className="text-sm hover:text-primary transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
+          {/* Resources */}
+          <div>
+            <h4 className="font-semibold text-black text-sm sm:text-base mb-3 sm:mb-4">
+              Resources
+            </h4>
+            <ul className="space-y-1.5 sm:space-y-2">
+              {resources.map((item) => (
+                <li key={item.path}>
+                  <Link
+                    href={item.path}
+                    className="text-xs sm:text-sm text-gray-700 hover:text-primary transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* 20 Years Logo */}
-          <div className="flex items-start">
-            <Link href="/" className="flex items-center">
-              <img
-                src="/image/logo20.png"
-                alt="20 years logo"
-                className="w-20 h-20 object-contain"
-              />
-            </Link>
+          {/* Solutions */}
+          <div>
+            <h2 className="font-semibold text-black text-sm sm:text-base mb-3 sm:mb-4">
+              Solutions
+            </h2>
+            <ul className="space-y-1.5 sm:space-y-2">
+              {solutions.map((solution) => (
+                <li key={solution.slug}>
+                  <Link
+                    href={`/solutions/${solution.slug}`}
+                    className="text-xs sm:text-sm text-gray-700 hover:text-primary transition-colors"
+                  >
+                    {solution.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
+
+          {/* Services */}
+          <div>
+            <h2 className="font-semibold text-black text-sm sm:text-base mb-3 sm:mb-4">
+              Services
+            </h2>
+            <ul className="space-y-1.5 sm:space-y-2">
+              {services.map((service) => (
+                <li key={service.slug}>
+                  <Link
+                    href={`/services/${service.slug}`}
+                    className="text-xs sm:text-sm text-gray-700 hover:text-primary transition-colors"
+                  >
+                    {service.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+               
+         
 
         </div>
+      </div>
 
-        {/* ================= BOTTOM SECTION ================= */}
+      {/* RIGHT: LOGOS */}
+      <div>
+
+        {/* Indo-Sakura Logo */}
+        {/* <Link href="/">
+          <img
+            src="/image/indofooter.png"
+            alt="Indo-Sakura logo"
+            className="w-28 sm:w-32 lg:w-36 object-contain"
+          />
+        </Link> */}
+
+        {/* 20 Years Logo */}
+        <img
+          src="/image/logo20.png"
+          alt="20 years of excellence"
+          className="w-16 sm:w-20 object-contain"
+        />
+      </div>
+    </div>
+
+   {/* ================= BOTTOM SECTION ================= */}
         <div className="border-t border-gray-600 pt-6">
           <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
 
@@ -227,8 +235,10 @@ const Footer = () => {
           </div>
         </div>
 
-      </div>
-    </footer>
+  </div>
+</footer>
+
+
   );
 };
 

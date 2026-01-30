@@ -85,7 +85,7 @@ export default function Show({ service }: Props) {
 
       {/* ================= HERO ================= */}
       <section className="hero-gradient text-primary-foreground py-20">
-        <div className="container mx-auto px-6 text-white max-w-6xl" data-aos="fade-left">
+        <div className="container mx-auto px-6 text-white max-w-6xl" data-aos="fade-right">
           {service.hero_description && (
             <div
               className="prose prose-invert max-w-2xl mb-4 "
