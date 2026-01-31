@@ -106,14 +106,14 @@ export default function SeminarDetail() {
         <div className="container mx-auto px-4">
           {seminar.tags?.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {seminar.tags.map((tag: string, i: number) => (
+              {/* {seminar.tags.map((tag: string, i: number) => (
                 <span
                   key={i}
                   className="px-3 py-1 bg-section-light text-black rounded text-sm"
                 >
                   {tag}
                 </span>
-              ))}
+              ))} */}
             </div>
           )}
 

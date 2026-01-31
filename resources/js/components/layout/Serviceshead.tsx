@@ -17,34 +17,61 @@ const Serviceshead = () => {
  
   const serviceNav = props.serviceNav ?? [];
 
-  const navItems = [
-    {
-      path: "/services",
-      label: language === "en" ? "Services TOP" : "サービスTOP",
-      exact: true,
-    },
+ const navItems = [
+  {
+    path: "/services",
+    label: language === "en" ? "Services TOP" : "サービスTOP",
+    exact: true,
+  },
 
-    ...serviceNav.map((service) => ({
-      path: `/services/${service.slug}`,
-      label: service.title,
-    })),
+  ...serviceNav.map((service) => ({
+    path: `/services/${service.slug}`,
+    label: service.title,
+  })),
 
-    {
-      path: "/services/seminars-index",
-      label: language === "en" ? "Seminar (Events)" : "セミナー",
-      exact: true,
-    },
-    {
-      path: "/services/blogs-index",
-      label: language === "en" ? "Blogs" : "ブログ",
-      exact: true,
-    },
-  ];
+  {
+    path: "/services/seminars-index",
+    label: language === "en" ? "Seminar (Events)" : "セミナー",
+    exact: true,
+    activePaths: ["/seminars"],
+  },
+  {
+    path: "/services/blogs-index",
+    label: language === "en" ? "Blogs" : "ブログ",
+    exact: true,
+    activePaths: ["/blogs"],
+  },
+];
 
-  const isActive = (item: { path: string; exact?: boolean }) => {
-    if (item.exact) return url === item.path;
-    return url === item.path || url.startsWith(item.path + "/");
-  };
+
+const isActive = (item: { path: string; exact?: boolean }) => {
+  // Services TOP → ONLY exact
+  if (item.path === "/services") {
+    return url === "/services";
+  }
+
+  // Blogs → both list & detail
+  if (item.path === "/services/blogs-index") {
+    return (
+      url === "/services/blogs-index" ||
+      url.startsWith("/blogs/")
+    );
+  }
+
+  // Seminars → both list & detail
+  if (item.path === "/services/seminars-index") {
+    return (
+      url === "/services/seminars-index" ||
+      url.startsWith("/seminars/")
+    );
+  }
+
+  // Default behavior (services detail pages)
+  return url === item.path || url.startsWith(item.path + "/");
+};
+
+
+
 
   return (
     <div className="bg-muted/30 border-b border-border">

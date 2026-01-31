@@ -164,7 +164,7 @@ const Footer = () => {
             {/* Left */}
             <div className="flex flex-col items-start gap-2 text-sm">
               <p className="text-black">
-                © 2025 Indo-Sakura. All rights reserved.
+                © 2026 Indo-Sakura. All rights reserved.
               </p>
 
               <div className="flex items-center gap-4">

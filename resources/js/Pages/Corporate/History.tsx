@@ -124,11 +124,11 @@ const History = ({
           key={item.id}
           className="grid grid-cols-12 border border-border [&>div]:border-r last:[&>div]:border-r-0 text-sm"
         >
-          <div className="col-span-1 p-4 font-semibold bg-section-light">
+          <div className="col-span-1 p-4 font-semibold bg-pink-100">
             {item.year}
           </div>
 
-          <div className="col-span-1 p-4 font-semibold bg-section-light">
+          <div className="col-span-1 p-4 font-semibold bg-pink-100">
             {item.month}
           </div>
 

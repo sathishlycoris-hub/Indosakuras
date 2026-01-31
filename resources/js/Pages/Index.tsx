@@ -244,65 +244,75 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
       </Head>
       {/* Hero Section */}
      {/* Hero Section with Background Image */}
-      <section className="relative text-primary-foreground overflow-hidden min-h-[500px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[700px] xl:min-h-[400px]">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <img 
-            src="/image/osaka.jpg" 
-            alt="Indo Sakura Software Japan" 
-            className="w-full h-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
-        </div>
+      <section
+  className="
+    relative text-primary-foreground overflow-hidden
+    min-h-[380px] sm:min-h-[420px] md:min-h-[460px] lg:min-h-[520px]
+  "
+>
+  {/* Background Image with Overlay */}
+  <div className="absolute inset-0">
+    <img
+      src="/image/osaka.jpg"
+      alt="Indo Sakura Software Japan"
+      className="w-full h-full object-cover object-center"
+    />
+    <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
+  </div>
 
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-28 xl:py-36">
-          <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12">
-
-          
-
-            {/* RIGHT COLUMN - Info Card */}
-           <div className="flex-1 w-full lg:w-auto flex flex-col items-center lg:items-start mt-6 lg:mt-0">
   <div
     className="
-      relative
-      rounded-xl
-      p-4 sm:p-5 md:p-6 lg:p-8
-      w-full max-w-md lg:max-w-lg
-      shadow-2xl
-      backdrop-blur-sm
-      border border-white/30
-      bg-black/40
+      container relative z-10 mx-auto
+      px-4 sm:px-6 lg:px-8
+      py-10 sm:py-12 md:py-14 lg:py-16
     "
   >
-    {/* subtle inner overlay for readability */}
-    <div className="absolute inset-0 rounded-xl bg-black/30 pointer-events-none" />
+    <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12">
 
-    {/* content */}
-    <div className="relative z-10">
-      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-white">
-        20 Years of Legacy <br className="hidden md:block" />
-        Delivering
-      </h2>
+      {/* RIGHT COLUMN - Info Card */}
+      <div className="flex-1 w-full lg:w-auto flex flex-col items-center lg:items-start mt-6 lg:mt-0">
+        <div
+          className="
+            relative
+            rounded-xl
+            p-4 sm:p-5 md:p-6 lg:p-4
+            w-full sm:w-2/3 lg:w-1/3
+            max-w-sm
+            shadow-2xl
+            backdrop-blur-sm
+            border border-white/30
+            bg-black/40
+          "
+        >
+          {/* subtle inner overlay */}
+          <div className="absolute inset-0 rounded-xl bg-black/30 pointer-events-none" />
 
-      <p className="text-sm sm:text-base md:text-lg text-white/90 mb-3 sm:mb-4 leading-relaxed">
-        Since 2005, Indo-Sakura has been at the forefront of IT innovation,
-        delivering cutting-edge solutions that empower businesses worldwide.
-      </p>
+          {/* content */}
+          <div className="relative z-10">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-white">
+              20 Years of Legacy <br className="hidden md:block" />
+              Delivering
+            </h2>
 
-      <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white">
-        Japanese Quality ✦ Indian Capability ✦ Global Innovation
-      </p>
-    </div>
-  </div>
-</div>
+            <p className="text-sm sm:text-base md:text-lg text-white/90 mb-3 sm:mb-4 leading-relaxed">
+              Since 2005, Indo-Sakura has been at the forefront of IT innovation,
+              delivering cutting-edge solutions that empower businesses worldwide.
+            </p>
 
-
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white">
+              Japanese Quality ✦ Indian Capability ✦ Global Innovation
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* Decorative Elements */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 lg:h-24 bg-gradient-to-t from-background/20 to-transparent" />
-      </section>
+    </div>
+  </div>
+
+  {/* Decorative bottom fade */}
+  <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 bg-gradient-to-t from-background/20 to-transparent" />
+</section>
+
 
       {/* Service Banner */}
       {/* <div className="bg-muted py-4 mt-8">
@@ -315,7 +325,10 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
        {/* Case Studies Section */}
       <section className="py-16 relative overflow-hidden">
         {/* Dot pattern background */}
-        <div 
+        
+        
+        <div className="max-w-6xl mx-auto px-4 lg:px-8 relative z-10 pt-8">
+          <div 
            className="container absolute inset-0 opacity-15 pointer-events-none"
           style={{
             backgroundImage: 'url(/image/dot.jpg)',
@@ -324,8 +337,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
             backgroundPosition: 'center top'
           }}
         />
-        
-        <div className="container mx-auto px-4 lg:px-8 relative z-10 pt-8">
+           
           {/* Header with line divider matching reference */} 
           <div className="flex items-center gap-6 mb-10 section-divider">
             <h2 className="text-2xl font-semibold text-foreground uppercase tracking-wide whitespace-nowrap">
@@ -368,13 +380,14 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
               </div>
             ))}
           </div>
-        </div>
+          </div>
+        
       </section>
 
 
       {/* Updates */}
       <section className="py-16 ">
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div className="section-divider">
               <h2 className="text-2xl font-semibold">Information</h2>
@@ -529,7 +542,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
       {/* Services */}
       {/* Services */}
       <section className="py-16">
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 lg:px-8">
 
           <div className="section-divider mb-8">
             <h2 className="text-2xl font-semibold">Services</h2>
@@ -641,7 +654,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
 
       {/* Solutions */}
       <section className="py-16 bg-section-light text-gray-900">
-        <div className="container mx-auto px-4 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 lg:px-8">
 
           <div className="section-divider mb-4">
             <h2 className="text-2xl font-semibold">Solutions</h2>

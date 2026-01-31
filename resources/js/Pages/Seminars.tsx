@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import Serviceshead from "@/components/layout/Serviceshead";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { Link, usePage } from "@inertiajs/react";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, Clock, MapPin, Tag  } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 interface Seminar {
@@ -91,7 +91,9 @@ export default function Seminars() {
                   />
 
                   <div className="p-6">
-                    <span className="text-xs text-primary">Upcoming</span>
+                    <div className="flex gap-3 text-xs mb-3">
+                    <span className="bg-rose-100 text-rose-600 px-2 py-1 rounded flex items-center gap-1"><Tag size={12} /> Upcoming Event</span>
+                    </div>
                     <h3 className="font-semibold mt-2">{getTitle(s)}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">
                       {getDescription(s)}
@@ -150,9 +152,9 @@ export default function Seminars() {
                   </div>
 
                   <div className="p-6">
-                    <span className="text-xs bg-primary/10 px-2 py-1 rounded">
-                      event
-                    </span>
+                    <div className="flex gap-3 text-xs mb-3">
+                    <span className="bg-rose-100 text-rose-600 px-2 py-1 rounded flex items-center gap-1"><Tag size={12} /> Archived Event</span>
+                    </div>
                     <h3 className="font-semibold mt-2">{getTitle(s)}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">
                       {getDescription(s)}

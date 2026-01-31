@@ -390,7 +390,7 @@ function Services({
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Link
-              href="/blogs"
+              href="services/blogs-index"
               className="group relative h-64 rounded-lg overflow-hidden"
             >
               <img
@@ -411,7 +411,7 @@ function Services({
               </div>
             </Link>
             <Link
-              href="/seminars"
+              href="services/seminars-index"
               className="group relative h-64 rounded-lg overflow-hidden"
             >
               <img

@@ -31,7 +31,7 @@ const Casestudies3 = () => {
       <section className="relative bg-primary py-10">
 
         <div className="container mx-auto px-4 relative z-10 text-start text-white">
-          <h1 className="text-2xl md:text-2xl font-bold mb-2">Case Studies-3</h1>
+          <h1 className="text-2xl md:text-2xl font-bold mb-2">Responsible for cloud development</h1>
 
         </div>
       </section>

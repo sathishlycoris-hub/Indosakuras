@@ -105,7 +105,7 @@ export default function Team() {
       <Subheader currentPage="Management Team" />
 
       {/* Hero */}
-      <section className="py-12 bg-gradient-to-br from-primary/5 to-primary/10">
+      <section className="py-8 pb-4  bg-gradient-to-br from-primary/5 to-primary/10">
         <div className="container mx-auto px-4 lg:px-8">
           <h1 className="text-primary text-3xl lg:text-4xl font-bold mb-2">
             Our Team
@@ -117,7 +117,7 @@ export default function Team() {
       </section>
 
       {/* Executive Leadership */}
-      <section className="py-12 bg-section-light">
+      <section className="py-8 bg-pink-50">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-3xl p-8 lg:p-12">
             <h2 className="text-primary text-3xl font-bold mb-2 text-center">
@@ -148,7 +148,7 @@ export default function Team() {
       </section>
 
       {/* Our Ecosystem */}
-      <section className="bg-section-light py-6 -mt-12">
+      <section className="bg-pink-50 py-6 -mt-12">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="bg-section-light rounded-xl p-8 lg:p-12 pt-0">
             <h2 className="text-primary text-3xl font-bold mb-2 text-center">
