@@ -71,7 +71,7 @@ const config: Config = {
 
         /* Fluid (optional, advanced) */
         "fluid-sm": "clamp(0.875rem, 1vw, 1rem)",
-        "fluid-lg": "clamp(2rem, 4vw, 3rem)", 
+        "fluid-lg": "clamp(2rem, 4vw, 3rem)",
       },
 
       /* -----------------------------
@@ -83,6 +83,11 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
 
         primary: {
           DEFAULT: "hsl(var(--primary))",

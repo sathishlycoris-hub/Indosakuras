@@ -7,6 +7,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Eye } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 import {
   Table,
@@ -201,11 +202,11 @@ export default function Index({ events, eventTypes }: PageProps) {
   </Select>
 
   <Label>Date *</Label>
-  <Input
-    type="date"
-    value={data.date}
-    onChange={(e) => setData("date", e.target.value)}
-  />
+  <DatePicker
+  value={data.date}
+  onChange={(value) => setData("date", value)}
+/>
+
 
   {/* IMAGE */}
   <Label>Image (optional)</Label>
@@ -328,6 +329,31 @@ export default function Index({ events, eventTypes }: PageProps) {
     onChange={(value) => setData("description", value)}
     className="bg-white"
   />
+
+   <Label>Event Type *</Label>
+  <Select
+    value={data.eventtype}
+    onValueChange={(v) => setData("eventtype", v)}
+  >
+    <SelectTrigger>
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent>
+      {eventTypes.map((type) => (
+        <SelectItem key={type} value={type}>
+          {type}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+
+   {/* ✅ ADD THIS */}
+  <Label>Date *</Label>
+  <DatePicker
+    value={data.date}
+    onChange={(value) => setData("date", value)}
+  />
+
 
   {/* EXISTING IMAGE */}
   {existingImage && (

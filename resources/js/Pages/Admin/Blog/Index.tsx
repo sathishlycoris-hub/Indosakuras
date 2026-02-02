@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Table,
   TableBody,
@@ -294,11 +295,11 @@ export default function AdminBlogIndex() {
         {/* Published Date */}
         <div className="space-y-1">
           <label className="font-medium">Published Date</label>
-          <Input
-            type="date"
+          <DatePicker
+           
             value={data.published_date}
-            onChange={(e) =>
-              setData("published_date", e.target.value)
+            onChange={(value) =>
+              setData("published_date", value)
             }
           />
         </div>

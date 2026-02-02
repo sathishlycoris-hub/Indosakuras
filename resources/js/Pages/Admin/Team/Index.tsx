@@ -28,7 +28,6 @@ import {
 import { Eye, Pencil, Trash2, Plus, Search } from "lucide-react";
 
 const teamCategories = [
-  "Executive Leadership",
   "Management Team",
   "Technology & Innovation Leadership",
   "Regional Leadership",

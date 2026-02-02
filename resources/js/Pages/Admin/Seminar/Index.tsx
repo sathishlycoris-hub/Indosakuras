@@ -4,6 +4,7 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Table,
   TableBody,
@@ -197,12 +198,12 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
                 {/* Date */}
                 <div className="space-y-1">
                   <label className="font-medium">Date</label>
-                  <Input
-                    type="date"
+                  <DatePicker
                     value={data.date}
-                    onChange={(e) => setData("date", e.target.value)}
+                    onChange={(value) => setData("date", value)}
                   />
                 </div>
+
 
                 {/* Time */}
                 <div className="space-y-1">
