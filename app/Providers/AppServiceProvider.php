@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Service;
 use App\Models\Solution;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -22,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Inertia::share([
+
+            'lang' => fn() => session('lang', 'en'),
             'flash' => fn() => [
                 'success' => session('success'),
                 'error' => session('error'),

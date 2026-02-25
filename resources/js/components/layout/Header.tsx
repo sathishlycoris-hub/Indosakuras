@@ -1,6 +1,7 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import { Globe } from "lucide-react";
 import { useState } from "react";
+
 
 const Header = () => {
   const { url } = usePage();
@@ -13,6 +14,12 @@ const Header = () => {
     { label: "Corporate Info", href: "/corporate-info" },
     { label: "Recruitment", href: "/recruitment" },
   ];
+
+  const { lang } = usePage().props;
+
+  const changeLanguage = (language: string) => {
+  router.post(route("set.language"), { lang: language });
+};
 
   /**
    * ✅ SECTION-AWARE ACTIVE LOGIC

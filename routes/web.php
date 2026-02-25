@@ -106,6 +106,11 @@ Route::middleware('auth')->group(function () {
 // Route::get('/blogs/4', fn() => Inertia::render('Blogs/Blog4'));
 // Route::get('/blogs/5', fn() => Inertia::render('Blogs/Blog5'));
 
+Route::post('/set-language', function (\Illuminate\Http\Request $request) {
+    session(['lang' => $request->lang]);
+    return back();
+})->name('set.language');
+
 /* Contact & Utility */
 Route::get('/contact', fn() => Inertia::render('Contact'));
 Route::get('/sitemap', fn() => Inertia::render('Sitemap'));
