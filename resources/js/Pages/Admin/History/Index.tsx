@@ -25,23 +25,32 @@ import "react-quill/dist/quill.snow.css";
 interface History {
   id: number;
   year: string;
+  year_ja?: string | null;
   month: string;
+  month_ja?: string | null;
   description: string;
+  description_ja?: string | null;
 }
 
 export default function Index({ histories }: { histories: History[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<History | null>(null);
   const [open, setOpen] = useState(false);
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
   const { data, setData, post, reset, processing } = useForm<{
     year: string;
     month: string;
     description: string;
+    year_ja?: string | null;
+    month_ja?: string | null;
+    description_ja?: string | null;
   }>({
     year: "",
     month: "",
     description: "",
+    year_ja: "",
+    month_ja: "",
+    description_ja: "",
   });
 
   /* ================= OPEN ADD ================= */
@@ -50,6 +59,7 @@ export default function Index({ histories }: { histories: History[] }) {
     setMode("add");
     setCurrent(null);
     setOpen(true);
+    setActiveLang("en");
   };
 
   /* ================= OPEN EDIT ================= */
@@ -57,11 +67,15 @@ export default function Index({ histories }: { histories: History[] }) {
     setMode("edit");
     setCurrent(item);
     setOpen(true);
+    setActiveLang("en");
 
     setData({
       year: item.year,
+      year_ja: item.year_ja || "",
       month: item.month,
-      description: item.description,
+      month_ja: item.month_ja || "",
+      description: item.description || item.description_ja || "",
+      description_ja: item.description_ja || item.description || "",
     });
   };
 
@@ -155,16 +169,46 @@ export default function Index({ histories }: { histories: History[] }) {
           {/* ================= ADD / EDIT ================= */}
           {mode !== "view" && (
             <div className="space-y-4 mt-6">
-              <Input
-                placeholder="Year (e.g. 2024)"
-                value={data.year}
-                onChange={(e) => setData("year", e.target.value)}
-              />
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
 
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+              </div>
               <Input
-                placeholder="Month (e.g. January)"
-                value={data.month}
-                onChange={(e) => setData("month", e.target.value)}
+                value={
+                  activeLang === "en"
+                    ? data.year ?? ""
+                    : data.year_ja ?? ""
+                }
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("year", e.target.value)
+                    : setData("year_ja", e.target.value)
+                }
+              />
+              <Input
+                value={
+                  activeLang === "en"
+                    ? data.month ?? ""
+                    : data.month_ja ?? ""
+                }
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("month", e.target.value)
+                    : setData("month_ja", e.target.value)
+                }
               />
 
               <div>
@@ -172,9 +216,16 @@ export default function Index({ histories }: { histories: History[] }) {
                   Description
                 </label>
                 <ReactQuill
-                  theme="snow"
-                  value={data.description}
-                  onChange={(v) => setData("description", v)}
+                  value={
+                    activeLang === "en"
+                      ? data.description ?? ""
+                      : data.description_ja ?? ""
+                  }
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("description", v)
+                      : setData("description_ja", v)
+                  }
                 />
               </div>
 
@@ -210,13 +261,25 @@ export default function Index({ histories }: { histories: History[] }) {
           {histories.map((h, i) => (
             <TableRow key={h.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{h.year}</TableCell>
-              <TableCell>{h.month}</TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? h.year
+                  : h.year_ja || h.year}
+              </TableCell>
+
+              <TableCell>
+                {activeLang === "en"
+                  ? h.month
+                  : h.month_ja || h.month}
+              </TableCell>
 
               <TableCell className="line-clamp-2 max-w-md">
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: h.description,
+                    __html:
+                      activeLang === "en"
+                        ? h.description
+                        : h.description_ja || h.description,
                   }}
                 />
               </TableCell>
@@ -225,7 +288,7 @@ export default function Index({ histories }: { histories: History[] }) {
                 <Button
                   title="View"
                   size="icon"
-                  
+
                   onClick={() => openView(h)}
                 >
                   <Eye className="w-4 h-4" />
@@ -233,7 +296,7 @@ export default function Index({ histories }: { histories: History[] }) {
                 <Button
                   title="Edit"
                   size="icon"
-                  
+
                   onClick={() => openEdit(h)}
                 >
                   <Pencil className="w-4 h-4" />

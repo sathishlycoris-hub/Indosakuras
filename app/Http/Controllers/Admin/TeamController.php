@@ -44,11 +44,14 @@ class TeamController extends Controller
         //
 
          $data = $request->validate([
-            'language' => 'required',
-            'name' => 'required',
-            'designation' => 'required',
-            'category' => 'required',
-            'description' => 'required',
+            'language' => 'nullable',
+            'name_ja' => 'nullable',
+            'name' => 'nullable',
+            'designation' => 'nullable',
+            'designation_ja' => 'nullable',
+            'category' => 'nullable',
+            'description' => 'nullable',
+            'description_ja' => 'nullable',
             'image' => 'nullable|image',
         ]);
 
@@ -84,11 +87,14 @@ class TeamController extends Controller
     {
         //
         $data = $request->validate([
-            'language' => 'required',
-            'name' => 'required',
-            'designation' => 'required',
-            'category' => 'required',
-            'description' => 'required',
+            'language' => 'nullable',
+            'name_ja' => 'nullable',
+            'name' => 'nullable',
+            'designation' => 'nullable',
+            'designation_ja' => 'nullable',
+            'category' => 'nullable',
+            'description' => 'nullable',
+            'description_ja' => 'nullable',
             'image' => 'nullable|image',
         ]);
 

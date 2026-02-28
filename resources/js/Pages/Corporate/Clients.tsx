@@ -1,30 +1,44 @@
 import Layout from "@/components/layout/Layout";
 import Subheader from "@/components/layout/Subheader";
 import ContactCTA from "@/components/layout/Contact";
+import { usePage } from "@inertiajs/react";
+
 interface ClientSection {
   section_type: "customer" | "alliance" | "contract" | "partner";
   name: string;
+  name_ja?: string | null;
 }
 
 interface Client {
   id: number;
   description: string;
+  description_ja?: string | null;
   sections: ClientSection[];
 }
 
-const Clients = ({ client }: { client: Client | null }) => {
-  const getCompanies = (type: ClientSection["section_type"]) =>
-    client?.sections
-      .filter((s) => s.section_type === type)
-      .map((s) => s.name) ?? [];
+export default function Clients() {
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
+  const page = usePage();
+  const client = page.props.client as Client | null;
 
-  const renderCompanyList = (companies: string[]) => (
+  const getCompanyName = (s: ClientSection) =>
+    lang === "en" ? s.name : s.name_ja || s.name;
+
+  const getDescription = () =>
+    lang === "en"
+      ? client?.description
+      : client?.description_ja || client?.description;
+
+  const getCompanies = (type: ClientSection["section_type"]) =>
+    client?.sections.filter((s) => s.section_type === type) ?? [];
+
+  const renderCompanyList = (companies: ClientSection[]) => (
     <div className="grid md:grid-cols-2 gap-x-12 gap-y-2">
-      {companies.map((company, index) => (
+      {companies.map((s, index) => (
         <div key={index} className="flex items-center gap-2 py-2">
           <div className="w-2 h-2 bg-primary flex-shrink-0" />
           <span className="text-muted-foreground hover:text-primary transition-colors">
-            {company}
+            {getCompanyName(s)}
           </span>
         </div>
       ))}
@@ -33,71 +47,76 @@ const Clients = ({ client }: { client: Client | null }) => {
 
   return (
     <Layout>
-      {/* Subheader */}
-      <Subheader currentPage="Clients / Biz Partners" />
+      <Subheader
+        currentPage={
+          lang === "en"
+            ? "Clients / Biz Partners"
+            : "取引先・ビジネスパートナー"
+        }
+      />
 
-      {/* Customer Companies */}
+      {/* Customer */}
       <section className="py-12">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-primary text-3xl lg:text-4xl font-bold mb-8">
-            Customer Company
+            {lang === "en" ? "Customer Company" : "取引先企業"}
           </h2>
 
           {renderCompanyList(getCompanies("customer"))}
         </div>
       </section>
 
-      {/* Alliance Companies */}
+      {/* Alliance */}
       <section className="py-8 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-xl font-bold mb-6 pb-2 border-b border-primary">
-            Alliance Companies
+            {lang === "en" ? "Alliance Companies" : "提携企業"}
           </h2>
 
           {renderCompanyList(getCompanies("alliance"))}
         </div>
       </section>
 
-      {/* Contract Companies */}
+      {/* Contract */}
       <section className="py-8 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-xl font-bold mb-6 pb-2 border-b border-primary">
-            Product / Service Agency Contract Companies
+            {lang === "en"
+              ? "Product / Service Agency Contract Companies"
+              : "代理店契約企業"}
           </h2>
 
           {renderCompanyList(getCompanies("contract"))}
         </div>
       </section>
 
-      {/* Partner Companies */}
+      {/* Partner */}
       <section className="py-8 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-xl font-bold mb-6 pb-2 border-b border-primary">
-            Partner Companies
+            {lang === "en" ? "Partner Companies" : "パートナー企業"}
           </h2>
 
           {renderCompanyList(getCompanies("partner"))}
 
-          {client?.description && (
+          {getDescription() && (
             <div
               className="prose max-w-none mt-8 text-muted-foreground"
               dangerouslySetInnerHTML={{
-                __html: client.description,
+                __html: getDescription() || "",
               }}
             />
           )}
 
           <p className="text-sm text-muted-foreground mt-8 text-center">
-            *Only companies that have permission to publish are listed.
-            (Company names in alphabetical order, honorifics omitted)
+            {lang === "en"
+              ? "*Only companies that have permission to publish are listed. (Company names in alphabetical order, honorifics omitted)"
+              : "※掲載許可をいただいた企業のみ掲載しています。（五十音順・敬称略）"}
           </p>
         </div>
       </section>
 
-      {/* Contact CTA */}
       <ContactCTA />
     </Layout>
   );
-};
-
-export default Clients;
+}

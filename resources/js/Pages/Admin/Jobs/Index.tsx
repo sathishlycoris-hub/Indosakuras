@@ -30,24 +30,42 @@ import "react-quill/dist/quill.snow.css";
 
 interface Job {
   id: number;
-  title: string;
-  department: string;
-  location: string;
-  employment_type: string;
-  experience: string;
+  title?: string;
+  title_ja?: string;
+
+  department?: string;
+  department_ja?: string;
+
+  location?: string;
+  location_ja?: string;
+
+  employment_type?: string;
+  employment_type_ja?: string;
+
+  experience?: string;
+  experience_ja?: string;
+
   salary?: string;
+  salary_ja?: string;
+
   short_description?: string;
-  about_role: string;
-  language: "en" | "ja";
+  short_description_ja?: string;
+
+  about_role?: string;
+  about_role_ja?: string;
+
   status: "published" | "draft";
+
   sections: {
     section_type: string;
-    content: string;
+    content?: string;
+    content_ja?: string;
   }[];
 }
 
 export default function Index({ jobs }: { jobs: Job[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
   const [current, setCurrent] = useState<Job | null>(null);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -61,9 +79,17 @@ export default function Index({ jobs }: { jobs: Job[] }) {
     salary: "",
     short_description: "",
     about_role: "",
-    language: "en" as "en" | "ja",
+
     status: "draft" as "draft" | "published",
-    sections: [] as { type: string; content: string }[],
+    sections: [] as { type: string; content: string; content_ja: string; }[],
+    title_ja: "",
+    department_ja: "",
+    location_ja: "",
+    employment_type_ja: "",
+    experience_ja: "",
+    salary_ja: "",
+    short_description_ja: "",
+    about_role_ja: "",
   });
 
   /* ================= SEARCH FILTER ================= */
@@ -74,13 +100,13 @@ export default function Index({ jobs }: { jobs: Job[] }) {
 
     return jobs.filter((job) =>
       [
-        job.title,
-        job.department,
-        job.location,
-        job.employment_type,
+        job.title_ja,
+        job.department_ja,
+        job.location_ja,
+        job.employment_type_ja,
         job.status,
       ]
-        .filter(Boolean)
+        .filter((field): field is string => typeof field === "string")
         .some((field) => field.toLowerCase().includes(q))
     );
   }, [search, jobs]);
@@ -97,14 +123,22 @@ export default function Index({ jobs }: { jobs: Job[] }) {
       salary: "",
       short_description: "",
       about_role: "",
-      language: "en",
       status: "draft",
       sections: [
-        { type: "responsibilities", content: "" },
-        { type: "requirements", content: "" },
-        { type: "preferred", content: "" },
-        { type: "offer", content: "" },
+        { type: "responsibilities", content: "", content_ja: "" },
+        { type: "requirements", content: "", content_ja: "" },
+        { type: "preferred", content: "", content_ja: "" },
+        { type: "offer", content: "", content_ja: "" },
       ],
+
+      title_ja: "",
+      department_ja: "",
+      location_ja: "",
+      employment_type_ja: "",
+      experience_ja: "",
+      salary_ja: "",
+      short_description_ja: "",
+      about_role_ja: "",
     });
     setMode("add");
     setCurrent(null);
@@ -118,20 +152,29 @@ export default function Index({ jobs }: { jobs: Job[] }) {
     setOpen(true);
 
     setData({
-      title: job.title,
-      department: job.department,
-      location: job.location,
-      employment_type: job.employment_type,
-      experience: job.experience,
-      salary: job.salary || "",
-      short_description: job.short_description || "",
-      about_role: job.about_role,
-      language: job.language,
+      title: job.title ?? "",
+      department: job.department ?? "",
+      location: job.location ?? "",
+      employment_type: job.employment_type ?? "",
+      experience: job.experience ?? "",
+      salary: job.salary ?? "",
+      short_description: job.short_description ?? "",
+      about_role: job.about_role ?? "",
       status: job.status,
       sections: job.sections.map((s) => ({
         type: s.section_type,
-        content: s.content,
+        content: s.content ?? "",
+        content_ja: s.content_ja ?? "",
       })),
+
+      title_ja: job.title_ja ?? "",
+      department_ja: job.department_ja ?? "",
+      location_ja: job.location_ja ?? "",
+      employment_type_ja: job.employment_type_ja ?? "",
+      experience_ja: job.experience_ja ?? "",
+      salary_ja: job.salary_ja ?? "",
+      short_description_ja: job.short_description_ja ?? "",
+      about_role_ja: job.about_role_ja ?? "",
     });
   };
 
@@ -175,7 +218,10 @@ export default function Index({ jobs }: { jobs: Job[] }) {
 
   /* ================= BULLET HELPERS ================= */
   const addSection = (type: string) => {
-    setData("sections", [...data.sections, { type, content: "" }]);
+    setData("sections", [
+      ...data.sections,
+      { type, content: "", content_ja: "" },
+    ]);
   };
 
   const updateSection = (index: number, value: string) => {
@@ -191,12 +237,26 @@ export default function Index({ jobs }: { jobs: Job[] }) {
       {data.sections
         .map((s, i) => ({ ...s, i }))
         .filter((s) => s.type === type)
-        .map(({ content, i }) => (
+        .map(({ content, content_ja, i }) => (
           <Input
             key={i}
             disabled={mode === "view"}
-            value={content}
-            onChange={(e) => updateSection(i, e.target.value)}
+            value={
+              activeLang === "en"
+                ? content
+                : content_ja
+            }
+            onChange={(e) => {
+              const updated = [...data.sections];
+
+              if (activeLang === "en") {
+                updated[i].content = e.target.value;
+              } else {
+                updated[i].content_ja = e.target.value;
+              }
+
+              setData("sections", updated);
+            }}
             placeholder="Enter point"
           />
         ))}
@@ -206,7 +266,12 @@ export default function Index({ jobs }: { jobs: Job[] }) {
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => addSection(type)}
+          onClick={() =>
+            setData("sections", [
+              ...data.sections,
+              { type, content: "", content_ja: "" },
+            ])
+          }
         >
           + Add Point
         </Button>
@@ -216,7 +281,7 @@ export default function Index({ jobs }: { jobs: Job[] }) {
 
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Jobs</h2>}>
-      
+
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Recruitments</h1>
 
@@ -240,154 +305,209 @@ export default function Index({ jobs }: { jobs: Job[] }) {
 
       {/* ================= SHEET ================= */}
       {/* ================= SHEET ================= */}
-<Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Job"}
-        {mode === "edit" && "Edit Job"}
-        {mode === "view" && "Job Details"}
-      </SheetTitle>
-    </SheetHeader>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Job"}
+              {mode === "edit" && "Edit Job"}
+              {mode === "view" && "Job Details"}
+            </SheetTitle>
+          </SheetHeader>
 
-{/* ================= VIEW MODE ================= */}
-{mode === "view" && current && (
-  <div className="space-y-6 mt-6">
+          {/* ================= VIEW MODE ================= */}
+          {mode === "view" && current && (
+            <div className="space-y-6 mt-6">
 
-    {/* BASIC INFO */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <p><strong>Title:</strong> {current.title}</p>
-      <p><strong>Department:</strong> {current.department}</p>
-      <p><strong>Location:</strong> {current.location}</p>
-      <p><strong>Employment Type:</strong> {current.employment_type}</p>
-      <p><strong>Experience:</strong> {current.experience}</p>
-      <p><strong>Status:</strong> {current.status}</p>
-      {current.salary && <p><strong>Salary:</strong> {current.salary}</p>}
-    </div>
+              {/* BASIC INFO */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <p><strong>Title:</strong> {current.title_ja || "No title available"}</p>
+                <p><strong>Department:</strong> {current.department}</p>
+                <p><strong>Location:</strong> {current.location}</p>
+                <p><strong>Employment Type:</strong> {current.employment_type}</p>
+                <p><strong>Experience:</strong> {current.experience}</p>
+                <p><strong>Status:</strong> {current.status}</p>
+                {current.salary && <p><strong>Salary:</strong> {current.salary}</p>}
+              </div>
 
-    {/* SHORT DESCRIPTION */}
-    {current.short_description && (
-      <div>
-        <h3 className="font-semibold mb-1">Short Description</h3>
-        <p className="text-gray-700">{current.short_description}</p>
-      </div>
-    )}
+              {/* SHORT DESCRIPTION */}
+              {current.short_description_ja && (
+                <div>
+                  <h3 className="font-semibold mb-1">Short Description</h3>
+                  <p>{current.short_description_ja}</p>
+                </div>
+              )}
 
-    {/* ABOUT ROLE */}
-    <div>
-      <h3 className="font-semibold mb-2">About Role</h3>
-      <div
-        className="prose max-w-none"
-        dangerouslySetInnerHTML={{ __html: current.about_role }}
-      />
-    </div>
+              {/* ABOUT ROLE */}
+              <div>
+                <h3 className="font-semibold mb-2">About Role</h3>
 
-    {/* SECTIONS */}
-    {current.sections?.length > 0 && (
-      <div className="space-y-5">
-        {current.sections.map((section, i) => {
-          const titles: Record<string, string> = {
-            responsibilities: "Responsibilities",
-            requirements: "Requirements",
-            preferred: "Preferred Skills",
-            offer: "What We Offer",
-          };
+                {current.about_role_ja ? (
+                  <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{
+                      __html: current.about_role_ja,
+                    }}
+                  />
+                ) : (
+                  <p>No details available</p>
+                )}
+              </div>
 
-          return (
-            <div key={i}>
-              <h3 className="font-semibold mb-2">
-                {titles[section.section_type] ?? section.section_type}
-              </h3>
+              {/* SECTIONS */}
+              {current.sections?.length > 0 && (
+                <div className="space-y-5">
+                  {current.sections.map((section, i) => {
+                    const titles: Record<string, string> = {
+                      responsibilities: "Responsibilities",
+                      requirements: "Requirements",
+                      preferred: "Preferred Skills",
+                      offer: "What We Offer",
+                    };
 
-              <ul className="list-disc pl-6 space-y-1">
-                <li className="text-gray-700">{section.content}</li>
-              </ul>
+                    return (
+                      <div key={i}>
+                        <h3 className="font-semibold mb-2">
+                          {titles[section.section_type] ?? section.section_type}
+                        </h3>
+
+                        <ul className="list-disc pl-6 space-y-1">
+                          <li>{section.content_ja || "No content available"}</li>
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
             </div>
-          );
-        })}
-      </div>
-    )}
-
-  </div>
-)}
+          )}
 
 
-    {/* ================= ADD / EDIT MODE ================= */}
-    {mode !== "view" && (
-  <div className="space-y-5 mt-6">
+          {/* ================= ADD / EDIT MODE ================= */}
+          {mode !== "view" && (
+            <div className="space-y-5 mt-6">
 
-    {/* Job Title */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Job Title</label>
-      <Input
-        placeholder="Job Title"
-        value={data.title}
-        onChange={(e) => setData("title", e.target.value)}
-      />
-    </div>
+              <div className="flex gap-3 mb-6">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
 
-    {/* Department */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Department</label>
-      <Input
-        placeholder="Department"
-        value={data.department}
-        onChange={(e) => setData("department", e.target.value)}
-      />
-    </div>
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
+              </div>
+              {/* Job Title */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Job Title</label>
+                <Input
+                  value={activeLang === "en" ? data.title : data.title_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
+                />
+              </div>
 
-    {/* Location */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Location</label>
-      <Input
-        placeholder="Location"
-        value={data.location}
-        onChange={(e) => setData("location", e.target.value)}
-      />
-    </div>
+              {/* Department */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Department</label>
+                <Input
+                  value={activeLang === "en" ? data.department : data.department_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("department", e.target.value)
+                      : setData("department_ja", e.target.value)
+                  }
+                />
+              </div>
 
-    {/* Employment Type */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Employment Type</label>
-      <Input
-        placeholder="Full-time, Contract"
-        value={data.employment_type}
-        onChange={(e) => setData("employment_type", e.target.value)}
-      />
-    </div>
+              {/* Location */}
+               <div className="space-y-1">
+                <label className="text-sm font-medium">Location</label>
+              <Input
+                value={activeLang === "en" ? data.location : data.location_ja}
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("location", e.target.value)
+                    : setData("location_ja", e.target.value)
+                }
+              />
+              </div>
 
-    {/* Experience */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Experience</label>
-      <Input
-        placeholder="e.g. 3+ years"
-        value={data.experience}
-        onChange={(e) => setData("experience", e.target.value)}
-      />
-    </div>
+              {/* Employment Type */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Employment Type</label>
+                <Input
+                  value={
+                    activeLang === "en"
+                      ? data.employment_type
+                      : data.employment_type_ja
+                  }
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("employment_type", e.target.value)
+                      : setData("employment_type_ja", e.target.value)
+                  }
+                />
+              </div>
 
-    {/* Salary */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Salary</label>
-      <Input
-        placeholder="Optional"
-        value={data.salary}
-        onChange={(e) => setData("salary", e.target.value)}
-      />
-    </div>
+              {/* Experience */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Experience</label>
+              <Input
+                value={activeLang === "en"
+                  ? data.experience
+                  : data.experience_ja}
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("experience", e.target.value)
+                    : setData("experience_ja", e.target.value)
+                }
+              /></div>
 
-    {/* Short Description */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Short Description</label>
-      <Input
-        placeholder="Short description"
-        value={data.short_description}
-        onChange={(e) => setData("short_description", e.target.value)}
-      />
-    </div>
+              {/* Salary */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Salary</label>
+                <Input
+                  value={
+                    activeLang === "en"
+                      ? data.salary
+                      : data.salary_ja
+                  }
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("salary", e.target.value)
+                      : setData("salary_ja", e.target.value)
+                  }
+                />
+              </div>
 
-    {/* Language */}
-    {/* <div className="space-y-1">
+              {/* Short Description */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Short Description</label>
+                <Input
+                  placeholder="Short description"
+                  value={activeLang === "en" ? data.short_description : data.short_description_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("short_description", e.target.value)
+                      : setData("short_description_ja", e.target.value)
+                  }
+                />
+              </div>
+
+              {/* Language */}
+              {/* <div className="space-y-1">
       <label className="text-sm font-medium">Language</label>
       <Select
         value={data.language}
@@ -403,56 +523,56 @@ export default function Index({ jobs }: { jobs: Job[] }) {
       </Select>
     </div> */}
 
-    {/* Status */}
-    <div className="space-y-1">
-      <label className="text-sm font-medium">Status</label>
-      <Select
-        value={data.status}
-        onValueChange={(v) =>
-          setData("status", v as "draft" | "published")
-        }
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="draft">Draft</SelectItem>
-          <SelectItem value="published">Published</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+              {/* Status */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Status</label>
+                <Select
+                  value={data.status}
+                  onValueChange={(v) =>
+                    setData("status", v as "draft" | "published")
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-    {/* About Role */}
-    <div className="space-y-2">
-      <label className="text-sm font-medium">About Role</label>
-      <ReactQuill
-        theme="snow"
-        value={data.about_role}
-        onChange={(value) => setData("about_role", value)}
-      />
-    </div>
+              {/* About Role */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">About Role</label>
+                <ReactQuill
+                  theme="snow"
+                  value={activeLang === "en" ? data.about_role : data.about_role_ja}
+                  onChange={(value) => activeLang === "en" ? setData("about_role", value) : setData("about_role_ja", value)}
+                />
+              </div>
 
-    {/* Sections */}
-    <div className="space-y-6">
-      {renderSection("responsibilities", "Responsibilities")}
-      {renderSection("requirements", "Requirements")}
-      {renderSection("preferred", "Preferred Skills")}
-      {renderSection("offer", "What We Offer")}
-    </div>
+              {/* Sections */}
+              <div className="space-y-6">
+                {renderSection("responsibilities", "Responsibilities")}
+                {renderSection("requirements", "Requirements")}
+                {renderSection("preferred", "Preferred Skills")}
+                {renderSection("offer", "What We Offer")}
+              </div>
 
-    {/* Submit */}
-    <Button
-      className="w-full mt-4"
-      disabled={processing}
-      onClick={mode === "edit" ? submitUpdate : submitAdd}
-    >
-      {mode === "edit" ? "Update Job" : "Save Job"}
-    </Button>
-  </div>
-)}
+              {/* Submit */}
+              <Button
+                className="w-full mt-4"
+                disabled={processing}
+                onClick={mode === "edit" ? submitUpdate : submitAdd}
+              >
+                {mode === "edit" ? "Update Job" : "Save Job"}
+              </Button>
+            </div>
+          )}
 
-  </SheetContent>
-</Sheet>
+        </SheetContent>
+      </Sheet>
 
 
       {/* ================= TABLE ================= */}
@@ -479,8 +599,8 @@ export default function Index({ jobs }: { jobs: Job[] }) {
           {filteredJobs.map((job, i) => (
             <TableRow key={job.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{job.title}</TableCell>
-              <TableCell>{job.department}</TableCell>
+              <TableCell>{job.title_ja ?? "-"}</TableCell>
+              <TableCell>{job.department_ja ?? "-"}</TableCell>
               <TableCell>{job.status}</TableCell>
               <TableCell className="space-x-2 text-center">
                 {/* <Button title="View" size="icon" onClick={() => openView(job)}>

@@ -1,9 +1,31 @@
 import { Link } from "@inertiajs/react";
-
-interface Job {
+import { usePage } from "@inertiajs/react";
+export interface Job {
   id: number;
-  title: string;
   slug: string;
+
+  title?: string;
+  title_ja?: string;
+
+  department?: string;
+  department_ja?: string;
+
+  location?: string;
+  location_ja?: string;
+
+  employment_type?: string;
+  employment_type_ja?: string;
+
+  experience?: string;
+  experience_ja?: string;
+
+  salary?: string;
+  salary_ja?: string;
+
+  about_role?: string;
+  about_role_ja?: string;
+
+
 }
 
 interface RecruitmentheadProps {
@@ -14,7 +36,7 @@ interface RecruitmentheadProps {
 const Recruitmenthead = ({ jobs = [], currentSlug }: RecruitmentheadProps) => {
   // Reverse safely (Last In → First Out)
   const orderedJobs = [...jobs].reverse();
-
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
   return (
     <div className="bg-muted/50 border-b border-border">
       <div className="container mx-auto px-4 lg:px-8">
@@ -23,11 +45,10 @@ const Recruitmenthead = ({ jobs = [], currentSlug }: RecruitmentheadProps) => {
           {/* Recruitment TOP */}
           <Link
             href="/recruitment"
-            className={`px-3 py-2 text-sm font-medium ${
-              !currentSlug
+            className={`px-3 py-2 text-sm font-medium ${!currentSlug
                 ? "text-primary border-b-2 border-primary"
                 : "text-muted-foreground hover:text-primary"
-            }`}
+              }`}
           >
             Recruitment TOP
           </Link>
@@ -44,13 +65,14 @@ const Recruitmenthead = ({ jobs = [], currentSlug }: RecruitmentheadProps) => {
               <div key={job.slug} className="flex items-center">
                 <Link
                   href={`/recruitment/${job.slug}`}
-                  className={`px-3 py-2 text-sm font-medium ${
-                    isActive
+                  className={`px-3 py-2 text-sm font-medium ${isActive
                       ? "text-primary border-b-2 border-primary"
                       : "text-muted-foreground hover:text-primary"
-                  }`}
+                    }`}
                 >
-                  {job.title}
+                  {lang === "ja"
+                    ? job.title_ja ?? job.title ?? ""
+                    : job.title ?? job.title_ja ?? ""}
                 </Link>
 
                 {index < orderedJobs.length - 1 && (

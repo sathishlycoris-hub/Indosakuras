@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Greeting extends Model
 {
     use HasFactory;
-     protected $fillable = [
+    protected $fillable = [
         'title',
-        'image',
+        'title_ja',
         'description',
+        'description_ja',
+        'image',
     ];
 }

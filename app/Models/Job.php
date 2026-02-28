@@ -21,6 +21,13 @@ class Job extends Model
         'about_role',
         'language',
         'status',
+        'title_ja',
+        // 'department_ja',
+        // 'location_ja',
+        // 'employment_type_ja',
+        // 'experience_ja',
+        // 'salary_ja',
+        'short_description_ja',   
     ];
 
     public function sections()

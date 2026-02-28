@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class Profile extends Model
 {
     use HasFactory;
-     protected $fillable = [
-        'title',
+    protected $fillable = [
         'sub_title',
+        'sub_title_ja',
         'content',
+        'content_ja',
     ];
 }

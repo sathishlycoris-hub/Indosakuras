@@ -1,7 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import Serviceshead from "@/components/layout/Serviceshead";
 import ContactCTA from "@/components/layout/Contact";
-import { useLanguage } from "@/Contexts/LanguageContext";
+
 import { usePage, Link } from "@inertiajs/react";
 import { Calendar, User, ArrowLeft, Tag } from "lucide-react";
 
@@ -20,32 +20,22 @@ interface Blog {
 }
 
 export default function BlogDetails() {
-const formatDateYYYYMMDD = (dateStr: string) => {
-  const date = new Date(dateStr);
+  const formatDateYYYYMMDD = (dateStr: string) => {
+    const date = new Date(dateStr);
 
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
 
-  return `${yyyy}/${mm}/${dd}`;
-};
-  
+    return `${yyyy}/${mm}/${dd}`;
+  };
+  const getValue = (en: string, ja?: string) => {
+    return lang === "ja" ? ja || en : en;
+  };
   //  FIXED TYPING
-  const { blog } = usePage<{ blog: Blog }>().props;
-  const { language } = useLanguage();
+  const { blog, lang } = usePage<{ blog: Blog; lang: "en" | "ja" }>().props;
 
-  const getTitle = () =>
-    language === "en" ? blog.title : blog.title_ja || blog.title;
 
-  const getExcerpt = () =>
-    language === "en"
-      ? blog.short_description
-      : blog.short_description_ja || blog.short_description;
-
-  const getContent = () =>
-    language === "en"
-      ? blog.content
-      : blog.content_ja || blog.content;
 
   return (
     <Layout>
@@ -76,11 +66,11 @@ const formatDateYYYYMMDD = (dateStr: string) => {
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                {getTitle()}
+                {getValue(blog.title, blog.title_ja)}
               </h1>
 
               <p className="text-lg text-muted-foreground max-w-3xl">
-                {getExcerpt()}
+                {getValue(blog.short_description, blog.short_description_ja)}
               </p>
             </header>
 
@@ -89,7 +79,7 @@ const formatDateYYYYMMDD = (dateStr: string) => {
               <div className="rounded-xl overflow-hidden shadow-lg mb-12">
                 <img
                   src={`/storage/${blog.image}`}
-                  alt={getTitle()}
+                  alt={getValue(blog.title, blog.title_ja)}
                   className="w-full max-h-[480px] object-cover"
                 />
               </div>
@@ -101,7 +91,9 @@ const formatDateYYYYMMDD = (dateStr: string) => {
                 prose-headings:font-bold
                 prose-h2:text-2xl prose-h2:mt-12
                 prose-p:text-muted-foreground"
-              dangerouslySetInnerHTML={{ __html: getContent() }}
+              dangerouslySetInnerHTML={{
+                __html: getValue(blog.content, blog.content_ja),
+              }}
             />
 
             {/* Back */}
@@ -111,7 +103,7 @@ const formatDateYYYYMMDD = (dateStr: string) => {
                 className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
               >
                 <ArrowLeft size={18} />
-                {language === "en" ? "Back to Blogs" : "ブログ一覧に戻る"}
+                {getValue("Back to Blogs", "ブログ一覧に戻る")}
               </Link>
             </div>
 

@@ -34,17 +34,17 @@ class BlogController extends Controller
     {
         //
         $data = $request->validate([
-            'language' => 'required|in:en,ja',
-            'title' => 'required|string',
+            
+            'title' => 'nullable|string',
             'title_ja' => 'nullable|string',
-            'short_description' => 'required|string',
+            'short_description' => 'nullable|string',
             'short_description_ja' => 'nullable|string',
-            'content' => 'required',
+            'content' => 'nullable',    
             'content_ja' => 'nullable',
-            'category' => 'required|string',
+            'category' => 'nullable|string',
             'author' => 'nullable|string',
-            'published_date' => 'required|date',
-            'status' => 'required|in:published,draft',
+            'published_date' => 'nullable|date',
+            'status' => 'nullable|in:published,draft',
             'image' => 'nullable|image',
         ]);
 
@@ -80,17 +80,17 @@ class BlogController extends Controller
     {
         //
         $data = $request->validate([
-            'language' => 'required|in:en,ja',
-            'title' => 'required|string',
+            'language' => 'nullable|in:en,ja',
+            'title' => 'nullable|string',
             'title_ja' => 'nullable|string',
-            'short_description' => 'required|string',
+            'short_description' => 'nullable|string',
             'short_description_ja' => 'nullable|string',
-            'content' => 'required',
+            'content' => 'nullable',
             'content_ja' => 'nullable',
-            'category' => 'required|string',
+            'category' => 'nullable|string',
             'author' => 'nullable|string',
-            'published_date' => 'required|date',
-            'status' => 'required|in:published,draft',
+            'published_date' => 'nullable|date',
+            'status' => 'nullable|in:published,draft',
             'image' => 'nullable|image',
         ]);
 

@@ -8,6 +8,7 @@ class Client extends Model
 {
     protected $fillable = [
         'description',
+        'description_ja', 
     ];
 
     public function sections()

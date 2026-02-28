@@ -25,26 +25,35 @@ import "react-quill/dist/quill.snow.css";
 interface Philosophy {
   id: number;
   title: string;
+  title_ja?: string | null;
   content: string;
-  image?: string | null;
+  content_ja?: string | null;
   description: string;
+  description_ja?: string | null;
+  image?: string | null;
 }
 
 export default function Index({ philosophies }: { philosophies: Philosophy[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Philosophy | null>(null);
   const [open, setOpen] = useState(false);
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const { data, setData, post, reset, processing } = useForm<{
     title: string;
     content: string;
     image: File | null;
     description: string;
+    title_ja: string;
+    content_ja: string;
+    description_ja: string;
   }>({
     title: "",
     content: "",
     image: null,
     description: "",
+    title_ja: "",
+    content_ja: "",
+    description_ja: "",
   });
 
   /* ================= OPEN ADD ================= */
@@ -59,13 +68,17 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
   const openEdit = (item: Philosophy) => {
     setMode("edit");
     setCurrent(item);
+    setActiveLang("en");
     setOpen(true);
 
     setData({
       title: item.title,
-      content: item.content,
-      image: null, // optional on edit
-      description: item.description,
+      title_ja: item.title_ja || "",
+      content: item.content || item.content_ja || "",
+      content_ja: item.content_ja || item.content || "",
+      description: item.description || item.description_ja || "",
+      description_ja: item.description_ja || item.description || "",
+      image: null,
     });
   };
 
@@ -126,137 +139,162 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
 
       {/* ================= SHEET ================= */}
       <Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Philosophy"}
-        {mode === "edit" && "Edit Philosophy"}
-        {mode === "view" && "Philosophy Details"}
-      </SheetTitle>
-    </SheetHeader>
+        <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Philosophy"}
+              {mode === "edit" && "Edit Philosophy"}
+              {mode === "view" && "Philosophy Details"}
+            </SheetTitle>
+          </SheetHeader>
 
-    {/* ================= VIEW ================= */}
-    {mode === "view" && current && (
-      <div className="space-y-6 mt-6">
-        <div>
-          <strong>Title</strong>
-          <p className="mt-1">{current.title}</p>
-        </div>
+          {/* ================= VIEW ================= */}
+          {mode === "view" && current && (
+            <div className="space-y-6 mt-6">
+              <div>
+                <strong>Title</strong>
+                <p className="mt-1">{current.title}</p>
+              </div>
 
-        <div>
-          <strong>Content</strong>
-          <div
-            className="prose max-w-none mt-2"
-            dangerouslySetInnerHTML={{
-              __html: current.content,
-            }}
-          />
-        </div>
+              <div>
+                <strong>Content</strong>
+                <div
+                  className="prose max-w-none mt-2"
+                  dangerouslySetInnerHTML={{
+                    __html: current.content,
+                  }}
+                />
+              </div>
 
-        {current.image && (
-          <div>
-            <strong>Image</strong>
-            <img
-              src={`/storage/${current.image}`}
-              alt="Philosophy"
-              className="mt-2 rounded-md max-h-56 border object-contain"
-            />
-          </div>
-        )}
+              {current.image && (
+                <div>
+                  <strong>Image</strong>
+                  <img
+                    src={`/storage/${current.image}`}
+                    alt="Philosophy"
+                    className="mt-2 rounded-md max-h-56 border object-contain"
+                  />
+                </div>
+              )}
 
-        <div>
-          <strong>Description</strong>
-          <div
-            className="prose max-w-none mt-2"
-            dangerouslySetInnerHTML={{
-              __html: current.description,
-            }}
-          />
-        </div>
-      </div>
-    )}
+              <div>
+                <strong>Description</strong>
+                <div
+                  className="prose max-w-none mt-2"
+                  dangerouslySetInnerHTML={{
+                    __html: current.description,
+                  }}
+                />
+              </div>
+            </div>
+          )}
 
-    {/* ================= ADD / EDIT ================= */}
-    {mode !== "view" && (
-      <div className="space-y-5 mt-6">
+          {/* ================= ADD / EDIT ================= */}
+          {mode !== "view" && (
+            <div className="space-y-5 mt-6">
+              <div className="flex gap-2">
+  <Button
+    type="button"
+    variant={activeLang === "en" ? "default" : "outline"}
+    onClick={() => setActiveLang("en")}
+  >
+    English
+  </Button>
 
-        {/* Title */}
-        <div className="space-y-1">
-          <label className="font-medium">Title</label>
-          <Input
-            placeholder="Title"
-            value={data.title}
-            onChange={(e) => setData("title", e.target.value)}
-          />
-        </div>
+  <Button
+    type="button"
+    variant={activeLang === "ja" ? "default" : "outline"}
+    onClick={() => setActiveLang("ja")}
+  >
+    Japanese
+  </Button>
+</div>
+              {/* Title */}
+              <div className="space-y-1">
+                <label className="font-medium">Title</label>
+                <Input
+                  value={activeLang === "en" ? data.title : data.title_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Content */}
-        <div className="space-y-2">
-          <label className="font-medium">Content</label>
-          <ReactQuill
-            theme="snow"
-            value={data.content}
-            onChange={(v) => setData("content", v)}
-          />
-        </div>
+              {/* Content */}
+              <div className="space-y-2">
+                <label className="font-medium">Content</label>
+                <ReactQuill
+                  value={activeLang === "en" ? data.content : data.content_ja}
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("content", v)
+                      : setData("content_ja", v)
+                  }
+                />
+              </div>
 
-        {/* Existing Image (EDIT ONLY) */}
-        {mode === "edit" && current?.image && (
-          <div className="space-y-2">
-            <label className="font-medium">Existing Image</label>
-            <img
-              src={`/storage/${current.image}`}
-              alt="Existing"
-              className="h-32 rounded-md border object-contain"
-            />
-          </div>
-        )}
+              {/* Existing Image (EDIT ONLY) */}
+              {mode === "edit" && current?.image && (
+                <div className="space-y-2">
+                  <label className="font-medium">Existing Image</label>
+                  <img
+                    src={`/storage/${current.image}`}
+                    alt="Existing"
+                    className="h-32 rounded-md border object-contain"
+                  />
+                </div>
+              )}
 
-        {/* Upload Image */}
-        <div className="space-y-1">
-          <label className="font-medium">
-            {mode === "edit" ? "Replace Image" : "Upload Image"}
-          </label>
+              {/* Upload Image */}
+              <div className="space-y-1">
+                <label className="font-medium">
+                  {mode === "edit" ? "Replace Image" : "Upload Image"}
+                </label>
 
-          <div className="flex items-center gap-3">
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={(e) =>
-                setData("image", e.target.files?.[0] || null)
-              }
-            />
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      setData("image", e.target.files?.[0] || null)
+                    }
+                  />
 
-            <span className="text-xs text-gray-500 whitespace-nowrap">
-              Max: 2048 KB
-            </span>
-          </div>
-        </div>
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
+                    Max: 2048 KB
+                  </span>
+                </div>
+              </div>
 
-        {/* Description */}
-        <div className="space-y-2">
-          <label className="font-medium">Description</label>
-          <ReactQuill
-            theme="snow"
-            value={data.description}
-            onChange={(v) => setData("description", v)}
-          />
-        </div>
+              {/* Description */}
+              <div className="space-y-2">
+                <label className="font-medium">Description</label>
+                <ReactQuill
+                  value={activeLang === "en" ? data.description : data.description_ja}
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("description", v)
+                      : setData("description_ja", v)
+                  }
+                />
+              </div>
 
-        {/* Submit */}
-        <Button
-          className="w-full"
-          disabled={processing}
-          onClick={mode === "edit" ? submitUpdate : submitAdd}
-        >
-          {mode === "edit"
-            ? "Update Philosophy"
-            : "Save Philosophy"}
-        </Button>
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+              {/* Submit */}
+              <Button
+                className="w-full"
+                disabled={processing}
+                onClick={mode === "edit" ? submitUpdate : submitAdd}
+              >
+                {mode === "edit"
+                  ? "Update Philosophy"
+                  : "Save Philosophy"}
+              </Button>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
 
       {/* ================= TABLE ================= */}
@@ -278,7 +316,11 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
           {philosophies.map((p, i) => (
             <TableRow key={p.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{p.title}</TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? p.title
+                  : p.title_ja || p.title}
+              </TableCell>
 
               <TableCell className="line-clamp-2 max-w-md">
                 <div
@@ -311,7 +353,7 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
                 <Button
                   title="View"
                   size="icon"
-                  
+
                   onClick={() => openView(p)}
                 >
                   <Eye className="w-4 h-4" />
@@ -319,7 +361,7 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
                 <Button
                   title="Edit"
                   size="icon"
-                  
+
                   onClick={() => openEdit(p)}
                 >
                   <Pencil className="w-4 h-4" />

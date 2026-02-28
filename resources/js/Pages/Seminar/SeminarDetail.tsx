@@ -1,24 +1,54 @@
 import { usePage } from "@inertiajs/react";
 import Layout from "@/components/layout/Layout";
 import Serviceshead from "@/components/layout/Serviceshead";
-import { useLanguage } from "@/Contexts/LanguageContext";
+
 
 export default function SeminarDetail() {
-  const { seminar } = usePage().props as any;
-  const { language } = useLanguage();
+  interface Seminar {
+  id: number;
+  title: string;
+  title_ja?: string | null;
+
+  description: string;
+  description_ja?: string | null;
+
+  location: string;
+  location_ja?: string | null;
+
+  date: string;
+  time: string;
+
+  participation_fee?: string | null;
+  participation_fee_ja?: string | null;
+
+  organizer?: string | null;
+  organizer_ja?: string | null;
+
+  sponsorship?: string | null;
+  sponsorship_ja?: string | null;
+
+  cooperation?: string | null;
+  cooperation_ja?: string | null;
+
+  tags?: string[];
+}
+const { seminar, lang } = usePage<{
+  seminar: Seminar;
+  lang: "en" | "ja";
+}>().props
 
   const getTitle = () =>
-    language === "en"
+    lang === "en"
       ? seminar.title
       : seminar.title_ja || seminar.title;
 
   const getDescription = () =>
-    language === "en"
+    lang === "en"
       ? seminar.description
       : seminar.description_ja || seminar.description;
 
   const getLocation = () =>
-    language === "en"
+    lang === "en"
       ? seminar.location
       : seminar.location_ja || seminar.location;
 
@@ -48,7 +78,7 @@ export default function SeminarDetail() {
           label_en: "Participation Fee",
           label_jp: "参加費",
           value: [
-            language === "en"
+            lang === "en"
               ? seminar.participation_fee
               : seminar.participation_fee_ja ||
               seminar.participation_fee,
@@ -62,7 +92,7 @@ export default function SeminarDetail() {
           label_en: "Organizer",
           label_jp: "主催",
           value: [
-            language === "en"
+            lang === "en"
               ? seminar.organizer
               : seminar.organizer_ja || seminar.organizer,
           ],
@@ -75,7 +105,7 @@ export default function SeminarDetail() {
           label_en: "Sponsorship",
           label_jp: "協賛",
           value: [
-            language === "en"
+            lang === "en"
               ? seminar.sponsorship
               : seminar.sponsorship_ja || seminar.sponsorship,
           ],
@@ -88,7 +118,7 @@ export default function SeminarDetail() {
           label_en: "Cooperation",
           label_jp: "協力",
           value: [
-            language === "en"
+            lang === "en"
               ? seminar.cooperation
               : seminar.cooperation_ja || seminar.cooperation,
           ],
@@ -104,7 +134,7 @@ export default function SeminarDetail() {
       {/* HERO */}
       <section className="bg-primary py-24 text-white">
         <div className="container mx-auto px-4">
-          {seminar.tags?.length > 0 && (
+          {(seminar.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {/* {seminar.tags.map((tag: string, i: number) => (
                 <span
@@ -130,7 +160,7 @@ export default function SeminarDetail() {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-6">
-            {language === "en" ? "Details" : "イベント概要"}
+            {lang === "en" ? "Details" : "イベント概要"}
           </h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-12 rounded-full" />
 
@@ -144,7 +174,7 @@ export default function SeminarDetail() {
                   }`}
               >
                 <div className="bg-section-light p-6 font-semibold text-gray-700 text-center">
-                  {language === "en"
+                  {lang === "en"
                     ? item.label_en
                     : item.label_jp}
                 </div>

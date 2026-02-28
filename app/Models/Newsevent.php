@@ -15,7 +15,9 @@ class Newsevent extends Model
         'date',
         'eventtype',
         'short',
+        'short_ja',
         'description',
+        'description_ja',
         'image',
         'pdf',
     ];

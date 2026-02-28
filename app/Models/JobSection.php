@@ -13,6 +13,7 @@ class JobSection extends Model
         'job_id',
         'section_type',
         'content',
+        'content_ja',
         'sort_order',
     ];
 

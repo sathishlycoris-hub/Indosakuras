@@ -6,11 +6,14 @@ import ContactCTA from "@/components/layout/Contact";
 import { Link } from "@inertiajs/react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { usePage } from "@inertiajs/react";
 
 interface CompanyProfile {
   id: number;
   sub_title: string;
+  sub_title_ja?: string | null;
   content: string;
+  content_ja?: string | null;
 }
 
 const Profile = ({
@@ -18,15 +21,15 @@ const Profile = ({
 }: {
   companyProfiles: CompanyProfile[];
 }) => {
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
 
-
-AOS.init({
-  duration: 1000,
-  easing: "ease-in-out",
-  once: true,
-  offset: 120,
-  delay: 80,
-});
+  AOS.init({
+    duration: 1000,
+    easing: "ease-in-out",
+    once: true,
+    offset: 120,
+    delay: 80,
+  });
 
 
 
@@ -72,7 +75,7 @@ services and more, ensuring your business stays ahead in innovation.`
     }
   ];
 
-  
+
 
   const contactLocationData = {
     title: "Locations",
@@ -88,7 +91,9 @@ services and more, ensuring your business stays ahead in innovation.`
   return (
     <Layout>
       {/* Subheader Navigation */}
-      <Subheader currentPage="Corporate Profile" />
+      <Subheader
+        currentPage={lang === "ja" ? "会社概要" : "Corporate Profile"}
+      />
 
 
 
@@ -206,7 +211,9 @@ services and more, ensuring your business stays ahead in innovation.`
 
           {/* LABEL */}
           <div className="section-divider mb-8 border-white/80">
-            <h2 className="text-3xl font-semibold text-white">Our Strengths</h2>
+            <h2 className="text-3xl font-semibold text-white">
+              {lang === "ja" ? "当社の強み" : "Our Strengths"}
+            </h2>
           </div>
 
           <div className="container grid lg:grid-cols-[65%_35%] gap-12">
@@ -214,7 +221,9 @@ services and more, ensuring your business stays ahead in innovation.`
             {/* LEFT — CONTENT */}
             <div>
               <h2 className="text-3xl lg:text-4xl font-bold leading-snug mb-6">
-                Combining Expertise for Innovation
+                {lang === "ja"
+                  ? "専門知識を融合し、革新を実現"
+                  : "Combining Expertise for Innovation"}
               </h2>
 
               <p className="text-white mb-4 leading-relaxed">
@@ -301,7 +310,7 @@ services and more, ensuring your business stays ahead in innovation.`
               <p className="font-medium">Cutting-Edge Tech</p>
               <p className="text-white">GenAI & Cloud services</p>
               <p className="mt-2 text-white leading-relaxed">
-               We embrace the latest technologies like GenAI, machine learning, cloud services and more, ensuring your business stays ahead in innovation.
+                We embrace the latest technologies like GenAI, machine learning, cloud services and more, ensuring your business stays ahead in innovation.
               </p>
             </div>
 
@@ -321,37 +330,49 @@ services and more, ensuring your business stays ahead in innovation.`
 
 
 
-     <section className="py-16 bg-muted/20">
-  <div className="container mx-auto px-4 lg:px-8">
+      <section className="py-16 bg-muted/20">
+        <div className="container mx-auto px-4 lg:px-8">
 
-    <div className="section-divider mb-8 border-pink/80">
-      <h2 className="text-3xl font-bold mb-8 text-primary">
-        Company Profile
-      </h2>
-    </div>
-
-    <div className="border border-gray-300 rounded-lg overflow-hidden text-sm">
-      {companyProfiles.map((row, i) => (
-        <div
-          key={row.id}
-          className="grid grid-cols-3 border-b border-gray-300"
-        >
-          {/* LEFT COLUMN */}
-          <div className="bg-pink-100 p-4 font-semibold leading-relaxed">
-            {row.sub_title}
+          <div className="section-divider mb-8 border-pink/80">
+            <h2 className="text-3xl font-bold mb-8 text-primary">
+              {lang === "ja" ? "会社概要" : "Company Profile"}
+            </h2>
           </div>
 
-          {/* RIGHT COLUMN */}
-          <div
-            className="col-span-2 p-4 space-y-1 leading-relaxed prose max-w-none"
-            dangerouslySetInnerHTML={{ __html: row.content }}
-          />
-        </div>
-      ))}
-    </div>
+          <div className="border border-gray-300 rounded-lg overflow-hidden text-sm">
+            {companyProfiles.map((row) => {
+              const title =
+                lang === "ja"
+                  ? row.sub_title_ja || row.sub_title
+                  : row.sub_title;
 
-  </div>
-</section>
+              const content =
+                lang === "ja"
+                  ? row.content_ja || row.content
+                  : row.content;
+
+              return (
+                <div
+                  key={row.id}
+                  className="grid grid-cols-3 border-b border-gray-300"
+                >
+                  {/* LEFT COLUMN */}
+                  <div className="bg-pink-100 p-4 font-semibold leading-relaxed">
+                    {title}
+                  </div>
+
+                  {/* RIGHT COLUMN */}
+                  <div
+                    className="col-span-2 p-4 space-y-1 leading-relaxed prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: content }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
 
 
 
@@ -359,7 +380,7 @@ services and more, ensuring your business stays ahead in innovation.`
         <div className="container mx-auto px-4 lg:px-8">
 
           <h2 className="text-primary text-3xl font-bold mb-4">
-            {contactLocationData.title}
+            {lang === "ja" ? "拠点情報" : contactLocationData.title}
           </h2>
 
           <div className="w-full flex justify-center mb-0">

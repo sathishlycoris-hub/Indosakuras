@@ -24,24 +24,29 @@ import "react-quill/dist/quill.snow.css";
 
 interface Profile {
   id: number;
-//   title: string;
   sub_title: string;
+  sub_title_ja?: string | null;
   content: string;
+  content_ja?: string | null;
 }
 
 export default function Index({ profiles }: { profiles: Profile[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Profile | null>(null);
   const [open, setOpen] = useState(false);
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const { data, setData, post, reset, processing } = useForm<{
     // title: string;
     sub_title: string;
     content: string;
+    sub_title_ja?: string;
+    content_ja?: string;
   }>({
     // title: "",
     sub_title: "",
     content: "",
+    sub_title_ja: "",
+    content_ja: "",
   });
 
   /* ================= OPEN ADD ================= */
@@ -50,6 +55,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
     setMode("add");
     setCurrent(null);
     setOpen(true);
+    setActiveLang("en");
   };
 
   /* ================= OPEN EDIT ================= */
@@ -59,9 +65,11 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
     setOpen(true);
 
     setData({
-    //   title: item.title,
+      //   title: item.title,
       sub_title: item.sub_title,
       content: item.content,
+      sub_title_ja: item.sub_title_ja || "",
+      content_ja: item.content_ja || item.content || "",
     });
   };
 
@@ -154,7 +162,26 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
 
           {/* ================= ADD / EDIT ================= */}
           {mode !== "view" && (
+
+
             <div className="space-y-4 mt-6">
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
+
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+              </div>
               {/* <Input
                 placeholder="Title"
                 value={data.title}
@@ -163,16 +190,23 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
 
               <Input
                 placeholder="Title"
-                value={data.sub_title}
-                onChange={(e) => setData("sub_title", e.target.value)}
+                value={activeLang === "en" ? data.sub_title : data.sub_title_ja}
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("sub_title", e.target.value)
+                    : setData("sub_title_ja", e.target.value)
+                }
               />
 
               <div>
                 <label className="text-sm font-medium">Content</label>
                 <ReactQuill
-                  theme="snow"
-                  value={data.content}
-                  onChange={(v) => setData("content", v)}
+                  value={activeLang === "en" ? data.content : data.content_ja}
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("content", v)
+                      : setData("content_ja", v)
+                  }
                 />
               </div>
 
@@ -209,7 +243,11 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
             <TableRow key={p.id}>
               <TableCell>{i + 1}</TableCell>
               {/* <TableCell>{p.title}</TableCell> */}
-              <TableCell>{p.sub_title}</TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? p.sub_title
+                  : p.sub_title_ja || p.sub_title}
+              </TableCell>
 
               <TableCell className="line-clamp-2 max-w-md">
                 <div
@@ -223,7 +261,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
                 <Button
                   title="View"
                   size="icon"
-                 
+
                   onClick={() => openView(p)}
                 >
                   <Eye className="w-4 h-4" />
@@ -231,7 +269,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
                 <Button
                   title="Edit"
                   size="icon"
-                  
+
                   onClick={() => openEdit(p)}
                 >
                   <Pencil className="w-4 h-4" />

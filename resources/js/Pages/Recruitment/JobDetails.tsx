@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import { getLangValue } from "@/utils/lang";
 import { usePage } from "@inertiajs/react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -15,20 +16,36 @@ import Recruitmenthead from "@/components/layout/Recruitmenthead";
 
 interface JobSection {
   section_type: "responsibilities" | "requirements" | "preferred" | "offer";
-  content: string;
+  content?: string;
+  content_ja?: string;
 }
 
 interface Job {
-    id: number;
-  title: string;
-  department: string;
-  location: string;
-  employment_type: string;
-  experience: string;
+  id: number;
+
+  title?: string;
+  title_ja?: string;
+
+  department?: string;
+  department_ja?: string;
+
+  location?: string;
+  location_ja?: string;
+
+  employment_type?: string;
+  employment_type_ja?: string;
+
+  experience?: string;
+  experience_ja?: string;
+
   salary?: string;
-  about_role: string;
+  salary_ja?: string;
+
+  short_description?: string;
+  short_description_ja?: string;
+
   sections: JobSection[];
-   slug: string;
+  slug: string;
 }
 AOS.init({
   duration: 1000,
@@ -41,13 +58,13 @@ AOS.init({
 export default function JobDetail({ job }: { job: Job }) {
   const getSection = (type: JobSection["section_type"]) =>
     job.sections.filter((s) => s.section_type === type);
-    const { jobs } = usePage<{ jobs: Job[] }>().props;
-
+  // const { jobs } = usePage<{ jobs: Job[] }>().props;
+  const { jobs, lang } = usePage<{ jobs: Job[]; lang: "en" | "ja" }>().props;
 
   return (
-   
-      
-      <Layout>
+
+
+    <Layout>
       <Recruitmenthead
         jobs={jobs}
         currentSlug={job.slug}
@@ -55,31 +72,29 @@ export default function JobDetail({ job }: { job: Job }) {
       {/* Job Header */}
       <section className="hero-gradient text-primary-foreground py-12">
         <div className="container mx-auto px-4 lg:px-8" data-aos="fade-right">
-          <p className="text-sm text-primary-foreground/80 mb-2">
-            {job.department}
+          <p className="text-sm mb-2">
+            {getLangValue(lang, job.department, job.department_ja)}
           </p>
 
           <h1 className="text-3xl lg:text-4xl font-bold mb-4">
-            {job.title}
+            {getLangValue(lang, job.title, job.title_ja)}
           </h1>
 
           <div className="flex flex-wrap gap-4 text-sm">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              {job.location}
+            <span>
+              {getLangValue(lang, job.location, job.location_ja)}
             </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              {job.employment_type}
+            <span>
+              {getLangValue(lang, job.employment_type, job.employment_type_ja)}
             </span>
             <span className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
-              {job.experience}
+              {getLangValue(lang, job.experience, job.experience_ja)}
             </span>
             {job.salary && (
               <span className="flex items-center gap-1">
                 <DollarSign className="w-4 h-4" />
-                {job.salary}
+                {getLangValue(lang, job.salary, job.salary_ja)}
               </span>
             )}
           </div>
@@ -100,18 +115,30 @@ export default function JobDetail({ job }: { job: Job }) {
                 <div
                   className="prose max-w-none"
                   dangerouslySetInnerHTML={{
-                    __html: job.about_role,
-                  }}
+  __html: getLangValue(lang, job.short_description, job.short_description_ja),
+}}
                 />
               </div>
 
               {/* Sections */}
               {[
-                ["responsibilities", "Key Responsibilities"],
-                ["requirements", "Requirements"],
-                ["preferred", "Preferred Qualifications"],
-                ["offer", "What We Offer"],
-              ].map(([type, title]) => {
+  [
+    "responsibilities",
+    getLangValue(lang, "Key Responsibilities", "主な業務内容"),
+  ],
+  [
+    "requirements",
+    getLangValue(lang, "Requirements", "応募条件"),
+  ],
+  [
+    "preferred",
+    getLangValue(lang, "Preferred Qualifications", "歓迎条件"),
+  ],
+  [
+    "offer",
+    getLangValue(lang, "What We Offer", "待遇・福利厚生"),
+  ],
+].map(([type, title]) => {
                 const items = getSection(
                   type as JobSection["section_type"]
                 );

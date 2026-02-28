@@ -18,8 +18,8 @@ const Header = () => {
   const { lang } = usePage().props;
 
   const changeLanguage = (language: string) => {
-  router.post(route("set.language"), { lang: language });
-};
+    router.post(route("set.language"), { lang: language });
+  };
 
   /**
    * ✅ SECTION-AWARE ACTIVE LOGIC
@@ -69,9 +69,21 @@ const Header = () => {
             Contact us
           </Link>
           <span>/</span>
-          <button className="hover:text-primary">English</button>
+          <button
+            onClick={() => changeLanguage("en")}
+            className={lang === "en" ? "text-primary" : ""}
+          >
+            English
+          </button>
+
           <span>/</span>
-          <button className="hover:text-primary">Japanese</button>
+
+          <button
+            onClick={() => changeLanguage("ja")}
+            className={lang === "ja" ? "text-primary" : ""}
+          >
+            Japanese
+          </button>
         </div>
 
         <div className="hidden lg:flex justify-end">
@@ -95,11 +107,10 @@ const Header = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-lg font-semibold transition-colors hover:text-primary ${
-                  isActive(item.href)
+                className={`text-lg font-semibold transition-colors hover:text-primary ${isActive(item.href)
                     ? "text-primary"
                     : "text-foreground"
-                }`}
+                  }`}
               >
                 {item.label}
               </Link>
@@ -126,11 +137,10 @@ const Header = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`block py-3 text-base font-semibold ${
-                  isActive(item.href)
+                className={`block py-3 text-base font-semibold ${isActive(item.href)
                     ? "text-primary"
                     : "text-foreground"
-                }`}
+                  }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}

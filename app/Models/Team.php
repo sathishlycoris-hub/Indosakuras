@@ -12,9 +12,12 @@ class Team extends Model
       protected $fillable = [
         'language',
         'name',
+        'name_ja',
         'designation',
+        'designation_ja',
         'category',
         'description',
+        'description_ja',
         'image',
     ];
 }

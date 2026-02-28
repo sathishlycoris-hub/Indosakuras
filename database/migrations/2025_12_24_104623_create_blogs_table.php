@@ -16,7 +16,7 @@ return new class extends Migration
             $table->enum('language', ['en', 'ja'])->default('en');
 
             $table->string('title');
-            $table->string('title_ja')->nullable();
+            $table->string('title_ja')->nullable(); 
 
             $table->text('short_description');
             $table->text('short_description_ja')->nullable();

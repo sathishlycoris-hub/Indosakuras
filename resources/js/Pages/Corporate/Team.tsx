@@ -11,8 +11,11 @@ import ContactCTA from "@/components/layout/Contact";
 
 type TeamMember = {
   name: string;
+  name_ja?: string | null;
   designation: string;
+  designation_ja?: string | null;
   description: string;
+  description_ja?: string | null;
   image: string | null;
 };
 
@@ -28,6 +31,7 @@ type TeamPageProps = {
    ========================= */
 
 export default function Team() {
+  const { lang } = usePage().props as any;
   const {
     managementTeam,
     technologyLeadership,
@@ -55,12 +59,21 @@ export default function Team() {
       </div>
 
       <div className="flex-1">
-        <h3 className="font-bold text-lg mb-1">{member.name}</h3>
-        <p className="text-primary font-medium text-sm mb-2">
-          {member.designation}
+        <h3>
+          {lang === "ja"
+            ? member.name_ja || member.name
+            : member.name}
+        </h3>
+        <p>
+          {lang === "ja"
+            ? member.designation_ja || member.designation
+            : member.designation}
         </p>
-        <p className="text-muted-foreground text-sm leading-relaxed">
-          {member.description}
+
+        <p>
+          {lang === "ja"
+            ? member.description_ja || member.description
+            : member.description}
         </p>
       </div>
     </div>
@@ -130,7 +143,7 @@ export default function Team() {
 
             <SectionBlock title="Management Team" items={managementTeam} />
             <SectionBlock
-            
+
               title="Technology & Innovation Leadership"
               items={technologyLeadership}
             />

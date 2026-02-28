@@ -9,7 +9,7 @@ class TeamPageController extends Controller
 {
     public function index()
     {
-        $teams = Team::where('language', 'en')->get();
+        $teams = Team::orderBy('id')->get();
 
         return Inertia::render('Corporate/Team', [
             'managementTeam' => $teams->where('category', 'Management Team')->values(),

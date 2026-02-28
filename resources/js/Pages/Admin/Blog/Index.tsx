@@ -32,33 +32,47 @@ import "react-quill/dist/quill.snow.css";
 
 interface Blog {
   id: number;
+
   title: string;
+  title_ja?: string;
+
+  short_description: string;
+  short_description_ja?: string;
+
+  content?: string;
+  content_ja?: string;
+
   category: string;
   status: "published" | "draft";
   published_date: string;
-  short_description: string;
-  content?: string;
+
   author?: string;
   image?: string | null;
 }
-
 export default function AdminBlogIndex() {
   const { blogs } = usePage<{ blogs: Blog[] }>().props;
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Blog | null>(null);
   const [search, setSearch] = useState("");
 
   const { data, setData, post, reset, processing } = useForm({
-    language: "en",
     title: "",
+    title_ja: "",
+
     category: "",
+
     short_description: "",
+    short_description_ja: "",
+
     content: "",
+    content_ja: "",
+
     author: "",
     published_date: "",
     status: "draft",
+
     image: null as File | null,
   });
 
@@ -77,6 +91,7 @@ export default function AdminBlogIndex() {
     );
   });
 
+  console.warn({filteredBlogs})
   /* ================= OPEN ADD ================= */
   const openAdd = () => {
     reset();
@@ -92,14 +107,21 @@ export default function AdminBlogIndex() {
     setOpen(true);
 
     setData({
-      language: "en",
-      title: blog.title,
-      category: blog.category,
-      short_description: blog.short_description,
-      content: blog.content || "",
+      title: blog.title  || "",
+      title_ja: blog.title_ja || "",
+
+      category: blog.category  || "",
+
+      short_description: blog.short_description || "",
+      short_description_ja: blog.short_description_ja || "",
+
+      content: blog.content || blog.content_ja || "",
+      content_ja: blog.content_ja || blog.content ||  "", 
+
       author: blog.author || "",
-      published_date: blog.published_date,
-      status: blog.status,
+      published_date: blog.published_date  || "",
+      status: blog.status  || "",
+
       image: null,
     });
   };
@@ -155,6 +177,7 @@ export default function AdminBlogIndex() {
     ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   };
 
+  console.warn({ current });
   return (
     <AuthenticatedLayout header={<h2 className="text-xl font-bold">Blogs</h2>}>
 
@@ -170,201 +193,246 @@ export default function AdminBlogIndex() {
         </div>
 
         {/* SEARCH FILTER */}
-       <div className="mb-4 max-w-sm relative">
-        <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-        <input
-          type="text"
-          placeholder="Search Blogs..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
+        <div className="mb-4 max-w-sm relative">
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search Blogs..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
       </div>
 
       {/* ================= SHEET ================= */}
-     <Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Blog"}
-        {mode === "edit" && "Edit Blog"}
-        {mode === "view" && "View Blog"}
-      </SheetTitle>
-    </SheetHeader>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Blog"}
+              {mode === "edit" && "Edit Blog"}
+              {mode === "view" && "View Blog"}
+            </SheetTitle>
+          </SheetHeader>
 
-    {/* ================= VIEW ================= */}
-    {mode === "view" && current && (
-      <div className="space-y-4 mt-6">
-        <p><strong>Title:</strong> {current.title}</p>
-        <p><strong>Category:</strong> {current.category}</p>
-        <p><strong>Status:</strong> {current.status}</p>
-        <p>
-          <strong>Date:</strong>{" "}
-          {formatDate(current.published_date)}
-        </p>
+          {/* ================= VIEW ================= */}
+          {mode === "view" && current && (
+            <div className="space-y-4 mt-6">
+              <p><strong>Title:</strong> {current.title_ja}</p>
+              <p><strong>Category:</strong> {current.category}</p>
+              <p><strong>Status:</strong> {current.status}</p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {formatDate(current.published_date)}
+              </p>
 
-        {current.short_description && (
-          <div>
-            <strong>Short Description:</strong>
-            <p className="mt-1">{current.short_description}</p>
-          </div>
-        )}
+              <div>
+                <strong>Short Description:</strong>
+                <p>{current.short_description_ja || "No Description available"}</p>
+              </div>
 
-        {current.content && (
-          <div>
-            <strong>Content:</strong>
-            <div
-              className="prose mt-2 max-w-none"
-              dangerouslySetInnerHTML={{
-                __html: current.content,
-              }}
-            />
-          </div>
-        )}
+              <div>
+                <strong>Content:</strong>
 
-        {current.image && (
-          <div>
-            <strong>Image:</strong>
-            <img
-              src={`/storage/${current.image}`}
-              alt="Blog"
-              className="mt-2 h-40 rounded-md border object-contain"
-            />
-          </div>
-        )}
-      </div>
-    )}
+                {current.content_ja ? (
+                  <div
+                    className="prose mt-2 max-w-none"
+                    dangerouslySetInnerHTML={{
+                      __html: current.content_ja,
+                    }}
+                  />
+                ) : (
+                  <p>No content available</p>
+                )}
+              </div>
+              {current.image && (
+                <div>
+                  <strong>Image:</strong>
+                  <img
+                    src={`/storage/${current.image}`}
+                    alt="Blog"
+                    className="mt-2 h-40 rounded-md border object-contain"
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
-    {/* ================= ADD / EDIT ================= */}
-    {mode !== "view" && (
-      <div className="space-y-5 mt-6">
+          {/* ================= ADD / EDIT ================= */}
+          {mode !== "view" && (
+            <div className="space-y-5 mt-6">
 
-        {/* Title */}
-        <div className="space-y-1">
-          <label className="font-medium">Title</label>
-          <Input
-            placeholder="Title"
-            value={data.title}
-            onChange={(e) => setData("title", e.target.value)}
-          />
-        </div>
+              <div className="flex gap-3 mb-6">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
 
-        {/* Category */}
-        <div className="space-y-1">
-          <label className="font-medium">Category</label>
-          <Input
-            placeholder="Category"
-            value={data.category}
-            onChange={(e) => setData("category", e.target.value)}
-          />
-        </div>
 
-        {/* Short Description */}
-        <div className="space-y-1">
-          <label className="font-medium">Short Description</label>
-          <Textarea
-            placeholder="Short description"
-            value={data.short_description}
-            onChange={(e) =>
-              setData("short_description", e.target.value)
-            }
-          />
-        </div>
+              </div>
 
-        {/* Content */}
-        <div className="space-y-2">
-          <label className="font-medium">Content</label>
-          <ReactQuill
-            theme="snow"
-            value={data.content}
-            onChange={(v) => setData("content", v)}
-          />
-        </div>
+              {/* Title */}
+              <div className="space-y-1">
+                <label className="font-medium">
+                  Title {activeLang === "ja" && "(Japanese)"}
+                </label>
 
-        {/* Author */}
-        <div className="space-y-1">
-          <label className="font-medium">Author</label>
-          <Input
-            placeholder="Author"
-            value={data.author}
-            onChange={(e) => setData("author", e.target.value)}
-          />
-        </div>
+                <Input
+                  placeholder="Title"
+                  value={activeLang === "en" ? data.title : data.title_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Published Date */}
-        <div className="space-y-1">
-          <label className="font-medium">Published Date</label>
-          <DatePicker
-           
-            value={data.published_date}
-            onChange={(value) =>
-              setData("published_date", value)
-            }
-          />
-        </div>
+              {/* Category */}
+              <div className="space-y-1">
+                <label className="font-medium">Category</label>
+                <Input
+                  placeholder="Category"
+                  value={data.category}
+                  onChange={(e) => setData("category", e.target.value)}
+                />
+              </div>
 
-        {/* Status */}
-        <div className="space-y-1">
-          <label className="font-medium">Status</label>
-          <Select
-            value={data.status}
-            onValueChange={(v) =>
-              setData("status", v as "published" | "draft")
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="published">
-                Published
-              </SelectItem>
-              <SelectItem value="draft">
-                Draft
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+              {/* Short Description */}
+              <div className="space-y-1">
+                <label className="font-medium">
+                  Short Description {activeLang === "ja" && "(Japanese)"}
+                </label>
 
-        {/* Existing Image (EDIT ONLY) */}
-        {mode === "edit" && current?.image && (
-          <div className="space-y-2">
-            <label className="font-medium">Existing Image</label>
-            <img
-              src={`/storage/${current.image}`}
-              alt="Existing"
-              className="h-32 rounded-md border object-contain"
-            />
-          </div>
-        )}
+                <Textarea
+                  placeholder="Short description"
+                  value={
+                    activeLang === "en"
+                      ? data.short_description
+                      : data.short_description_ja
+                  }
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("short_description", e.target.value)
+                      : setData("short_description_ja", e.target.value)
+                  }
+                />
+              </div>
+              {/* Content */}
+              <div className="space-y-2">
+                <label className="font-medium">
+                  Content {activeLang === "ja" && "(Japanese)"}
+                </label>
 
-        {/* Upload Image */}
-        <div className="space-y-1">
-          <label className="font-medium">
-            {mode === "edit" ? "Replace Image" : "Upload Image"}
-          </label>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              setData("image", e.target.files?.[0] || null)
-            }
-          />
-        </div>
+                <ReactQuill
+                  theme="snow"
+                  value={
+                    activeLang === "en"
+                      ? data.content
+                      : data.content_ja
+                  }
+                  onChange={(value) =>
+                    activeLang === "en"
+                      ? setData("content", value)
+                      : setData("content_ja", value)
+                  }
+                />
+              </div>
 
-        {/* Submit */}
-        <Button
-          className="w-full"
-          onClick={mode === "edit" ? submitUpdate : submitAdd}
-          disabled={processing}
-        >
-          {mode === "edit" ? "Update Blog" : "Save Blog"}
-        </Button>
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+              {/* Author */}
+              <div className="space-y-1">
+                <label className="font-medium">Author</label>
+                <Input
+                  placeholder="Author"
+                  value={data.author}
+                  onChange={(e) => setData("author", e.target.value)}
+                />
+              </div>
+
+              {/* Published Date */}
+              <div className="space-y-1">
+                <label className="font-medium">Published Date</label>
+                <DatePicker
+
+                  value={data.published_date}
+                  onChange={(value) =>
+                    setData("published_date", value)
+                  }
+                />
+              </div>
+
+              {/* Status */}
+              <div className="space-y-1">
+                <label className="font-medium">Status</label>
+                <Select
+                  value={data.status}
+                  onValueChange={(v) =>
+                    setData("status", v as "published" | "draft")
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="published">
+                      Published
+                    </SelectItem>
+                    <SelectItem value="draft">
+                      Draft
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Existing Image (EDIT ONLY) */}
+              {mode === "edit" && current?.image && (
+                <div className="space-y-2">
+                  <label className="font-medium">Existing Image</label>
+                  <img
+                    src={`/storage/${current.image}`}
+                    alt="Existing"
+                    className="h-32 rounded-md border object-contain"
+                  />
+                </div>
+              )}
+
+              {/* Upload Image */}
+              <div className="space-y-1">
+                <label className="font-medium">
+                  {mode === "edit" ? "Replace Image" : "Upload Image"}
+                </label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setData("image", e.target.files?.[0] || null)
+                  }
+                />
+              </div>
+
+              {/* Submit */}
+              <Button
+                className="w-full"
+                onClick={mode === "edit" ? submitUpdate : submitAdd}
+                disabled={processing}
+              >
+                {mode === "edit" ? "Update Blog" : "Save Blog"}
+              </Button>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
 
       {/* ================= TABLE ================= */}
@@ -392,7 +460,7 @@ export default function AdminBlogIndex() {
           {filteredBlogs.map((blog, i) => (
             <TableRow key={blog.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{blog.title}</TableCell>
+              <TableCell>{blog.title_ja}</TableCell>
               <TableCell>{blog.category}</TableCell>
               <TableCell>{blog.status}</TableCell>
               <TableCell>{formatDate(blog.published_date)}</TableCell>

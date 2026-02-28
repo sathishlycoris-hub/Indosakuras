@@ -27,37 +27,55 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'employment_type' => 'required|string|max:255',
-            'experience' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'employment_type' => 'nullable|string|max:255',
+            'experience' => 'nullable|string|max:255',
             'salary' => 'nullable|string|max:255',
             'short_description' => 'nullable|string',
-            'about_role' => 'required|string',
-            'language' => 'required|in:en,ja',
-            'status' => 'required|in:draft,published',
+            'about_role' => 'nullable|string',
 
-            // sections
-            'sections' => 'required|array|min:1',
-            'sections.*.type' => 'required|in:responsibilities,requirements,preferred,offer',
-            'sections.*.content' => 'required|string',
+            'title_ja' => 'nullable|string|max:255',
+            'department_ja' => 'nullable|string|max:255',
+            'location_ja' => 'nullable|string|max:255',
+            'employment_type_ja' => 'nullable|string|max:255',
+            'experience_ja' => 'nullable|string|max:255',
+            'salary_ja' => 'nullable|string|max:255',
+            'short_description_ja' => 'nullable|string',
+            'about_role_ja' => 'nullable|string',
+
+            'status' => 'nullable|in:draft,published',
+
+            'sections' => 'nullable|array|min:1',
+            'sections.*.type' => 'nullable|in:responsibilities,requirements,preferred,offer',
+            'sections.*.content' => 'nullable|string',
+            'sections.*.content_ja' => 'nullable|string',
         ]);
 
         // Create Job
         $job = Job::create([
-            'title' => $data['title'],
-            'slug' => Str::slug($data['title']),
-            'department' => $data['department'],
-            'location' => $data['location'],
-            'employment_type' => $data['employment_type'],
-            'experience' => $data['experience'],
+            'title' => $data['title'] ?? null,
+            'slug' => Str::slug($data['title'] ?? $data['title_ja']),
+            'department' => $data['department'] ?? null,
+            'location' => $data['location'] ?? null,
+            'employment_type' => $data['employment_type'] ?? null,
+            'experience' => $data['experience'] ?? null,
             'salary' => $data['salary'] ?? null,
             'short_description' => $data['short_description'] ?? null,
-            'about_role' => $data['about_role'],
-            'language' => $data['language'],
+            'about_role' => $data['about_role'] ?? null,
+
+            'title_ja' => $data['title_ja'] ?? null,
+            'department_ja' => $data['department_ja'] ?? null,
+            'location_ja' => $data['location_ja'] ?? null,
+            'employment_type_ja' => $data['employment_type_ja'] ?? null,
+            'experience_ja' => $data['experience_ja'] ?? null,
+            'salary_ja' => $data['salary_ja'] ?? null,
+            'short_description_ja' => $data['short_description_ja'] ?? null,
+
+
             'status' => $data['status'],
         ]);
 
@@ -66,7 +84,8 @@ class JobController extends Controller
             JobSection::create([
                 'job_id' => $job->id,
                 'section_type' => $section['type'],
-                'content' => $section['content'],
+                'content' => $section['content'] ?? null,
+                'content_ja' => $section['content_ja'] ?? null,
                 'sort_order' => $index,
             ]);
         }
@@ -82,21 +101,30 @@ class JobController extends Controller
     public function update(Request $request, Job $job)
     {
         $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'employment_type' => 'required|string|max:255',
-            'experience' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'employment_type' => 'nullable|string|max:255',
+            'experience' => 'nullable|string|max:255',
             'salary' => 'nullable|string|max:255',
             'short_description' => 'nullable|string',
-            'about_role' => 'required|string',
-            'language' => 'required|in:en,ja',
-            'status' => 'required|in:draft,published',
+            'about_role' => 'nullable|string',
+
+            'status' => 'nullable|in:draft,published',
+            'title_ja' => 'nullable|string|max:255',
+            'department_ja' => 'nullable|string|max:255',
+            'location_ja' => 'nullable|string|max:255',
+            'employment_type_ja' => 'nullable|string|max:255',
+            'experience_ja' => 'nullable|string|max:255',
+            'salary_ja' => 'nullable|string|max:255',
+            'short_description_ja' => 'nullable|string',
+            'about_role_ja' => 'nullable|string',
 
             // sections
-            'sections' => 'required|array|min:1',
-            'sections.*.type' => 'required|in:responsibilities,requirements,preferred,offer',
-            'sections.*.content' => 'required|string',
+            'sections' => 'nullable|array|min:1',
+            'sections.*.type' => 'nullable|in:responsibilities,requirements,preferred,offer',
+            'sections.*.content' => 'nullable|string',
+            'sections.*.content_ja' => 'nullable|string',
         ]);
 
         // Update Job
@@ -110,7 +138,14 @@ class JobController extends Controller
             'salary' => $data['salary'] ?? null,
             'short_description' => $data['short_description'] ?? null,
             'about_role' => $data['about_role'],
-            'language' => $data['language'],
+            'title_ja' => $data['title_ja'] ?? null,
+            'department_ja' => $data['department_ja'] ?? null,
+            'location_ja' => $data['location_ja'] ?? null,
+            'employment_type_ja' => $data['employment_type_ja'] ?? null,
+            'experience_ja' => $data['experience_ja'] ?? null,
+            'salary_ja' => $data['salary_ja'] ?? null,
+            'short_description_ja' => $data['short_description_ja'] ?? null,
+            'about_role_ja' => $data['about_role_ja'] ?? null,
             'status' => $data['status'],
         ]);
 
@@ -121,7 +156,8 @@ class JobController extends Controller
             JobSection::create([
                 'job_id' => $job->id,
                 'section_type' => $section['type'],
-                'content' => $section['content'],
+                'content' => $section['content'] ?? null,
+                'content_ja' => $section['content_ja'] ?? null,
                 'sort_order' => $index,
             ]);
         }
@@ -142,23 +178,20 @@ class JobController extends Controller
     }
 
     public function recruitment()
-{
-    return Inertia::render('Recruitment', [
-        'jobs' => Job::where('status', 'published')
-            ->orderBy('created_at', 'desc')
-            ->get([
-                'id',
-                'title',
-                'department',
-                'location',
-                'employment_type',
-                'experience',
-                'salary',
-                'slug',
-            ]),
-    ]);
-}
-
-
-
+    {
+        return Inertia::render('Recruitment', [
+            'jobs' => Job::where('status', 'published')
+                ->orderBy('created_at', 'desc')
+                ->get([
+                    'id',
+                    'title',
+                    'department',
+                    'location',
+                    'employment_type',
+                    'experience',
+                    'salary',
+                    'slug',
+                ]),
+        ]);
+    }
 }

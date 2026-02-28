@@ -10,23 +10,23 @@ use Inertia\Inertia;
 
 class PhilosophyController extends Controller
 {
-     public function index()
+    public function index()
     {
         return Inertia::render('Admin/Philosophy/Index', [
             'philosophies' => Philosophy::latest()->get(),
         ]);
     }
 
-    /**
-     * Store new philosophy (Sheet - Add)
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title'       => 'required|string|max:255',
-            'content'     => 'required|string',
-            'image'       => 'nullable|image|max:2048',
-            'description' => 'required|string',
+            'title' => 'nullable|string|max:255',
+            'title_ja' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'content_ja' => 'nullable|string',
+            'description' => 'nullable|string',
+            'description_ja' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -41,25 +41,29 @@ class PhilosophyController extends Controller
             ->with('success', 'Philosophy added successfully');
     }
 
-    /**
-     * Update philosophy (Sheet - Edit)
-     */
     public function update(Request $request, Philosophy $philosophy)
     {
         $data = $request->validate([
-            'title'       => 'required|string|max:255',
-            'content'     => 'required|string',
-            'image'       => 'nullable|image|max:2048',
-            'description' => 'required|string',
+            'title' => 'nullable|string|max:255',
+            'title_ja' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'content_ja' => 'nullable|string',
+            'description' => 'nullable|string',
+            'description_ja' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
+
             if ($philosophy->image) {
                 Storage::disk('public')->delete($philosophy->image);
             }
 
             $data['image'] = $request->file('image')
                 ->store('philosophy', 'public');
+        } else {
+            // Prevent image becoming NULL
+            unset($data['image']);
         }
 
         $philosophy->update($data);
@@ -69,9 +73,6 @@ class PhilosophyController extends Controller
             ->with('success', 'Philosophy updated successfully');
     }
 
-    /**
-     * Delete philosophy
-     */
     public function destroy(Philosophy $philosophy)
     {
         if ($philosophy->image) {

@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
-       public function index()
+    public function index()
     {
         return Inertia::render('Admin/Profile/Index', [
             'profiles' => Profile::latest()->get(),
@@ -24,8 +24,10 @@ class ProfileController extends Controller
     {
         $data = $request->validate([
             // 'title'     => 'nullable|string|max:255',
-            'sub_title' => 'required|string|max:255',
-            'content'   => 'required|string',
+            'sub_title' => 'nullable|string|max:255',
+            'sub_title_ja' => 'nullable|string|max:255',
+            'content'   => 'nullable|string',
+            'content_ja' => 'nullable|string',
         ]);
 
         Profile::create($data);
@@ -42,8 +44,10 @@ class ProfileController extends Controller
     {
         $data = $request->validate([
             // 'title'     => 'nullable|string|max:255',
-            'sub_title' => 'required|string|max:255',
-            'content'   => 'required|string',
+            'sub_title' => 'nullable|string|max:255',
+            'sub_title_ja' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'content_ja' => 'nullable|string',
         ]);
 
         $profile->update($data);

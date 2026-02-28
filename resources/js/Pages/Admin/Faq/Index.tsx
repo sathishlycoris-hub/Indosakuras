@@ -23,18 +23,24 @@ import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
 interface Faq {
   id: number;
   question: string;
+  question_ja?: string | null;
+  answer_ja?: string | null;
   answer: string;
   sort_order?: number | null;
 }
 
 export default function Index({ faqs }: { faqs: Faq[] }) {
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Faq | null>(null);
   const [open, setOpen] = useState(false);
+  
 
   const { data, setData, post, reset, processing } = useForm({
     question: "",
+    question_ja: "",
     answer: "",
+    answer_ja: "",
     sort_order: "",
   });
 
@@ -55,6 +61,8 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
     setData({
       question: faq.question,
       answer: faq.answer,
+      question_ja: (faq as any).question_ja || "",
+      answer_ja: (faq as any).answer_ja || "",
       sort_order:
         faq.sort_order !== null && faq.sort_order !== undefined
           ? String(faq.sort_order)
@@ -146,17 +154,43 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
           {/* ADD / EDIT */}
           {mode !== "view" && (
             <div className="space-y-4 mt-6">
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
+
+
+              </div>
               <Input
                 placeholder="Question"
-                value={data.question}
-                onChange={(e) => setData("question", e.target.value)}
+                value={activeLang === "en" ? data.question : data.question_ja}
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("question", e.target.value)
+                    : setData("question_ja", e.target.value)
+                }
               />
 
               <Textarea
                 placeholder="Answer"
                 rows={5}
-                value={data.answer}
-                onChange={(e) => setData("answer", e.target.value)}
+                value={activeLang === "en" ? data.answer : data.answer_ja}
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("answer", e.target.value)
+                    : setData("answer_ja", e.target.value)
+                }
               />
 
               <Input
@@ -195,9 +229,15 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
           {faqs.map((faq, i) => (
             <TableRow key={faq.id}>
               <TableCell>{faq.sort_order ?? i + 1}</TableCell>
-              <TableCell>{faq.question}</TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? faq.question
+                  : faq.question_ja || faq.question}
+              </TableCell>
               <TableCell className="line-clamp-2 max-w-xl">
-                {faq.answer}
+                {activeLang === "en"
+                  ? faq.answer
+                  : faq.answer_ja || faq.answer}
               </TableCell>
               <TableCell className="space-x-2 text-center">
                 <Button title="View" size="icon" onClick={() => openView(faq)}>

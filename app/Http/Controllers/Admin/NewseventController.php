@@ -10,18 +10,18 @@ use Inertia\Inertia;
 class NewseventController extends Controller
 {
     public function home()
-{
-    return Inertia::render('Index', [
-        'updates' => Newsevent::orderBy('date', 'desc')
-            ->take(6)
-            ->get([
-                'id',
-                'date',
-                'eventtype',
-                'short',
-            ]),
-    ]);
-}
+    {
+        return Inertia::render('Index', [
+            'updates' => Newsevent::orderBy('date', 'desc')
+                ->take(6)
+                ->get([
+                    'id',
+                    'date',
+                    'eventtype',
+                    'short',
+                ]),
+        ]);
+    }
     /**
      * Admin list page
      */
@@ -45,10 +45,12 @@ class NewseventController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'date' => 'required|date',
-            'eventtype' => 'required|string',
-            'short' => 'required|string',
-            'description' => 'required|string',
+            'date' => 'nullable|date',
+            'eventtype' => 'nullable|string',
+            'short' => 'nullable|string',
+            'short_ja' => 'nullable|string',
+            'description' => 'nullable|string',
+            'description_ja' => 'nullable|string',
             'image' => 'nullable|image',
             'pdf' => 'nullable|file|mimes:pdf',
         ]);
@@ -60,7 +62,7 @@ class NewseventController extends Controller
         if ($request->hasFile('pdf')) {
             $data['pdf'] = $request->file('pdf')->store('news', 'public');
         }
-        
+
 
         Newsevent::create($data);
 
@@ -81,40 +83,42 @@ class NewseventController extends Controller
      * Update news/event
      */
     public function update(Request $request, Newsevent $newsevent)
-{
-    $data = $request->validate([
-        'date' => 'required|date',
-        'eventtype' => 'required|string',
-        'short' => 'required|string',
-        'description' => 'required|string',
-        'image' => 'nullable|image',
-        'pdf' => 'nullable|file|mimes:pdf',
-    ]);
+    {
+        $data = $request->validate([
+            'date' => 'nullable|date',
+            'eventtype' => 'nullable|string',
+            'short' => 'nullable|string',
+            'short_ja' => 'nullable|string',
+            'description' => 'nullable|string',
+            'description_ja' => 'nullable|string',
+            'image' => 'nullable|image',
+            'pdf' => 'nullable|file|mimes:pdf',
+        ]);
 
-    //  VERY IMPORTANT: prevent accidental deletion
-    if (!$request->hasFile('image')) {
-        unset($data['image']);
+        //  VERY IMPORTANT: prevent accidental deletion
+        if (!$request->hasFile('image')) {
+            unset($data['image']);
+        }
+
+        if (!$request->hasFile('pdf')) {
+            unset($data['pdf']);
+        }
+
+        if ($request->hasFile('image')) {
+            // optional: delete old image
+            // Storage::disk('public')->delete($newsevent->image);
+
+            $data['image'] = $request->file('image')->store('news', 'public');
+        }
+
+        if ($request->hasFile('pdf')) {
+            $data['pdf'] = $request->file('pdf')->store('news', 'public');
+        }
+
+        $newsevent->update($data);
+
+        return back()->with('success', 'News updated');
     }
-
-    if (!$request->hasFile('pdf')) {
-        unset($data['pdf']);
-    }
-
-    if ($request->hasFile('image')) {
-        // optional: delete old image
-        // Storage::disk('public')->delete($newsevent->image);
-
-        $data['image'] = $request->file('image')->store('news', 'public');
-    }
-
-    if ($request->hasFile('pdf')) {
-        $data['pdf'] = $request->file('pdf')->store('news', 'public');
-    }
-
-    $newsevent->update($data);
-
-    return back()->with('success', 'News updated');
-}
 
 
     /**
@@ -128,21 +132,20 @@ class NewseventController extends Controller
     }
 
     /**
- * Public Press Release page
- */
-public function pressRelease()
-{
-    return Inertia::render('Corporate/Pressrelease', [
-        'news' => Newsevent::orderBy('date', 'desc')->get(),
-        'filters' => [
-            'All',
-            'Press Release',
-            'Updates',
-            'Media',
-            'Event',
-            'Notice',
-        ],
-    ]);
-}
-
+     * Public Press Release page
+     */
+    public function pressRelease()
+    {
+        return Inertia::render('Corporate/Pressrelease', [
+            'news' => Newsevent::orderBy('date', 'desc')->get(),
+            'filters' => [
+                'All',
+                'Press Release',
+                'Updates',
+                'Media',
+                'Event',
+                'Notice',
+            ],
+        ]);
+    }
 }

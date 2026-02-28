@@ -11,8 +11,11 @@ class Philosophy extends Model
 
      protected $fillable = [
         'title',
+        'title_ja',
         'content',
+        'content_ja',
         'image',
         'description',
+        'description_ja',
     ];
 }

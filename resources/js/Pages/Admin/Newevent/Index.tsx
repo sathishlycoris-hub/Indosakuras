@@ -41,7 +41,9 @@ interface NewsEvent {
   eventtype: string;
   short: string;
   description: string;
+  short_ja?: string | null;
   image?: string | null;
+  description_ja?: string | null;
   // pdf?: string | null;
 }
 
@@ -51,6 +53,8 @@ interface PageProps {
 }
 
 export default function Index({ events, eventTypes }: PageProps) {
+
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editItem, setEditItem] = useState<NewsEvent | null>(null);
   const [existingImage, setExistingImage] = useState<string | null>(null);
@@ -60,20 +64,21 @@ export default function Index({ events, eventTypes }: PageProps) {
     date: "",
     eventtype: "Press Release",
     short: "",
+    short_ja: "",
     description: "",
+    description_ja: "",
     image: null as File | null,
-    // pdf: null as File | null,
   });
 
   const fileUrl = (path?: string | null) => {
-  if (!path) return null;
+    if (!path) return null;
 
-  // Already absolute
-  if (path.startsWith("http")) return path;
+    // Already absolute
+    if (path.startsWith("http")) return path;
 
-  // Laravel public storage
-  return `/storage/${path}`;
-};
+    // Laravel public storage
+    return `/storage/${path}`;
+  };
 
   /* ================= SEARCH FILTER ================= */
   const filteredEvents = useMemo(() => {
@@ -85,12 +90,14 @@ export default function Index({ events, eventTypes }: PageProps) {
       [
         e.eventtype,
         e.short,
+        e.short_ja,
         e.description,
+        e.description_ja,
         format(new Date(e.date), "yyyy-MM-dd"),
       ]
         .filter(Boolean)
         .some((field) =>
-          field.toLowerCase().includes(q)
+          field!.toLowerCase().includes(q)
         )
     );
   }, [search, events]);
@@ -114,9 +121,10 @@ export default function Index({ events, eventTypes }: PageProps) {
       date: item.date,
       eventtype: item.eventtype,
       short: item.short,
+      short_ja: item.short_ja ?? "",
       description: item.description,
+      description_ja: item.description_ja ?? "",
       image: null,
-      // pdf: null,
     });
   };
 
@@ -168,70 +176,95 @@ export default function Index({ events, eventTypes }: PageProps) {
               <SheetTitle>Add News</SheetTitle>
             </SheetHeader>
 
-          <div className="space-y-4 mt-6">
-
-  <Label>Short Description *</Label>
-  <Textarea
-    value={data.short}
-    onChange={(e) => setData("short", e.target.value)}
-  />
-
-  <Label>Description *</Label>
-  <ReactQuill
-    theme="snow"
-    value={data.description}
-    onChange={(value) => setData("description", value)}
-    className="bg-white"
-  />
-
-  <Label>Event Type *</Label>
-  <Select
-    value={data.eventtype}
-    onValueChange={(v) => setData("eventtype", v)}
-  >
-    <SelectTrigger>
-      <SelectValue />
-    </SelectTrigger>
-    <SelectContent>
-      {eventTypes.map((type) => (
-        <SelectItem key={type} value={type}>
-          {type}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-
-  <Label>Date *</Label>
-  <DatePicker
-  value={data.date}
-  onChange={(value) => setData("date", value)}
-/>
+            <div className="space-y-4 mt-6">
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
 
 
-  {/* IMAGE */}
-  <Label>Image (optional)</Label>
-  <Input
-    type="file"
-    accept="image/*"
-    onChange={(e) => setData("image", e.target.files?.[0] || null)}
-  />
+              </div>
+              <Label>Short Description *</Label>
+              <Textarea
+                value={activeLang === "en" ? data.short : data.short_ja}
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("short", e.target.value)
+                    : setData("short_ja", e.target.value)
+                }
+              />
 
-  {/* PDF */}
-  {/* <Label>PDF (optional)</Label>
+              <Label>Description *</Label>
+              <ReactQuill
+                theme="snow"
+                value={activeLang === "en" ? data.description : data.description_ja}
+                onChange={(value) =>
+                  activeLang === "en"
+                    ? setData("description", value)
+                    : setData("description_ja", value)
+                }
+                className="bg-white"
+              />
+
+              <Label>Event Type *</Label>
+              <Select
+                value={data.eventtype}
+                onValueChange={(v) => setData("eventtype", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {eventTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Label>Date *</Label>
+              <DatePicker
+                value={data.date}
+                onChange={(value) => setData("date", value)}
+              />
+
+
+              {/* IMAGE */}
+              <Label>Image (optional)</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setData("image", e.target.files?.[0] || null)}
+              />
+
+              {/* PDF */}
+              {/* <Label>PDF (optional)</Label>
   <Input
     type="file"
     accept="application/pdf"
     onChange={(e) => setData("pdf", e.target.files?.[0] || null)}
-  />
+  /> */}
 
-  <Button
-    className="w-full"
-    onClick={submitAdd}
-    disabled={processing}
-  >
-    Save
-  </Button> */}
-</div>
+              <Button
+                className="w-full"
+                onClick={submitAdd}
+                disabled={processing}
+              >
+                Save
+              </Button>
+            </div>
 
           </SheetContent>
         </Sheet>
@@ -274,7 +307,9 @@ export default function Index({ events, eventTypes }: PageProps) {
             <TableRow key={e.id}>
               <TableCell>{i + 1}</TableCell>
               <TableCell>{e.eventtype}</TableCell>
-              <TableCell className="max-w-md truncate">{e.short}</TableCell>
+              <TableCell className="max-w-md truncate">{activeLang === "en"
+                ? e.short
+                : e.short_ja || e.short}</TableCell>
               <TableCell>
                 {format(new Date(e.date), "yyyy-MM-dd")}
               </TableCell>
@@ -316,141 +351,174 @@ export default function Index({ events, eventTypes }: PageProps) {
 
           <div className="space-y-4 mt-6">
 
-  <Label>Short *</Label>
-  <Textarea
-    value={data.short}
-    onChange={(e) => setData("short", e.target.value)}
-  />
+            <div className="flex gap-2 mb-4">
+              <Button
+                type="button"
+                variant={activeLang === "en" ? "default" : "outline"}
+                onClick={() => setActiveLang("en")}
+              >
+                English
+              </Button>
 
-  <Label>Description *</Label>
-  <ReactQuill
-    theme="snow"
-    value={data.description}
-    onChange={(value) => setData("description", value)}
-    className="bg-white"
-  />
+              <Button
+                type="button"
+                variant={activeLang === "ja" ? "default" : "outline"}
+                onClick={() => setActiveLang("ja")}
+              >
+                Japanese
+              </Button>
+            </div>
 
-   <Label>Event Type *</Label>
-  <Select
-    value={data.eventtype}
-    onValueChange={(v) => setData("eventtype", v)}
-  >
-    <SelectTrigger>
-      <SelectValue />
-    </SelectTrigger>
-    <SelectContent>
-      {eventTypes.map((type) => (
-        <SelectItem key={type} value={type}>
-          {type}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
+            <Label>Short *</Label>
+            <Textarea
+              value={activeLang === "en" ? data.short : data.short_ja}
+              onChange={(e) =>
+                activeLang === "en"
+                  ? setData("short", e.target.value)
+                  : setData("short_ja", e.target.value)
+              }
+            />
 
-   {/* ✅ ADD THIS */}
-  <Label>Date *</Label>
-  <DatePicker
-    value={data.date}
-    onChange={(value) => setData("date", value)}
-  />
+            <Label>Description *</Label>
+            <ReactQuill
+              theme="snow"
+              value={activeLang === "en" ? data.description : data.description_ja}
+              onChange={(value) =>
+                activeLang === "en"
+                  ? setData("description", value)
+                  : setData("description_ja", value)
+              }
+              className="bg-white"
+            />
+
+            <Label>Event Type *</Label>
+            <Select
+              value={data.eventtype}
+              onValueChange={(v) => setData("eventtype", v)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {eventTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* ✅ ADD THIS */}
+            <Label>Date *</Label>
+            <DatePicker
+              value={data.date}
+              onChange={(value) => setData("date", value)}
+            />
 
 
-  {/* EXISTING IMAGE */}
-  {existingImage && (
-  <div className="space-y-2">
-    <Label>Existing Image</Label>
-    <img
-      src={fileUrl(existingImage)!}
-      alt="Existing"
-      className="rounded-md max-h-40 border object-contain"
-    />
-  </div>
-)}
+            {/* EXISTING IMAGE */}
+            {existingImage && (
+              <div className="space-y-2">
+                <Label>Existing Image</Label>
+                <img
+                  src={fileUrl(existingImage)!}
+                  alt="Existing"
+                  className="rounded-md max-h-40 border object-contain"
+                />
+              </div>
+            )}
 
 
-  {/* UPDATE IMAGE */}
-  <Label>Replace Image</Label>
-  <Input
-    type="file"
-    accept="image/*"
-    onChange={(e) => setData("image", e.target.files?.[0] || null)}
-  />
+            {/* UPDATE IMAGE */}
+            <Label>Replace Image</Label>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setData("image", e.target.files?.[0] || null)}
+            />
 
-  {/* UPDATE PDF */}
-  {/* <Label>Replace PDF</Label>
+            {/* UPDATE PDF */}
+            {/* <Label>Replace PDF</Label>
   <Input
     type="file"
     accept="application/pdf"
     onChange={(e) => setData("pdf", e.target.files?.[0] || null)}
   /> */}
 
-  <Button
-    className="w-full"
-    onClick={submitUpdate}
-    disabled={processing}
-  >
-    Update
-  </Button>
-</div>
+            <Button
+              className="w-full"
+              onClick={submitUpdate}
+              disabled={processing}
+            >
+              Update
+            </Button>
+          </div>
 
         </SheetContent>
       </Sheet>
       {/* ================= VIEW SHEET ================= */}
-<Sheet
-  open={!!viewItem}
-  onOpenChange={(open) => {
-    if (!open) setViewItem(null);
-  }}
->
-  <SheetContent side="right" className="w-[90%] sm:max-w-3xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>News / Event Details</SheetTitle>
-    </SheetHeader>
+      <Sheet
+        open={!!viewItem}
+        onOpenChange={(open) => {
+          if (!open) setViewItem(null);
+        }}
+      >
+        <SheetContent side="right" className="w-[90%] sm:max-w-3xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>News / Event Details</SheetTitle>
+          </SheetHeader>
 
-    {viewItem && (
-      <div className="space-y-6 mt-6">
+          {viewItem && (
+            <div className="space-y-6 mt-6">
 
-        {/* META */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <p><strong>Type:</strong> {viewItem.eventtype}</p>
-          <p>
-            <strong>Date:</strong>{" "}
-            {format(new Date(viewItem.date), "yyyy-MM-dd")}
-          </p>
-        </div>
+              {/* META */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <p><strong>Type:</strong> {viewItem.eventtype}</p>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {format(new Date(viewItem.date), "yyyy-MM-dd")}
+                </p>
+              </div>
 
-        {/* SHORT */}
-        <div>
-          <h3 className="font-semibold mb-1">Short Description</h3>
-          <p className="text-gray-700">{viewItem.short}</p>
-        </div>
+              {/* SHORT */}
+              <div>
+                <h3 className="font-semibold mb-1">Short Description</h3>
+                <p>
+                  {activeLang === "en"
+                    ? viewItem.short
+                    : viewItem.short_ja || viewItem.short}
+                </p>
+              </div>
 
-        {/* DESCRIPTION */}
-        <div>
-          <h3 className="font-semibold mb-2">Description</h3>
-          <div
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: viewItem.description,
-            }}
-          />
-        </div>
+              {/* DESCRIPTION */}
+              <div>
+                <h3 className="font-semibold mb-2">Description</h3>
+                <div
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      activeLang === "en"
+                        ? viewItem.description
+                        : viewItem.description_ja || viewItem.description,
+                  }}
+                />
+              </div>
 
-        {/* IMAGE */}
-       {viewItem.image && (
-  <div>
-    <h3 className="font-semibold mb-2">Image</h3>
-    <img
-      src={fileUrl(viewItem.image)!}
-      alt="News"
-      className="rounded-md max-h-64 border object-contain"
-    />
-  </div>
-)}
+              {/* IMAGE */}
+              {viewItem.image && (
+                <div>
+                  <h3 className="font-semibold mb-2">Image</h3>
+                  <img
+                    src={fileUrl(viewItem.image)!}
+                    alt="News"
+                    className="rounded-md max-h-64 border object-contain"
+                  />
+                </div>
+              )}
 
 
-        {/* PDF */}
-       {/* {viewItem.pdf && (
+              {/* PDF */}
+              {/* {viewItem.pdf && (
   <div>
     <h3 className="font-semibold mb-2">PDF</h3>
     <a
@@ -465,10 +533,10 @@ export default function Index({ events, eventTypes }: PageProps) {
 )} */}
 
 
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
     </Authenticated>
   );

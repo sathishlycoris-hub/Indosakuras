@@ -37,14 +37,16 @@ const teamCategories = [
 
 export default function Index() {
   const { teams } = usePage().props as any;
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<any>(null);
   const [search, setSearch] = useState("");
 
   const { data, setData, post, reset } = useForm({
-    language: "en",
+    name_ja: "",
+    designation_ja: "",
+    description_ja: "",
     name: "",
     designation: "",
     category: "",
@@ -80,11 +82,13 @@ export default function Index() {
     setMode("edit");
     setOpen(true);
     setData({
-      language: item.language,
-      name: item.name,
-      designation: item.designation,
+      name: item.name ?? "",
+      name_ja: item.name_ja ?? "",
+      designation: item.designation ?? "",
+      designation_ja: item.designation_ja ?? "",
       category: item.category,
-      description: item.description,
+      description: item.description ?? "",
+      description_ja: item.description_ja ?? "",
       image: null,
     });
   };
@@ -110,28 +114,28 @@ export default function Index() {
   return (
     <Authenticated header={<h2 className="text-xl font-bold">Team List</h2>}>
       {/* HEADER */}
-    <div className="mb-5">
-  <div className="flex items-center justify-between mb-4">
-    <h1 className="text-2xl font-bold">Team Members</h1>
+      <div className="mb-5">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">Team Members</h1>
 
-    <Button onClick={openAdd}>
-      <Plus className="w-4 h-4 mr-2" />
-      Add Member
-    </Button>
-  </div>
+          <Button onClick={openAdd}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Member
+          </Button>
+        </div>
 
-  {/* SEARCH FILTER */}
- <div className="mb-4 max-w-sm relative">
-        <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-        <input
-          type="text"
-          placeholder="Search team members..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        />
+        {/* SEARCH FILTER */}
+        <div className="mb-4 max-w-sm relative">
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search team members..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
       </div>
-</div>
 
 
       {/* TABLE */}
@@ -156,8 +160,16 @@ export default function Index() {
 
           {filteredTeams.map((t: any) => (
             <TableRow key={t.id}>
-              <TableCell>{t.name}</TableCell>
-              <TableCell>{t.designation}</TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? t.name
+                  : t.name_ja || t.name}
+              </TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? t.designation
+                  : t.designation_ja || t.designation}
+              </TableCell>
               <TableCell>{t.category}</TableCell>
               <TableCell className="space-x-2 text-center">
                 <Button title="View" size="icon" onClick={() => openView(t)}>
@@ -183,127 +195,160 @@ export default function Index() {
       </Table>
 
       {/* RIGHT DRAWER */}
-     <Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent side="right" className="w-[90%] sm:max-w-3xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Team Member"}
-        {mode === "edit" && "Edit Team Member"}
-        {mode === "view" && "Team Details"}
-      </SheetTitle>
-    </SheetHeader>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="right" className="w-[90%] sm:max-w-3xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Team Member"}
+              {mode === "edit" && "Edit Team Member"}
+              {mode === "view" && "Team Details"}
+            </SheetTitle>
+          </SheetHeader>
 
-    {/* ================= VIEW ================= */}
-    {mode === "view" ? (
-      <div className="space-y-4 mt-6">
-        <p><strong>Name:</strong> {current?.name}</p>
-        <p><strong>Designation:</strong> {current?.designation}</p>
-        <p><strong>Category:</strong> {current?.category}</p>
+          {/* ================= VIEW ================= */}
+          {mode === "view" ? (
+            <div className="space-y-4 mt-6">
+              <p>
+                <strong>Name:</strong>{" "}
+                {activeLang === "en"
+                  ? current?.name
+                  : current?.name_ja || current?.name}
+              </p>
+              <p><strong>Designation:</strong> {current?.designation}</p>
+              <p><strong>Category:</strong> {current?.category}</p>
 
-        {current?.description && (
-          <div>
-            <strong>Description:</strong>
-            <p className="mt-1">{current.description}</p>
-          </div>
-        )}
+              {current?.description && (
+                <div>
+                  <strong>Description:</strong>
+                  <p className="mt-1">{current.description}</p>
+                </div>
+              )}
 
-        {current?.image && (
-          <div>
-            <strong>Image:</strong>
-            <img
-              src={`/storage/${current.image}`}
-              className="mt-2 h-32 rounded-md border object-contain"
-            />
-          </div>
-        )}
-      </div>
-    ) : (
-      /* ================= ADD / EDIT ================= */
-      <div className="space-y-5 mt-6">
+              {current?.image && (
+                <div>
+                  <strong>Image:</strong>
+                  <img
+                    src={`/storage/${current.image}`}
+                    className="mt-2 h-32 rounded-md border object-contain"
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            /* ================= ADD / EDIT ================= */
+            <div className="space-y-5 mt-6">
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
 
-        {/* Name */}
-        <div className="space-y-1">
-          <label className="font-medium">Name</label>
-          <Input
-            placeholder="Name"
-            value={data.name}
-            onChange={(e) => setData("name", e.target.value)}
-          />
-        </div>
+              </div>
+              {/* Name */}
+              <div className="space-y-1">
+                <label className="font-medium">Name</label>
+                <Input
+                  placeholder="Name"
+                  value={activeLang === "en" ? data.name : data.name_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("name", e.target.value)
+                      : setData("name_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Designation */}
-        <div className="space-y-1">
-          <label className="font-medium">Designation</label>
-          <Input
-            placeholder="Designation"
-            value={data.designation}
-            onChange={(e) => setData("designation", e.target.value)}
-          />
-        </div>
+              {/* Designation */}
+              <div className="space-y-1">
+                <label className="font-medium">Designation</label>
+                <Input
+                  placeholder="Designation"
+                  value={activeLang === "en" ? data.designation : data.designation_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("designation", e.target.value)
+                      : setData("designation_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Category */}
-        <div className="space-y-1">
-          <label className="font-medium">Category</label>
-          <Select
-            value={data.category}
-            onValueChange={(v) => setData("category", v)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Category" />
-            </SelectTrigger>
-            <SelectContent>
-              {teamCategories.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+              {/* Category */}
+              <div className="space-y-1">
+                <label className="font-medium">Category</label>
+                <Select
+                  value={data.category}
+                  onValueChange={(v) => setData("category", v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {teamCategories.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-        {/* Description */}
-        <div className="space-y-1">
-          <label className="font-medium">Description</label>
-          <Textarea
-            placeholder="Description"
-            value={data.description}
-            onChange={(e) => setData("description", e.target.value)}
-          />
-        </div>
+              {/* Description */}
+              <div className="space-y-1">
+                <label className="font-medium">Description</label>
+                <Textarea
+                  placeholder="Description"
+                  value={activeLang === "en" ? data.description : data.description_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("description", e.target.value)
+                      : setData("description_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Existing Image (EDIT ONLY) */}
-        {mode === "edit" && current?.image && (
-          <div className="space-y-2">
-            <label className="font-medium">Existing Image</label>
-            <img
-              src={`/storage/${current.image}`}
-              className="h-32 rounded-md border object-contain"
-            />
-          </div>
-        )}
+              {/* Existing Image (EDIT ONLY) */}
+              {mode === "edit" && current?.image && (
+                <div className="space-y-2">
+                  <label className="font-medium">Existing Image</label>
+                  <img
+                    src={`/storage/${current.image}`}
+                    className="h-32 rounded-md border object-contain"
+                  />
+                </div>
+              )}
 
-        {/* Upload Image */}
-        <div className="space-y-1">
-          <label className="font-medium">
-            {mode === "edit" ? "Replace Image" : "Upload Image"}
-          </label>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              setData("image", e.target.files?.[0] || null)
-            }
-          />
-        </div>
+              {/* Upload Image */}
+              <div className="space-y-1">
+                <label className="font-medium">
+                  {mode === "edit" ? "Replace Image" : "Upload Image"}
+                </label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setData("image", e.target.files?.[0] || null)
+                  }
+                />
+              </div>
 
-        {/* Submit */}
-        <Button onClick={submit} className="w-full">
-          {mode === "add" ? "Add" : "Update"}
-        </Button>
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+              {/* Submit */}
+              <Button onClick={submit} className="w-full">
+                {mode === "add" ? "Add" : "Update"}
+              </Button>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
     </Authenticated>
   );

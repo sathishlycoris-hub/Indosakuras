@@ -26,9 +26,11 @@ class GreetingController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title'       => 'required|string|max:255',
+            'title'       => 'nullable|string|max:255',
+            'title_ja'        => 'nullable|string|max:255',
             'image'       => 'nullable|image|max:2048',
-            'description' => 'required|string',
+            'description_ja'  => 'nullable|string',
+            'description' => 'nullable|string',
         ]);
 
         if ($request->hasFile('image')) {
@@ -45,29 +47,36 @@ class GreetingController extends Controller
     /**
      * Update greeting (Sheet - Edit)
      */
-    public function update(Request $request, Greeting $greeting)
-    {
-        $data = $request->validate([
-            'title'       => 'required|string|max:255',
-            'image'       => 'nullable|image|max:2048',
-            'description' => 'required|string',
-        ]);
+   public function update(Request $request, Greeting $greeting)
+{
+    $data = $request->validate([
+        'title' => 'nullable|string|max:255',
+        'title_ja' => 'nullable|string|max:255',
+        'description' => 'nullable|string',
+        'description_ja' => 'nullable|string',
+        'image' => 'nullable|image|max:2048',
+    ]);
 
-        if ($request->hasFile('image')) {
-            // delete old image
-            if ($greeting->image) {
-                Storage::disk('public')->delete($greeting->image);
-            }
+    // If new image uploaded
+    if ($request->hasFile('image')) {
 
-            $data['image'] = $request->file('image')->store('greetings', 'public');
+        // Delete old image
+        if ($greeting->image) {
+            Storage::disk('public')->delete($greeting->image);
         }
 
-        $greeting->update($data);
-
-        return redirect()
-            ->route('admin.greetings.index')
-            ->with('success', 'Greeting updated successfully');
+        $data['image'] = $request->file('image')->store('greetings', 'public');
+    } else {
+        // VERY IMPORTANT: remove image from update data
+        unset($data['image']);
     }
+
+    $greeting->update($data);
+
+    return redirect()
+        ->route('admin.greetings.index')
+        ->with('success', 'Greeting updated successfully');
+}
 
     /**
      * Delete greeting

@@ -11,6 +11,9 @@ class Faq extends Model
     protected $fillable = [
         'question',
         'answer',
+        'question_ja',
+        'answer_ja',
+        
       
     ];
 }

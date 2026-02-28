@@ -25,14 +25,17 @@ import "react-quill/dist/quill.snow.css";
 interface ClientSection {
   type: "customer" | "alliance" | "contract" | "partner";
   name: string;
+  name_ja: string; //
 }
 
 interface Client {
   id: number;
   description: string;
+  description_ja?: string;
   sections: {
     section_type: string;
     name: string;
+    name_ja?: string;
   }[];
 }
 
@@ -40,12 +43,14 @@ export default function Index({ clients }: { clients: Client[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Client | null>(null);
   const [open, setOpen] = useState(false);
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const { data, setData, post, reset, processing } = useForm<{
     description: string;
+    description_ja: string;
     sections: ClientSection[];
   }>({
     description: "",
+    description_ja: "",
     sections: [],
   });
 
@@ -54,11 +59,12 @@ export default function Index({ clients }: { clients: Client[] }) {
     reset();
     setData({
       description: "",
+      description_ja: "",
       sections: [
-        { type: "customer", name: "" },
-        { type: "alliance", name: "" },
-        { type: "contract", name: "" },
-        { type: "partner", name: "" },
+        { type: "customer", name: "", name_ja: "" },
+        { type: "alliance", name: "", name_ja: "" },
+        { type: "contract", name: "", name_ja: "" },
+        { type: "partner", name: "", name_ja: "" },
       ],
     });
     setMode("add");
@@ -73,12 +79,14 @@ export default function Index({ clients }: { clients: Client[] }) {
     setOpen(true);
 
     setData({
-      description: client.description,
+      description: client.description ?? client.description_ja ?? "",
+      description_ja: client.description_ja ?? client.description ?? "",
       sections: client.sections.map((s) => ({
         type: s.section_type as ClientSection["type"],
         name: s.name,
+        name_ja: s.name_ja ?? ""
       })),
-    });
+    }); 
   };
 
   /* ================= OPEN VIEW ================= */
@@ -89,46 +97,48 @@ export default function Index({ clients }: { clients: Client[] }) {
   };
 
   /* ================= SAVE ================= */
- const submitAdd = () => {
-  post(route("admin.clients.store"), {
-    data: {
-      description: data.description,
-      sections: data.sections.map((s) => ({
-        type: s.type,
-        name: s.name,
-      })),
-    },
-    onSuccess: () => {
-      reset();
-      setOpen(false);
-    },
-  });
-};
-
-
-  const submitUpdate = () => {
-  if (!current) return;
-
-  router.post(
-    route("admin.clients.update", current.id),
-    {
-      _method: "PUT",
-      description: data.description,
-
-      //  explicitly map sections to plain objects
-      sections: data.sections.map((s) => ({
-        type: s.type,
-        name: s.name,
-      })),
-    },
-    {
+  const submitAdd = () => {
+    post(route("admin.clients.store"), {
+      data: {
+        description: data.description,
+        description_ja: data.description_ja,
+        sections: data.sections.map((s) => ({
+          type: s.type,
+          name: s.name,
+        })),
+      },
       onSuccess: () => {
         reset();
         setOpen(false);
       },
-    }
-  );
-};
+    });
+  };
+
+
+  const submitUpdate = () => {
+    if (!current) return;
+
+    router.post(
+      route("admin.clients.update", current.id),
+      {
+        _method: "PUT",
+        description: data.description,
+        description_ja: data.description_ja,
+
+        //  explicitly map sections to plain objects
+        sections: data.sections.map((s) => ({
+          type: s.type,
+          name: s.name,
+        })),
+      },
+      {
+        onSuccess: () => {
+          reset();
+          setOpen(false);
+        },
+      }
+    );
+  };
 
 
   /* ================= DELETE ================= */
@@ -140,12 +150,16 @@ export default function Index({ clients }: { clients: Client[] }) {
 
   /* ================= SECTION HELPERS ================= */
   const addSection = (type: ClientSection["type"]) => {
-    setData("sections", [...data.sections, { type, name: "" }]);
+    setData("sections", [...data.sections, { type, name: "", name_ja: "" }]);
   };
 
-  const updateSection = (index: number, value: string) => {
+  const updateSection = (
+    index: number,
+    field: "name" | "name_ja",
+    value: string
+  ) => {
     const updated = [...data.sections];
-    updated[index].name = value;
+    updated[index][field] = value;
     setData("sections", updated);
   };
 
@@ -163,8 +177,16 @@ export default function Index({ clients }: { clients: Client[] }) {
           <Input
             key={i}
             disabled={mode === "view"}
-            value={name}
-            onChange={(e) => updateSection(i, e.target.value)}
+            value={
+              activeLang === "en"
+                ? data.sections[i].name
+                : data.sections[i].name_ja
+            }
+            onChange={(e) =>
+              activeLang === "en"
+                ? updateSection(i, "name", e.target.value)
+                : updateSection(i, "name_ja", e.target.value)
+            }
             placeholder="Company name"
           />
         ))}
@@ -225,7 +247,10 @@ export default function Index({ clients }: { clients: Client[] }) {
                 <div
                   className="prose max-w-none mt-2"
                   dangerouslySetInnerHTML={{
-                    __html: current.description,
+                    __html:
+                      activeLang === "en"
+                        ? current.description
+                        : current.description_ja ?? ""
                   }}
                 />
               </div>
@@ -235,6 +260,24 @@ export default function Index({ clients }: { clients: Client[] }) {
           {/* ================= ADD / EDIT ================= */}
           {mode !== "view" && (
             <div className="space-y-6 mt-6">
+              <div className="flex gap-2 mb-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  EN
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  JA
+                </Button>
+              </div>
               {renderSection("customer", "Customer Companies")}
               {renderSection("alliance", "Alliance Companies")}
               {renderSection("contract", "Contract Companies")}
@@ -244,8 +287,12 @@ export default function Index({ clients }: { clients: Client[] }) {
                 <label className="text-sm font-medium">Description</label>
                 <ReactQuill
                   theme="snow"
-                  value={data.description}
-                  onChange={(v) => setData("description", v)}
+                  value={activeLang === "en" ? data.description : data.description_ja}
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("description", v)
+                      : setData("description_ja", v)
+                  }
                 />
               </div>
 
@@ -281,15 +328,15 @@ export default function Index({ clients }: { clients: Client[] }) {
             <TableRow key={c.id}>
               <TableCell>{i + 1}</TableCell>
               {["customer", "alliance", "contract", "partner"].map((type) => (
-                 
+
                 <TableCell key={type} className="w-50 max-w-48">
-  <div className="line-clamp-2">
-    {c.sections
-      .filter((s) => s.section_type === type)
-      .map((s) => s.name)
-      .join(", ") || "-"}
-  </div>
-</TableCell>
+                  <div className="line-clamp-2">
+                    {c.sections
+                      .filter((s) => s.section_type === type)
+                      .map((s) => s.name)
+                      .join(", ") || "-"}
+                  </div>
+                </TableCell>
               ))}
               <TableCell className="space-x-2 text-center">
                 <Button title="View" size="icon" onClick={() => openView(c)}>

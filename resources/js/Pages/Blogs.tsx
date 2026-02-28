@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import Serviceshead from "@/components/layout/Serviceshead";
-import { useLanguage } from "@/Contexts/LanguageContext";
+
 import { Link, usePage } from "@inertiajs/react";
 import { Calendar, ArrowRight, Tag } from "lucide-react";
 import AOS from "aos";
@@ -27,18 +27,14 @@ export default function Blogs() {
 
     return `${yyyy}/${mm}/${dd}`;
   };
-  const { language } = useLanguage();
+  const getValue = (en: string, ja?: string) => {
+  return lang === "ja" ? ja || en : en;
+};
 
   //  FIXED
-  const { blogs } = usePage<{ blogs: Blog[] }>().props;
+const { blogs, lang } = usePage<{ blogs: Blog[]; lang: "en" | "ja" }>().props;
 
-  const getTitle = (b: Blog) =>
-    language === "en" ? b.title : b.title_ja || b.title;
-
-  const getExcerpt = (b: Blog) =>
-    language === "en"
-      ? b.short_description
-      : b.short_description_ja || b.short_description;
+  
   AOS.init({
     duration: 800,
     easing: "ease-out-cubic",
@@ -52,12 +48,13 @@ export default function Blogs() {
       <section className="bg-primary py-20 text-white">
         <div className="container mx-auto px-4" data-aos="fade-right">
           <h1 className="text-4xl font-bold mb-4">
-            {language === "en" ? "Blogs" : "ブログ"}
+            {getValue("Blogs", "ブログ")}
           </h1>
           <p className="opacity-90">
-            {language === "en"
-              ? "Insights, updates, and thought leadership from our experts"
-              : "専門家によるインサイトと最新情報"}
+            {getValue(
+  "Insights, updates, and thought leadership from our experts",
+  "専門家によるインサイトと最新情報"
+)}
           </p>
         </div>
       </section>
@@ -86,15 +83,15 @@ export default function Blogs() {
                 </div>
 
                 <h3 className="font-semibold mb-2 line-clamp-1">
-                  {getTitle(b)}
+                  {getValue(b.title, b.title_ja)}
                 </h3>
 
                 <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                  {getExcerpt(b)}
+                  {getValue(b.short_description, b.short_description_ja)}
                 </p>
 
                 <span className="text-primary inline-flex items-center gap-1">
-                  {language === "en" ? "Read more" : "続きを読む"}
+                  {getValue("Read more", "続きを読む")}
                   <ArrowRight size={14} />
                 </span>
               </div>

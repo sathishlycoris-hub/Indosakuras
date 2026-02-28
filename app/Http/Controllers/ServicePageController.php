@@ -14,6 +14,7 @@ class ServicePageController extends Controller
     public function index()
     {
         return Inertia::render('Services', [
+             'lang' => app()->getLocale(),
             'seo' => Seo::where('page', 'services')->first(), 
             'services' => Service::select(
                 'id',
@@ -25,7 +26,7 @@ class ServicePageController extends Controller
                 ->orderBy('id')
                 ->get(),
 
-            'faqs' => Faq::select('id', 'question', 'answer')
+            'faqs' => Faq::select('id', 'question', 'question_ja','answer_ja', 'answer')
                 ->orderBy('id')
                 ->get(),
 

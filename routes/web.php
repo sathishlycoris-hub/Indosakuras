@@ -41,6 +41,7 @@ use App\Http\Controllers\PolicyPageController;
 use App\Http\Controllers\SolutionPageController;
 use App\Http\Controllers\ServicePageController;
 use App\Http\Controllers\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

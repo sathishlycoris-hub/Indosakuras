@@ -26,15 +26,17 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'description' => 'required|string',
-
-            'sections' => 'required|array|min:1',
-            'sections.*.type' => 'required|in:customer,alliance,contract,partner',
-            'sections.*.name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'description_ja' => 'nullable|string',
+            'sections' => 'nullable|array|min:1',
+            'sections.*.type' => 'nullable|in:customer,alliance,contract,partner',
+            'sections.*.name' => 'nullable|string|max:255',
+            'sections.*.name_ja' => 'nullable|string|max:255',
         ]);
 
         $client = Client::create([
             'description' => $data['description'],
+            'description_ja' => $data['description_ja'] ?? null,
         ]);
 
         foreach ($data['sections'] as $index => $section) {
@@ -42,6 +44,7 @@ class ClientController extends Controller
                 'client_id' => $client->id,
                 'section_type' => $section['type'],
                 'name' => $section['name'],
+                'name_ja' => $section['name_ja'] ?? null,
                 'sort_order' => $index,
             ]);
         }
@@ -57,15 +60,17 @@ class ClientController extends Controller
     public function update(Request $request, Client $client)
     {
         $data = $request->validate([
-            'description' => 'required|string',
-
-            'sections' => 'required|array|min:1',
-            'sections.*.type' => 'required|in:customer,alliance,contract,partner',
-            'sections.*.name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'description_ja' => 'nullable|string',
+            'sections' => 'nullable|array|min:1',
+            'sections.*.type' => 'nullable|in:customer,alliance,contract,partner',
+            'sections.*.name' => 'nullable|string|max:255',
+            'sections.*.name_ja' => 'nullable|string|max:255',
         ]);
 
         $client->update([
             'description' => $data['description'],
+            'description_ja' => $data['description_ja'],
         ]);
 
         // Replace sections (same as Jobs)
@@ -76,6 +81,7 @@ class ClientController extends Controller
                 'client_id' => $client->id,
                 'section_type' => $section['type'],
                 'name' => $section['name'],
+                'name_ja' => $section['name_ja'] ?? null,
                 'sort_order' => $index,
             ]);
         }

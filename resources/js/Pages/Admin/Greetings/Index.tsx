@@ -25,10 +25,13 @@ interface Greeting {
   id: number;
   title: string;
   description: string;
+  title_ja?: string | null;
+  description_ja?: string | null;
   image?: string | null;
 }
 
 export default function Index({ greetings }: { greetings: Greeting[] }) {
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Greeting | null>(null);
   const [open, setOpen] = useState(false);
@@ -37,9 +40,13 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
     title: string;
     description: string;
     image: File | null;
+    title_ja?: string;
+    description_ja?: string;
   }>({
     title: "",
     description: "",
+    description_ja: "",
+    title_ja: "",
     image: null,
   });
 
@@ -49,20 +56,24 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
     setMode("add");
     setCurrent(null);
     setOpen(true);
+    setActiveLang("en");
   };
 
   /* ================= OPEN EDIT ================= */
-  const openEdit = (item: Greeting) => {
-    setMode("edit");
-    setCurrent(item);
-    setOpen(true);
+ const openEdit = (item: Greeting) => {
+  setMode("edit");
+  setCurrent(item);
+  setActiveLang("en"); // reset language tab
+  setOpen(true);
 
-    setData({
-      title: item.title,
-      description: item.description,
-      image: null,
-    });
-  };
+  setData({
+    title: item.title,
+    description: item.description,
+    title_ja: item.title_ja || "",
+    description_ja: item.description_ja || "",
+    image: null,
+  });
+};
 
   /* ================= OPEN VIEW ================= */
   const openView = (item: Greeting) => {
@@ -120,119 +131,142 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
       </div>
 
       {/* ================= SHEET ================= */}
-     <Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Greeting"}
-        {mode === "edit" && "Edit Greeting"}
-        {mode === "view" && "Greeting Details"}
-      </SheetTitle>
-    </SheetHeader>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Greeting"}
+              {mode === "edit" && "Edit Greeting"}
+              {mode === "view" && "Greeting Details"}
+            </SheetTitle>
+          </SheetHeader>
 
-    {/* ================= VIEW ================= */}
-    {mode === "view" && current && (
-      <div className="space-y-6 mt-6">
-        <div>
-          <strong>Title</strong>
-          <p className="mt-1">{current.title}</p>
-        </div>
+          {/* ================= VIEW ================= */}
+          {mode === "view" && current && (
+            <div className="space-y-6 mt-6">
+              <div>
+                <strong>Title</strong>
+                <p className="mt-1">{current.title}</p>
+              </div>
 
-        <div>
-          <strong>Description</strong>
-          <div
-            className="prose max-w-none mt-2 text-muted-foreground"
-            dangerouslySetInnerHTML={{
-              __html: current.description,
-            }}
-          />
-        </div>
+              <div>
+                <strong>Description</strong>
+                <div
+                  className="prose max-w-none mt-2 text-muted-foreground"
+                  dangerouslySetInnerHTML={{
+                    __html: current.description,
+                  }}
+                />
+              </div>
 
-        {current.image && (
-          <div>
-            <strong>Image</strong>
-            <img
-              src={`/storage/${current.image}`}
-              alt="Greeting"
-              className="mt-2 w-64 rounded border object-contain"
-            />
-          </div>
-        )}
-      </div>
-    )}
+              {current.image && (
+                <div>
+                  <strong>Image</strong>
+                  <img
+                    src={`/storage/${current.image}`}
+                    alt="Greeting"
+                    className="mt-2 w-64 rounded border object-contain"
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
-    {/* ================= ADD / EDIT ================= */}
-    {mode !== "view" && (
-      <div className="space-y-5 mt-6">
+          {/* ================= ADD / EDIT ================= */}
+          {mode !== "view" && (
+            <div className="space-y-5 mt-6">
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
 
-        {/* Title */}
-        <div className="space-y-1">
-          <label className="font-medium">Title</label>
-          <Input
-            placeholder="Title"
-            value={data.title}
-            onChange={(e) => setData("title", e.target.value)}
-          />
-        </div>
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+              </div>
 
-        {/* Description */}
-        <div className="space-y-2">
-          <label className="font-medium">Description</label>
-          <ReactQuill
-            theme="snow"
-            value={data.description}
-            onChange={(value) => setData("description", value)}
-            className="bg-white"
-          />
-        </div>
+              {/* Title */}
+              <div className="space-y-1">
+                <label className="font-medium">Title</label>
+                <Input
+                  value={activeLang === "en" ? data.title : data.title_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Existing Image (EDIT ONLY) */}
-        {mode === "edit" && current?.image && (
-          <div className="space-y-2">
-            <label className="font-medium">Existing Image</label>
-            <img
-              src={`/storage/${current.image}`}
-              alt="Existing"
-              className="h-32 rounded-md border object-contain"
-            />
-          </div>
-        )}
+              {/* Description */}
+              <div className="space-y-2">
+                <label className="font-medium">Description</label>
+                <ReactQuill
+                  theme="snow"
+                  value={activeLang === "en" ? data.description : data.description_ja}
+                  onChange={(value) =>
+                    activeLang === "en"
+                      ? setData("description", value)
+                      : setData("description_ja", value)
+                  }
+                />
+              </div>
 
-        {/* Upload Image */}
-        <div className="space-y-1">
-          <label className="font-medium">
-            {mode === "edit" ? "Replace Image" : "Upload Image"}
-          </label>
+              {/* Existing Image (EDIT ONLY) */}
+              {mode === "edit" && current?.image && (
+                <div className="space-y-2">
+                  <label className="font-medium">Existing Image</label>
+                  <img
+                    src={`/storage/${current.image}`}
+                    alt="Existing"
+                    className="h-32 rounded-md border object-contain"
+                  />
+                </div>
+              )}
 
-          <div className="flex items-center gap-3">
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={(e) =>
-                setData("image", e.target.files?.[0] ?? null)
-              }
-            />
+              {/* Upload Image */}
+              <div className="space-y-1">
+                <label className="font-medium">
+                  {mode === "edit" ? "Replace Image" : "Upload Image"}
+                </label>
 
-            <span className="text-xs text-gray-500 whitespace-nowrap">
-              Max: 2048 KB
-            </span>
-          </div>
-        </div>
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      setData("image", e.target.files?.[0] ?? null)
+                    }
+                  />
 
-        {/* Submit */}
-        <Button
-          className="w-full"
-          disabled={processing}
-          onClick={mode === "edit" ? submitUpdate : submitAdd}
-        >
-          {mode === "edit"
-            ? "Update Greeting"
-            : "Save Greeting"}
-        </Button>
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
+                    Max: 2048 KB
+                  </span>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <Button
+                className="w-full"
+                disabled={processing}
+                onClick={mode === "edit" ? submitUpdate : submitAdd}
+              >
+                {mode === "edit"
+                  ? "Update Greeting"
+                  : "Save Greeting"}
+              </Button>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
 
       {/* ================= TABLE ================= */}
@@ -252,7 +286,11 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
           {greetings.map((item, i) => (
             <TableRow key={item.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{item.title}</TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? item.title
+                  : item.title_ja || item.title}
+              </TableCell>
               <TableCell>
                 {item.image && (
                   <img

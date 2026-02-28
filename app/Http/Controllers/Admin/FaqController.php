@@ -25,9 +25,11 @@ class FaqController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'question'   => 'required|string',
-            'answer'     => 'required|string',
-            
+            'question'   => 'nullable|string',
+            'question_ja'   => 'nullable|string',
+            'answer_ja'     => 'nullable|string',
+            'answer'     => 'nullable|string',
+            'sort_order'   => 'nullable|integer',
         ]);
 
         Faq::create($data);
@@ -43,10 +45,12 @@ class FaqController extends Controller
     public function update(Request $request, Faq $faq)
     {
         $data = $request->validate([
-            'question'   => 'required|string',
-            'answer'     => 'required|string',
-           
-        ]);
+            'question'   => 'nullable|string',
+            'question_ja'   => 'nullable|string',
+            'answer_ja'     => 'nullable|string',
+            'answer'     => 'nullable|string',
+            'sort_order'   => 'nullable|integer',
+        ]); 
 
         $faq->update($data);
 

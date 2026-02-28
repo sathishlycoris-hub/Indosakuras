@@ -31,24 +31,62 @@ import { Pencil, Trash2, Plus, Search } from "lucide-react";
 
 interface Seminar {
   id: number;
+
   title: string;
+  title_ja?: string;
+
   description?: string;
+  description_ja?: string;
+
+  location?: string;
+  location_ja?: string;
+
+  organizer?: string;
+  organizer_ja?: string;
+
   date: string;
   time: string;
-  location?: string;
-  organizer?: string;
+
   tags?: string[] | string;
+
   status: "upcoming" | "archived";
   image?: string | null;
+
+  participation_fee?: string;
+  participation_fee_ja?: string;
+
+  sponsorship?: string;
+  sponsorship_ja?: string;
+
+  cooperation?: string;
+  cooperation_ja?: string;
 }
 interface SeminarForm {
   title: string;
+  title_ja: string;
+
   description: string;
+  description_ja: string;
+
   location: string;
+  location_ja: string;
+
   organizer: string;
+  organizer_ja: string;
+
   tags: string;
   date: string;
   time: string;
+
+  participation_fee: string;
+  participation_fee_ja: string;
+
+  sponsorship: string;
+  sponsorship_ja: string;
+
+  cooperation: string;
+  cooperation_ja: string;
+
   status: "upcoming" | "archived";
   image: File | null;
 }
@@ -56,12 +94,29 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
   const [editItem, setEditItem] = useState<Seminar | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const { data, setData, post, reset, processing } = useForm<SeminarForm>({
     title: "",
+    title_ja: "",
+
     description: "",
+    description_ja: "",
+
     location: "",
+    location_ja: "",
+
     organizer: "",
+    organizer_ja: "",
+
+    participation_fee: "",
+    participation_fee_ja: "",
+
+    sponsorship: "",
+    sponsorship_ja: "",
+
+    cooperation: "",
+    cooperation_ja: "",
+
     tags: "",
     date: "",
     time: "",
@@ -102,14 +157,32 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
 
     setData({
       title: item.title,
+      title_ja: item.title_ja ?? "",
+
       description: item.description ?? "",
+      description_ja: item.description_ja ?? "",
+
       location: item.location ?? "",
+      location_ja: item.location_ja ?? "",
+
       organizer: item.organizer ?? "",
-      tags: Array.isArray(item.tags) ? item.tags.join(", ") : item.tags ?? "",
+      organizer_ja: item.organizer_ja ?? "",
+
+      participation_fee: item.participation_fee ?? "",
+      participation_fee_ja: item.participation_fee_ja ?? "",
+      sponsorship: item.sponsorship ?? "",
+      sponsorship_ja: item.sponsorship_ja ?? "",
+      cooperation: item.cooperation ?? "",
+      cooperation_ja: item.cooperation_ja ?? "",
+
+      tags: Array.isArray(item.tags)
+        ? item.tags.join(", ")
+        : item.tags ?? "",
+
       date: item.date,
       time: item.time,
       status: item.status,
-      image: null, // never preload file inputs
+      image: null,
     });
   };
 
@@ -174,14 +247,38 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
 
               {/* ================= FORM ================= */}
               <div className="space-y-5 mt-6">
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={activeLang === "en" ? "default" : "outline"}
+                    onClick={() => setActiveLang("en")}
+                  >
+                    English
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant={activeLang === "ja" ? "default" : "outline"}
+                    onClick={() => setActiveLang("ja")}
+                  >
+                    Japanese
+                  </Button>
+                </div>
 
                 {/* Title */}
                 <div className="space-y-1">
                   <label className="font-medium">Title</label>
                   <Input
-                    placeholder="Title"
-                    value={data.title}
-                    onChange={(e) => setData("title", e.target.value)}
+                    value={
+                      activeLang === "en"
+                        ? data.title
+                        : data.title_ja || data.title
+                    }
+                    onChange={(e) =>
+                      activeLang === "en"
+                        ? setData("title", e.target.value)
+                        : setData("title_ja", e.target.value)
+                    }
                   />
                 </div>
 
@@ -189,9 +286,16 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
                 <div className="space-y-1">
                   <label className="font-medium">Description</label>
                   <Textarea
-                    placeholder="Description"
-                    value={data.description}
-                    onChange={(e) => setData("description", e.target.value)}
+                    value={
+                      activeLang === "en"
+                        ? data.description
+                        : data.description_ja
+                    }
+                    onChange={(e) =>
+                      activeLang === "en"
+                        ? setData("description", e.target.value)
+                        : setData("description_ja", e.target.value)
+                    }
                   />
                 </div>
 
@@ -219,9 +323,16 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
                 <div className="space-y-1">
                   <label className="font-medium">Location</label>
                   <Input
-                    placeholder="Location"
-                    value={data.location}
-                    onChange={(e) => setData("location", e.target.value)}
+                    value={
+                      activeLang === "en"
+                        ? data.location
+                        : data.location_ja
+                    }
+                    onChange={(e) =>
+                      activeLang === "en"
+                        ? setData("location", e.target.value)
+                        : setData("location_ja", e.target.value)
+                    }
                   />
                 </div>
 
@@ -229,9 +340,64 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
                 <div className="space-y-1">
                   <label className="font-medium">Organizer</label>
                   <Input
-                    placeholder="Organizer"
-                    value={data.organizer}
-                    onChange={(e) => setData("organizer", e.target.value)}
+                    value={
+                      activeLang === "en"
+                        ? data.organizer
+                        : data.organizer_ja
+                    }
+                    onChange={(e) =>
+                      activeLang === "en"
+                        ? setData("organizer", e.target.value)
+                        : setData("organizer_ja", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-medium">Participation Fee</label>
+                  <Input
+                    value={
+                      activeLang === "en"
+                        ? data.participation_fee
+                        : data.participation_fee_ja
+                    }
+                    onChange={(e) =>
+                      activeLang === "en"
+                        ? setData("participation_fee", e.target.value)
+                        : setData("participation_fee_ja", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-medium">Cooperation</label>
+                  <Input
+                    value={
+                      activeLang === "en"
+                        ? data.cooperation
+                        : data.cooperation_ja
+                    }
+                    onChange={(e) =>
+                      activeLang === "en"
+                        ? setData("cooperation", e.target.value)
+                        : setData("cooperation_ja", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-medium">Sponsorship</label>
+                  <Input
+                    value={
+                      activeLang === "en"
+                        ? data.sponsorship
+                        : data.sponsorship_ja
+                    }
+                    onChange={(e) =>
+                      activeLang === "en"
+                        ? setData("sponsorship", e.target.value)
+                        : setData("sponsorship_ja", e.target.value)
+                    }
                   />
                 </div>
 
