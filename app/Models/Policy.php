@@ -8,9 +8,12 @@ class Policy extends Model
 {
     protected $fillable = [
         'title',
+        'title_ja',
         'slug',
         'intro',
+        'intro_ja',
         'sort_order',
+
     ];
 
     public function sections()

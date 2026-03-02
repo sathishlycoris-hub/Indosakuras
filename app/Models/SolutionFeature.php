@@ -12,8 +12,10 @@ class SolutionFeature extends Model
     protected $fillable = [
         'solution_id',
         'title',
+        'title_ja',
         'subtitle',
         'description',
+        'description_ja',
         'image',
         'sort_order',
     ];

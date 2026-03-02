@@ -16,41 +16,45 @@ class ServiceIndustryController extends Controller
         ]);
     }
 
-   public function store(Request $request)
-{
-    $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'sort_order' => 'nullable|integer',
-    ]);
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'title_ja' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'description_ja' => 'nullable|string',
+            'sort_order' => 'nullable|integer',
+        ]);
 
-    $data['sort_order'] = $data['sort_order'] ?? 0;
+        $data['sort_order'] = $data['sort_order'] ?? 0;
 
-    ServiceIndustry::create($data);
+        ServiceIndustry::create($data);
 
-    return back()->with('success', 'ServiceIndustry Saved successfully');
-}
+        return back()->with('success', 'ServiceIndustry Saved successfully');
+    }
 
-   public function update(Request $request, ServiceIndustry $serviceIndustry)
-{
-    $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'sort_order' => 'nullable|integer',
-    ]);
+    public function update(Request $request, ServiceIndustry $serviceIndustry)
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'title_ja' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'description_ja' => 'nullable|string',
+            'sort_order' => 'nullable|integer',
+        ]);
 
-    $data['sort_order'] = $data['sort_order'] ?? 0;
+        $data['sort_order'] = $data['sort_order'] ?? 0;
 
-    $serviceIndustry->update($data);
+        $serviceIndustry->update($data);
 
-    return back()->with('success', 'ServiceIndustry Updated successfully');
-}
+        return back()->with('success', 'ServiceIndustry Updated successfully');
+    }
 
 
     public function destroy(ServiceIndustry $serviceIndustry)
     {
         $serviceIndustry->delete();
 
-       return back()->with('success', 'ServiceIndustry Deleted successfully');
+        return back()->with('success', 'ServiceIndustry Deleted successfully');
     }
 }

@@ -168,19 +168,20 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
               <div className="flex gap-2">
                 <Button
                   type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+                <Button
+                  type="button"
                   variant={activeLang === "en" ? "default" : "outline"}
                   onClick={() => setActiveLang("en")}
                 >
                   English
                 </Button>
 
-                <Button
-                  type="button"
-                  variant={activeLang === "ja" ? "default" : "outline"}
-                  onClick={() => setActiveLang("ja")}
-                >
-                  Japanese
-                </Button>
+                
               </div>
               {/* <Input
                 placeholder="Title"
@@ -201,6 +202,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
               <div>
                 <label className="text-sm font-medium">Content</label>
                 <ReactQuill
+                key={activeLang}
                   value={activeLang === "en" ? data.content : data.content_ja}
                   onChange={(v) =>
                     activeLang === "en"

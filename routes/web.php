@@ -108,8 +108,15 @@ Route::middleware('auth')->group(function () {
 // Route::get('/blogs/5', fn() => Inertia::render('Blogs/Blog5'));
 
 Route::post('/set-language', function (\Illuminate\Http\Request $request) {
-    session(['lang' => $request->lang]);
-    return back();
+
+    $lang = $request->lang;
+
+    session(['lang' => $lang]);
+
+    app()->setLocale($lang);
+
+    return redirect()->back();
+
 })->name('set.language');
 
 /* Contact & Utility */

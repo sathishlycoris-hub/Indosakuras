@@ -12,7 +12,9 @@ class ServiceBenefit extends Model
     protected $fillable = [
         'service_id',
         'title',
+        'title_ja',
         'description',
+        'description_ja',
         'sort_order',
     ];
 

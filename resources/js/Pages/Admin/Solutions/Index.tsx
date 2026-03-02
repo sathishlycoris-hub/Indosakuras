@@ -26,25 +26,33 @@ import "react-quill/dist/quill.snow.css";
 
 interface Feature {
   title: string;
+  title_ja?: string;  // NEW
   subtitle: string;   // NEW
   description: string;
+  description_ja?: string;  // NEW
   image?: string;     // NEW
 }
 
 interface UseCase {
   title: string;
+  title_ja?: string;
   subtitle?: string;
+  subtitle_ja?: string;
   description: string;
 }
 
 interface Industry {
   title: string;
+  title_ja?: string;
   description: string;
+  description_ja?: string;
 }
 
 interface CaseStudy {
   title: string;
+  title_ja?: string;
   client?: string;
+  client_ja?: string;
   summary?: string;
   result?: string;
 }
@@ -52,9 +60,12 @@ interface CaseStudy {
 interface Solution {
   id: number;
   title: string;
+  title_ja?: string;
   slug: string;
   subtitle?: string;
+  subtitle_ja?: string;
   hero_description?: string;
+  hero_description_ja?: string;
   hero_image?: null;
   features: Feature[];
   use_cases: UseCase[];
@@ -69,16 +80,25 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
   const [current, setCurrent] = useState<Solution | null>(null);
   const [open, setOpen] = useState(false);
 
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
+
   const { data, setData, post, reset, processing } = useForm({
     title: "",
-    slug: "",
+    title_ja: "",
+
     subtitle: "",
+    subtitle_ja: "",
+
     hero_description: "",
+    hero_description_ja: "",
+
+    slug: "",
     hero_image: null as File | null,
-    features: [] as Feature[],
-    use_cases: [] as UseCase[],
-    industries: [] as Industry[],
-    case_studies: [] as CaseStudy[],
+
+    features: [] as any[],
+    use_cases: [] as any[],
+    industries: [] as any[],
+    case_studies: [] as any[],
   });
 
   /* ================= OPEN ================= */
@@ -97,9 +117,13 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
 
     setData({
       title: solution.title,
+      title_ja: solution.title_ja || "",
+
       slug: solution.slug,
       subtitle: solution.subtitle || "",
+      subtitle_ja: solution.subtitle_ja || "",
       hero_description: solution.hero_description || "",
+      hero_description_ja: solution.hero_description_ja || "",
       hero_image: null,
       features: solution.features || [],
       use_cases: solution.use_cases || [],
@@ -121,10 +145,17 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
     const form = new FormData();
 
     // basic fields
-    form.append("title", data.title);
     form.append("slug", data.slug);
+
+
+    form.append("title", data.title);
+    form.append("title_ja", data.title_ja);
+
     form.append("subtitle", data.subtitle);
+    form.append("subtitle_ja", data.subtitle_ja);
+
     form.append("hero_description", data.hero_description);
+    form.append("hero_description_ja", data.hero_description_ja);
 
     // hero image ONLY
     if (data.hero_image) {
@@ -152,17 +183,22 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
     const form = new FormData();
 
     form.append("_method", "PUT");
-    form.append("title", data.title);
-    form.append("slug", data.slug);
-    form.append("subtitle", data.subtitle);
-    form.append("hero_description", data.hero_description);
 
-    // hero image (only if user selected new one)
+    form.append("slug", data.slug);
+
+    form.append("title", data.title);
+    form.append("title_ja", data.title_ja);
+
+    form.append("subtitle", data.subtitle);
+    form.append("subtitle_ja", data.subtitle_ja);
+
+    form.append("hero_description", data.hero_description);
+    form.append("hero_description_ja", data.hero_description_ja);
+
     if (data.hero_image) {
       form.append("hero_image", data.hero_image);
     }
 
-    // relational data as JSON
     form.append("features", JSON.stringify(data.features));
     form.append("use_cases", JSON.stringify(data.use_cases));
     form.append("case_studies", JSON.stringify(data.case_studies));
@@ -175,7 +211,6 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
       },
     });
   };
-
 
 
   /* ================= DELETE ================= */
@@ -228,337 +263,458 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
       </div>
 
       {/* ================= SHEET ================= */}
-     <Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent className="w-[95%] sm:max-w-5xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Solution"}
-        {mode === "edit" && "Edit Solution"}
-        {mode === "view" && "Solution Details"}
-      </SheetTitle>
-    </SheetHeader>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="w-[95%] sm:max-w-5xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Solution"}
+              {mode === "edit" && "Edit Solution"}
+              {mode === "view" && "Solution Details"}
+            </SheetTitle>
+          </SheetHeader>
 
-    {/* ================= ADD / EDIT ================= */}
-    {mode !== "view" && (
-      <div className="space-y-6 mt-6">
+          {/* ================= ADD / EDIT ================= */}
+          {mode !== "view" && (
+            <div className="space-y-6 mt-6">
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
 
-        {/* Title */}
-        <div className="space-y-1">
-          <label className="font-medium">Title</label>
-          <Input
-            placeholder="Title"
-            value={data.title}
-            onChange={(e) => setData("title", e.target.value)}
-          />
-        </div>
 
-        {/* Slug */}
-        <div className="space-y-1">
-          <label className="font-medium">Slug</label>
-          <Input
-            placeholder="sourcebytes-ai"
-            value={data.slug}
-            onChange={(e) => setData("slug", e.target.value)}
-          />
-        </div>
+              </div>
+              {/* Title */}
+              <div className="space-y-1">
+                <label className="font-medium">Title</label>
+                <Input
+                  placeholder="Title"
+                  value={activeLang === "en" ? data.title : data.title_ja || ""}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Subtitle */}
-        <div className="space-y-1">
-          <label className="font-medium">Subtitle</label>
-          <Input
-            placeholder="Subtitle"
-            value={data.subtitle}
-            onChange={(e) => setData("subtitle", e.target.value)}
-          />
-        </div>
+              {/* Slug */}
+              <div className="space-y-1">
+                <label className="font-medium">Slug</label>
+                <Input
+                  placeholder="sourcebytes-ai"
+                  value={data.slug}
+                  onChange={(e) => setData("slug", e.target.value)}
+                />
+              </div>
 
-        {/* Hero Description */}
-        <div className="space-y-2">
-          <label className="font-medium">Hero Description</label>
-          <ReactQuill
-            theme="snow"
-            value={data.hero_description}
-            onChange={(v) => setData("hero_description", v)}
-          />
-        </div>
+              {/* Subtitle */}
+              <div className="space-y-1">
+                <label className="font-medium">Subtitle</label>
+                <Input
+                  value={activeLang === "en" ? data.subtitle : data.subtitle_ja || ""}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("subtitle", e.target.value)
+                      : setData("subtitle_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Existing Hero Image (EDIT ONLY) */}
-        {mode === "edit" && current?.hero_image && (
-          <div className="space-y-2">
-            <label className="font-medium">Existing Hero Image</label>
-            <img
-              src={`/storage/${current.hero_image}`}
-              alt="Hero"
-              className="h-32 rounded-md border object-contain"
-            />
-          </div>
-        )}
-
-        {/* Upload Hero Image */}
-        <div className="space-y-1">
-          <label className="font-medium">
-            {mode === "edit" ? "Replace Hero Image" : "Upload Hero Image"}
-          </label>
-
-          <div className="flex items-center gap-3">
-            <Input
-              type="file"
-              accept="image/*"
-              className="w-64"
-              onChange={(e) =>
-                setData("hero_image", e.target.files?.[0] || null)
-              }
-            />
-
-            <span className="text-xs text-gray-500 whitespace-nowrap">
-              Max: 2048 KB
-            </span>
-          </div>
-        </div>
-
-        {/* FEATURES */}
-        <SectionBlock
-          title="Features"
-          items={data.features}
-          onAdd={() =>
-            addItem("features", { title: "", description: "" })
-          }
-          onRemove={(i) => removeItem("features", i)}
-          render={(item, i) => (
-            <div className="space-y-2">
-              <Input
-                placeholder="Feature Title"
-                value={item.title}
-                onChange={(e) =>
-                  updateItem("features", i, "title", e.target.value)
-                }
-              />
-
+              {/* Hero Description */}
               <ReactQuill
+                key={activeLang}
                 theme="snow"
-                value={item.description || ""}
+                value={
+                  activeLang === "en"
+                    ? data.hero_description
+                    : data.hero_description_ja
+                }
                 onChange={(v) =>
-                  updateItem("features", i, "description", v)
+                  activeLang === "en"
+                    ? setData("hero_description", v)
+                    : setData("hero_description_ja", v)
                 }
               />
+
+              {/* Existing Hero Image (EDIT ONLY) */}
+              {mode === "edit" && current?.hero_image && (
+                <div className="space-y-2">
+                  <label className="font-medium">Existing Hero Image</label>
+                  <img
+                    src={`/storage/${current.hero_image}`}
+                    alt="Hero"
+                    className="h-32 rounded-md border object-contain"
+                  />
+                </div>
+              )}
+
+              {/* Upload Hero Image */}
+              <div className="space-y-1">
+                <label className="font-medium">
+                  {mode === "edit" ? "Replace Hero Image" : "Upload Hero Image"}
+                </label>
+
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    className="w-64"
+                    onChange={(e) =>
+                      setData("hero_image", e.target.files?.[0] || null)
+                    }
+                  />
+
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
+                    Max: 2048 KB
+                  </span>
+                </div>
+              </div>
+
+              {/* FEATURES */}
+              <SectionBlock
+                title="Features"
+                items={data.features}
+                onAdd={() =>
+                  addItem("features", {
+                    title: "",
+                    title_ja: "",
+                    description: "",
+                    description_ja: "",
+                  })
+                }
+                onRemove={(i) => removeItem("features", i)}
+                render={(item, i) => (
+                  <div className="space-y-2">
+                    <Input
+                      value={
+                        activeLang === "en" ? item.title : item.title_ja || ""
+                      }
+                      onChange={(e) =>
+                        updateItem(
+                          "features",
+                          i,
+                          activeLang === "en" ? "title" : "title_ja",
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <ReactQuill
+                      key={`${activeLang}-${i}`}
+                      theme="snow"
+                      value={
+                        activeLang === "en"
+                          ? item.description || ""
+                          : item.description_ja || ""
+                      }
+                      onChange={(v) =>
+                        updateItem(
+                          "features",
+                          i,
+                          activeLang === "en" ? "description" : "description_ja",
+                          v
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              />
+
+              {/* USE CASES */}
+              <SectionBlock
+                title="Use Cases"
+                items={data.use_cases}
+                onAdd={() =>
+                  addItem("use_cases", {
+                    title: "",
+                    title_ja: "",
+                    subtitle: "",
+                    subtitle_ja: "",
+                    description: "",
+                    description_ja: "",
+                  })
+                }
+                onRemove={(i) => removeItem("use_cases", i)}
+                render={(item, i) => (
+                  <div className="space-y-2">
+                    <Input
+                      value={activeLang === "en" ? item.title : item.title_ja || ""}
+                      onChange={(e) =>
+                        updateItem(
+                          "use_cases",
+                          i,
+                          activeLang === "en" ? "title" : "title_ja",
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <ReactQuill
+                      key={`${activeLang}-uc-${i}`}
+                      theme="snow"
+                      value={
+                        activeLang === "en"
+                          ? item.description || ""
+                          : item.description_ja || ""
+                      }
+                      onChange={(v) =>
+                        updateItem(
+                          "use_cases",
+                          i,
+                          activeLang === "en" ? "description" : "description_ja",
+                          v
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              />
+
+              {/* CASE STUDIES */}
+              <SectionBlock
+                title="Case Studies"
+                items={data.case_studies}
+                onAdd={() =>
+                  addItem("case_studies", {
+                    title: "",
+                    title_ja: "",
+                    summary: "",
+                    summary_ja: "",
+                  })
+                }
+                onRemove={(i) => removeItem("case_studies", i)}
+                render={(item, i) => (
+                  <div className="space-y-2">
+                    <Input
+                      value={activeLang === "en" ? item.title : item.title_ja || ""}
+                      onChange={(e) =>
+                        updateItem(
+                          "case_studies",
+                          i,
+                          activeLang === "en" ? "title" : "title_ja",
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <ReactQuill
+                      key={`${activeLang}-cs-${i}`}
+                      theme="snow"
+                      value={
+                        activeLang === "en"
+                          ? item.summary || ""
+                          : item.summary_ja || ""
+                      }
+                      onChange={(v) =>
+                        updateItem(
+                          "case_studies",
+                          i,
+                          activeLang === "en" ? "summary" : "summary_ja",
+                          v
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              />
+
+              {/* INDUSTRIES */}
+              <SectionBlock
+                title="Industries We Serve"
+                items={data.industries}
+                onAdd={() =>
+                  addItem("industries", {
+                    title: "",
+                    title_ja: "",
+                    description: "",
+                    description_ja: "",
+                  })
+                }
+                onRemove={(i) => removeItem("industries", i)}
+                render={(item, i) => (
+                  <div className="space-y-2">
+                    <Input
+                      value={activeLang === "en" ? item.title : item.title_ja || ""}
+                      onChange={(e) =>
+                        updateItem(
+                          "industries",
+                          i,
+                          activeLang === "en" ? "title" : "title_ja",
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <Input
+                      value={
+                        activeLang === "en"
+                          ? item.description
+                          : item.description_ja || ""
+                      }
+                      onChange={(e) =>
+                        updateItem(
+                          "industries",
+                          i,
+                          activeLang === "en"
+                            ? "description"
+                            : "description_ja",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              />
+
+              {/* Submit */}
+              <Button
+                disabled={processing}
+                className="w-full"
+                onClick={mode === "edit" ? submitUpdate : submitAdd}
+              >
+                {mode === "edit" ? "Update Solution" : "Save Solution"}
+              </Button>
             </div>
           )}
-        />
 
-        {/* USE CASES */}
-        <SectionBlock
-          title="Use Cases"
-          items={data.use_cases}
-          onAdd={() =>
-            addItem("use_cases", { title: "", description: "" })
-          }
-          onRemove={(i) => removeItem("use_cases", i)}
-          render={(item, i) => (
-            <div className="space-y-2">
-              <Input
-                placeholder="Use Case Title"
-                value={item.title}
-                onChange={(e) =>
-                  updateItem("use_cases", i, "title", e.target.value)
-                }
-              />
+          {/* ================= VIEW ================= */}
+          {mode === "view" && current && (
+            <div className="space-y-6 mt-6">
 
-              <ReactQuill
-                theme="snow"
-                value={item.description || ""}
-                onChange={(v) =>
-                  updateItem("use_cases", i, "description", v)
-                }
-              />
-            </div>
-          )}
-        />
+              {/* BASIC INFO */}
+              <div>
+                <h3 className="font-semibold text-lg"> {activeLang === "en" ? current.title : current.title_ja}</h3>
+                <p className="text-muted-foreground">{activeLang === "en" ? current.subtitle : current.subtitle_ja}</p>
+                <p className="text-gray-500 mt-1">Slug: {current.slug}</p>
+              </div>
 
-        {/* CASE STUDIES */}
-        <SectionBlock
-          title="Case Studies"
-          items={data.case_studies}
-          onAdd={() =>
-            addItem("case_studies", { title: "", summary: "" })
-          }
-          onRemove={(i) => removeItem("case_studies", i)}
-          render={(item, i) => (
-            <div className="space-y-2">
-              <Input
-                placeholder="Case Study Title"
-                value={item.title}
-                onChange={(e) =>
-                  updateItem("case_studies", i, "title", e.target.value)
-                }
-              />
+              {/* HERO IMAGE */}
+              {current.hero_image && (
+                <img
+                  src={`/storage/${current.hero_image}`}
+                  className="mt-2 w-64 rounded border object-contain"
+                  alt={current.title}
+                />
+              )}
 
-              <ReactQuill
-                theme="snow"
-                value={item.summary || ""}
-                onChange={(v) =>
-                  updateItem("case_studies", i, "summary", v)
-                }
-              />
-            </div>
-          )}
-        />
-
-        {/* INDUSTRIES */}
-        <SectionBlock
-          title="Industries We Serve"
-          items={data.industries}
-          onAdd={() =>
-            addItem("industries", { title: "", description: "" })
-          }
-          onRemove={(i) => removeItem("industries", i)}
-          render={(item, i) => (
-            <div className="space-y-2">
-              <Input
-                placeholder="Industry Title"
-                value={item.title}
-                onChange={(e) =>
-                  updateItem("industries", i, "title", e.target.value)
-                }
-              />
-              <Input
-                placeholder="Industry Description"
-                value={item.description || ""}
-                onChange={(e) =>
-                  updateItem(
-                    "industries",
-                    i,
-                    "description",
-                    e.target.value
-                  )
-                }
-              />
-            </div>
-          )}
-        />
-
-        {/* Submit */}
-        <Button
-          disabled={processing}
-          className="w-full"
-          onClick={mode === "edit" ? submitUpdate : submitAdd}
-        >
-          {mode === "edit" ? "Update Solution" : "Save Solution"}
-        </Button>
-      </div>
-    )}
-
-    {/* ================= VIEW ================= */}
-    {mode === "view" && current && (
-      <div className="space-y-6 mt-6">
-
-        {/* BASIC INFO */}
-        <div>
-          <h3 className="font-semibold text-lg">{current.title}</h3>
-          <p className="text-muted-foreground">{current.subtitle}</p>
-          <p className="text-gray-500 mt-1">Slug: {current.slug}</p>
-        </div>
-
-        {/* HERO IMAGE */}
-        {current.hero_image && (
-          <img
-            src={`/storage/${current.hero_image}`}
-            className="mt-2 w-64 rounded border object-contain"
-            alt={current.title}
-          />
-        )}
-
-        {/* HERO DESCRIPTION */}
-        {current.hero_description && (
-          <div>
-            <strong>Description</strong>
-            <div
-              className="prose max-w-none mt-2"
-              dangerouslySetInnerHTML={{
-                __html: current.hero_description,
-              }}
-            />
-          </div>
-        )}
-
-        {/* FEATURES */}
-        {current.features?.length > 0 && (
-          <div>
-            <strong>Features</strong>
-            <ul className="space-y-3 mt-2">
-              {current.features.map((f, i) => (
-                <li key={i} className="border rounded p-3">
-                  <strong>{f.title}</strong>
+              {/* HERO DESCRIPTION */}
+              {current.hero_description && (
+                <div>
+                  <strong>Description</strong>
                   <div
-                    className="prose max-w-none mt-1"
+                    className="prose max-w-none mt-2"
                     dangerouslySetInnerHTML={{
-                      __html: f.description ?? "",
+                      __html: current.hero_description,
                     }}
                   />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+                </div>
+              )}
 
-        {/* USE CASES */}
-        {current.use_cases?.length > 0 && (
-          <div>
-            <strong>Use Cases</strong>
-            <ul className="space-y-3 mt-2">
-              {current.use_cases.map((u, i) => (
-                <li key={i} className="border rounded p-3">
-                  <strong>{u.title}</strong>
-                  <div
-                    className="prose max-w-none mt-1"
-                    dangerouslySetInnerHTML={{
-                      __html: u.description ?? "",
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+              {/* FEATURES */}
+              {current.features?.length > 0 && (
+                <div>
+                  <strong>Features</strong>
+                  <ul className="space-y-3 mt-2">
+                    {current.features.map((f, i) => (
+                      <li key={i} className="border rounded p-3">
+                        <strong> {activeLang === "en"
+                          ? f.title
+                          : f.title_ja || f.title}</strong>
+                        <div
+                          className="prose max-w-none mt-1"
+                          dangerouslySetInnerHTML={{
+                            __html: f.description ?? "",
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-        {/* INDUSTRIES */}
-        {current.industries?.length > 0 && (
-          <div>
-            <strong>Industries We Serve</strong>
-            <ul className="space-y-3 mt-2">
-              {current.industries.map((ind, i) => (
-                <li key={i} className="border rounded p-3">
-                  <strong>{ind.title}</strong>
-                  <p className="mt-1">{ind.description}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+              {/* USE CASES */}
+              {current.use_cases?.length > 0 && (
+                <div>
+                  <strong>Use Cases</strong>
+                  <ul className="space-y-3 mt-2">
+                    {current.use_cases.map((u, i) => (
+                      <li key={i} className="border rounded p-3">
+                        <strong>{u.title}</strong>
+                        <div
+                          className="prose max-w-none mt-1"
+                          dangerouslySetInnerHTML={{
+                            __html: u.description ?? "",
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-        {/* CASE STUDIES */}
-        {current.case_studies?.length > 0 && (
-          <div>
-            <strong>Case Studies</strong>
-            <ul className="space-y-3 mt-2">
-              {current.case_studies.map((c, i) => (
-                <li key={i} className="border rounded p-3">
-                  <strong>{c.title}</strong>
-                  <div
-                    className="prose max-w-none mt-1"
-                    dangerouslySetInnerHTML={{
-                      __html: c.summary ?? "",
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+              {/* INDUSTRIES */}
+              {current.industries?.length > 0 && (
+                <div>
+                  <strong>
+                    {activeLang === "en"
+                      ? "Industries We Serve"
+                      : "対応業界"}
+                  </strong>
 
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+                  <ul className="space-y-3 mt-2">
+                    {current.industries.map((ind, i) => (
+                      <li key={i} className="border rounded p-3">
+                        <strong>
+                          {activeLang === "en"
+                            ? ind.title
+                            : ind.title_ja || ""}
+                        </strong>
+
+                        <p className="mt-1">
+                          {activeLang === "en"
+                            ? ind.description
+                            : ind.description_ja || ""}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {/* CASE STUDIES */}
+              {current.case_studies?.length > 0 && (
+                <div>
+                  <strong>Case Studies</strong>
+                  <ul className="space-y-3 mt-2">
+                    {current.case_studies.map((c, i) => (
+                      <li key={i} className="border rounded p-3">
+                        <strong>{c.title}</strong>
+                        <div
+                          className="prose max-w-none mt-1"
+                          dangerouslySetInnerHTML={{
+                            __html: c.summary ?? "",
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
 
       {/* ================= TABLE ================= */}

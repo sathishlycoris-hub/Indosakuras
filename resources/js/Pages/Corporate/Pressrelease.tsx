@@ -3,49 +3,61 @@ import Subheader from "@/components/layout/Subheader";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "@inertiajs/react";
-
+import { Link, usePage } from "@inertiajs/react";
+import { getLangValue } from "@/utils/lang";
 
 interface NewsEvent {
   id: number;
   date: string;
   eventtype: string;
+  eventtype_ja?: string;
+
   short: string;
+  short_ja?: string | null;
+
   description: string;
+  description_ja?: string | null;
 }
 
 interface PageProps {
   news: NewsEvent[];
   filters: string[];
+  filters_ja?: string[];
 }
 
-
 export default function Pressrelease({ news = [], filters = [] }: PageProps) {
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
+
   const [activeFilter, setActiveFilter] = useState("All");
 
   const filteredNews =
     activeFilter === "All"
       ? news
-      : news.filter((item) => item.eventtype === activeFilter);
+      : news.filter((item) =>
+          getLangValue(lang, item.eventtype, item.eventtype_ja) === activeFilter
+        );
 
   const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("en-GB");
+    new Date(date).toLocaleDateString(
+      lang === "ja" ? "ja-JP" : "en-GB"
+    );
 
   return (
     <Layout>
-      <Subheader currentPage="Press Release" />
+      <Subheader
+        currentPage={getLangValue(lang, "Press Release", "プレスリリース")}
+      />
 
       <section className="py-12 lg:py-16">
         <div className="container mx-auto px-4 lg:px-8">
           <h1 className="text-primary text-3xl lg:text-4xl font-bold mb-8">
-            News
+            {getLangValue(lang, "News", "ニュース")}
           </h1>
 
           {/* FILTER TABS */}
           <div className="flex flex-wrap gap-2 mb-8">
-            {filters.map((filter, index) => (
+            {filters.map((filter) => (
               <button
-             
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
@@ -62,7 +74,7 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
           {/* NEWS LIST */}
           {filteredNews.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              No news found
+              {getLangValue(lang, "No news found", "ニュースが見つかりません")}
             </div>
           ) : (
             filteredNews.map((item) => (
@@ -77,12 +89,12 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
 
                 {/* TYPE */}
                 <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium w-fit">
-                  {item.eventtype}
+                  {getLangValue(lang, item.eventtype, item.eventtype_ja)}
                 </div>
 
                 {/* TITLE */}
                 <div className="text-foreground">
-                  {item.short}
+                  {getLangValue(lang,item.short, item.short_ja)}
                 </div>
 
                 {/* LINK */}
@@ -95,7 +107,7 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
                     size="sm"
                     className="text-primary border-primary hover:bg-primary hover:text-white whitespace-nowrap"
                   >
-                    View
+                    {getLangValue(lang, "View", "詳細を見る")}
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </Button>
                 </Link>

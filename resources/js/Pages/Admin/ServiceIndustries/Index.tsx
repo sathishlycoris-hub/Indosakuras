@@ -24,7 +24,9 @@ import "react-quill/dist/quill.snow.css";
 interface Industry {
   id: number;
   title: string;
+  title_ja?: string | null;
   description: string;
+  description_ja?: string | null;
   sort_order?: number | null;
 }
 
@@ -32,10 +34,12 @@ export default function Index({ industries }: { industries: Industry[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Industry | null>(null);
   const [open, setOpen] = useState(false);
-
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const { data, setData, post, reset, processing } = useForm({
     title: "",
+    title_ja: "",
     description: "",
+    description_ja: "",
     sort_order: "0",
   });
 
@@ -55,7 +59,9 @@ export default function Index({ industries }: { industries: Industry[] }) {
 
     setData({
       title: industry.title,
+      title_ja: industry.title_ja ?? "",
       description: industry.description,
+      description_ja: industry.description_ja ?? "",
       sort_order:
         industry.sort_order !== null && industry.sort_order !== undefined
           ? String(industry.sort_order)
@@ -114,75 +120,123 @@ export default function Index({ industries }: { industries: Industry[] }) {
       </div>
 
       {/* ================= SHEET ================= */}
-    <Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Industry"}
-        {mode === "edit" && "Edit Industry"}
-        {mode === "view" && "Industry Details"}
-      </SheetTitle>
-    </SheetHeader>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Industry"}
+              {mode === "edit" && "Edit Industry"}
+              {mode === "view" && "Industry Details"}
+            </SheetTitle>
+          </SheetHeader>
 
-    {/* ================= VIEW ================= */}
-    {mode === "view" && current && (
-      <div className="space-y-6 mt-6">
+          {/* ================= VIEW ================= */}
+          {mode === "view" && current && (
+            <div className="space-y-6 mt-6">
 
-        <div className="space-y-1">
-          <strong>Title</strong>
-          <p>{current.title}</p>
-        </div>
+              <div className="space-y-1">
+                <strong>Title</strong>
+                <p>{current.title}</p>
+              </div>
 
-        <div className="space-y-1">
-          <strong>Description</strong>
-          <div
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: current.description ?? "",
-            }}
-          />
-        </div>
+              <div className="space-y-1">
+                <strong>Description</strong>
+                <div
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: current.description ?? "",
+                  }}
+                />
+              </div>
 
-      </div>
-    )}
+            </div>
+          )}
 
-    {/* ================= ADD / EDIT ================= */}
-    {mode !== "view" && (
-      <div className="space-y-5 mt-6">
+          {/* ================= ADD / EDIT ================= */}
+          {mode !== "view" && (
+            <div className="space-y-5 mt-6">
 
-        {/* Title */}
-        <div className="space-y-1">
-          <label className="font-medium">Title</label>
-          <Input
-            placeholder="Industry title"
-            value={data.title}
-            onChange={(e) => setData("title", e.target.value)}
-          />
-        </div>
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
 
-        {/* Description */}
-        <div className="space-y-1">
-          <label className="font-medium">Description</label>
-          <ReactQuill
-            theme="snow"
-            value={data.description}
-            onChange={(val) => setData("description", val)}
-          />
-        </div>
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
+              </div>
 
-        {/* Submit */}
-        <Button
-          className="w-full"
-          disabled={processing}
-          onClick={mode === "edit" ? submitUpdate : submitAdd}
-        >
-          {mode === "edit" ? "Update Industry" : "Save Industry"}
-        </Button>
+              {/* English Title */}
+              <div className="space-y-1">
+                <label className="font-medium">Title</label>
+                <Input
+                  value={activeLang === "en" ? data.title : data.title_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
+                />
+              </div>
 
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+              {/* Japanese Title */}
+              {/* <div className="space-y-1">
+                <label className="font-medium">Title (Japanese)</label>
+                <Input
+                  value={data.title_ja}
+                  onChange={(e) => setData("title_ja", e.target.value)}
+                />
+              </div> */}
+
+              {/* English Description */}
+              {/* <div className="space-y-1">
+                <label className="font-medium">Description (English)</label>
+                <ReactQuill
+                  theme="snow"
+                  value={data.description}
+                  onChange={(val) => setData("description", val)}
+                />
+              </div> */}
+
+              {/* Japanese Description */}
+              <div className="space-y-1">
+                <label className="font-medium">Description</label>
+                <ReactQuill
+                  key={activeLang}
+                  theme="snow"
+                  value={
+                    activeLang === "en"
+                      ? data.description
+                      : data.description_ja
+                  }
+                  onChange={(val) =>
+                    activeLang === "en"
+                      ? setData("description", val)
+                      : setData("description_ja", val)
+                  }
+                />
+              </div>
+
+              <Button
+                className="w-full"
+                disabled={processing}
+                onClick={mode === "edit" ? submitUpdate : submitAdd}
+              >
+                {mode === "edit" ? "Update Industry" : "Save Industry"}
+              </Button>
+
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
 
       {/* ================= TABLE ================= */}
@@ -207,10 +261,10 @@ export default function Index({ industries }: { industries: Industry[] }) {
                 />
               </TableCell>
               <TableCell className="space-x-2 text-center">
-                <Button title="View" size="icon"  onClick={() => openView(industry)}>
+                <Button title="View" size="icon" onClick={() => openView(industry)}>
                   <Eye className="w-4 h-4" />
                 </Button>
-                <Button  title="Edit" size="icon"  onClick={() => openEdit(industry)}>
+                <Button title="Edit" size="icon" onClick={() => openEdit(industry)}>
                   <Pencil className="w-4 h-4" />
                 </Button>
                 <Button

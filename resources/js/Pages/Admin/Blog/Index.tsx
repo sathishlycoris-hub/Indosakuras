@@ -51,7 +51,7 @@ interface Blog {
 }
 export default function AdminBlogIndex() {
   const { blogs } = usePage<{ blogs: Blog[] }>().props;
-  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Blog | null>(null);
@@ -285,7 +285,7 @@ export default function AdminBlogIndex() {
               {/* Title */}
               <div className="space-y-1">
                 <label className="font-medium">
-                  Title {activeLang === "ja" && "(Japanese)"}
+                  Title {activeLang === "ja" && ""}
                 </label>
 
                 <Input
@@ -312,7 +312,7 @@ export default function AdminBlogIndex() {
               {/* Short Description */}
               <div className="space-y-1">
                 <label className="font-medium">
-                  Short Description {activeLang === "ja" && "(Japanese)"}
+                  Short Description {activeLang === "ja" && ""}
                 </label>
 
                 <Textarea
@@ -332,10 +332,11 @@ export default function AdminBlogIndex() {
               {/* Content */}
               <div className="space-y-2">
                 <label className="font-medium">
-                  Content {activeLang === "ja" && "(Japanese)"}
+                  Content {activeLang === "ja" && ""}
                 </label>
 
                 <ReactQuill
+                key={activeLang}
                   theme="snow"
                   value={
                     activeLang === "en"
@@ -460,7 +461,7 @@ export default function AdminBlogIndex() {
           {filteredBlogs.map((blog, i) => (
             <TableRow key={blog.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{blog.title_ja}</TableCell>
+              <TableCell>{blog.title}</TableCell>
               <TableCell>{blog.category}</TableCell>
               <TableCell>{blog.status}</TableCell>
               <TableCell>{formatDate(blog.published_date)}</TableCell>

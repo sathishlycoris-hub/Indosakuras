@@ -1,7 +1,7 @@
 import Layout from "@/components/layout/Layout";
+import { Link, usePage } from "@inertiajs/react";
 import Serviceshead from "@/components/layout/Serviceshead";
 import { useLanguage } from "@/Contexts/LanguageContext";
-import { Link } from "@inertiajs/react";
 import { Head } from "@inertiajs/react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -47,21 +47,27 @@ interface Seo {
 interface Service {
   id: number;
   title: string;
+  title_ja?: string;
   slug: string;
   subtitle?: string;
+  subtitle_ja?: string;
   hero_image?: string | null;
 }
 
 interface Faq {
   id: number;
   question: string;
+  question_ja?: string;
   answer: string;
+  answer_ja?: string;
 }
 
 interface Industry {
   id: number;
   title: string;
-  description: string; // React Quill HTML
+  title_ja?: string;
+  description: string;
+  description_ja?: string; // React Quill HTML
 }
 
 const getIndustryIcon = (id: number) => {
@@ -89,9 +95,13 @@ function Services({
   services: Service[];
   faqs: Faq[];
   industries: Industry[];
-  seo?: Seo | null; 
+  seo?: Seo | null;
 }) {
-  const { language } = useLanguage();
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
+
+  const getValue = (en?: string | null, ja?: string | null): string => {
+    return (lang === "ja" ? ja || en : en) || "";
+  };
   const safeIndustries = Array.isArray(industries) ? industries : [];
   // const services = [
   //   {
@@ -233,10 +243,10 @@ function Services({
 
         <div className="container mx-auto px-4 relative z-10" data-aos="fade-right">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-            {language === 'en' ? "Services" : "サービス"}
+            {lang === 'en' ? "Services" : "サービス"}
           </h1>
           <p className="text-lg text-primary-foreground/90">
-            {language === 'en'
+            {lang === 'en'
               ? "Comprehensive IT solutions tailored to drive your business forward"
               : "ビジネスを前進させるためのオーダーメイドの包括的なITソリューション"}
           </p>
@@ -275,12 +285,12 @@ function Services({
                 {/* CONTENT */}
                 <div className="p-4 flex flex-col flex-1">
                   <h3 className="text-lg font-semibold text-primary flex items-center gap-2 min-h-[56px]">
-                    {service.title}
+                    {getValue(service.title, service.title_ja)}
                     <ArrowRight className="w-4 h-4 shrink-0" />
                   </h3>
 
                   <p className="text-muted-foreground mt-2 min-h-[80px] line-clamp-4">
-                    {service.subtitle}
+                    {getValue(service.subtitle, service.subtitle_ja)}
                   </p>
                 </div>
               </Link>
@@ -295,11 +305,11 @@ function Services({
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-primary mb-4" data-aos="fade-up">
-            {language === "en" ? "Industry We Serve" : "対象業界"}
+            {lang === "en" ? "Industry We Serve" : "対象業界"}
           </h2>
 
           <p className="text-center text-muted-foreground mb-12" data-aos="fade-up">
-            {language === "en"
+            {lang === "en"
               ? "Tailored IT Infrastructure Services for Every Industry"
               : "あらゆる業界向けにカスタマイズされたITインフラサービス"}
           </p>
@@ -319,12 +329,14 @@ function Services({
                   <Icon className="w-10 h-10 text-primary mb-4" />
 
                   <h3 className="text-lg font-semibold text-foreground mb-2">
-                    {industry.title}
+                    {getValue(industry.title, industry.title_ja)}
                   </h3>
 
                   <div
                     className="text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: industry.description }}
+                    dangerouslySetInnerHTML={{
+                      __html: getValue(industry.description, industry.description_ja),
+                    }}
                   />
                 </div>
               );
@@ -339,11 +351,11 @@ function Services({
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4 max-w-4xl">
           <h2 className="text-3xl font-bold text-center text-primary mb-4" data-aos="fade-up">
-            {language === "en" ? "Frequently Asked Questions" : "よくある質問"}
+            {lang === "en" ? "Frequently Asked Questions" : "よくある質問"}
           </h2>
 
           <p className="text-center text-muted-foreground mb-12" data-aos="fade-up">
-            {language === "en"
+            {lang === "en"
               ? "Here are some frequently asked questions from applicants in a Q&A format."
               : "応募者からよくいただく質問をQ&A形式でご紹介します。"}
           </p>
@@ -351,8 +363,8 @@ function Services({
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem
-              data-aos="fade-up"
-                    data-aos-delay={index * 90}
+                data-aos="fade-up"
+                data-aos-delay={index * 90}
                 key={faq.id}
                 value={`item-${faq.id}`}
                 className="border border-border rounded-lg px-6 bg-card"
@@ -363,7 +375,7 @@ function Services({
                     <p className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
                       Q
                     </p>
-                    <p className="text-foreground">{faq.question}</p>
+                    <p className="text-foreground">{getValue(faq.question, faq.question_ja)}</p>
                   </div>
                 </AccordionTrigger>
 
@@ -374,7 +386,7 @@ function Services({
                       A
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
-                      {faq.answer}
+                      {getValue(faq.answer, faq.answer_ja)}
                     </p>
                   </div>
                 </AccordionContent>
@@ -401,10 +413,10 @@ function Services({
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
                 <div>
                   <h3 className="text-2xl font-bold text-white mb-4">
-                    {language === 'en' ? "Blogs" : "ブログ"}
+                    {lang === 'en' ? "Blogs" : "ブログ"}
                   </h3>
                   <span className="inline-flex items-center gap-2 px-6 py-3 border border-white text-white rounded hover:bg-white hover:text-foreground transition-colors">
-                    {language === 'en' ? "To the blog list" : "ブログ一覧へ"}
+                    {lang === 'en' ? "To the blog list" : "ブログ一覧へ"}
                     <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>
@@ -422,10 +434,10 @@ function Services({
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
                 <div>
                   <h3 className="text-2xl font-bold text-white mb-4">
-                    {language === 'en' ? "Seminars and Events" : "セミナー・イベント"}
+                    {lang === 'en' ? "Seminars and Events" : "セミナー・イベント"}
                   </h3>
                   <span className="inline-flex items-center gap-2 px-6 py-3 border border-white text-white rounded hover:bg-white hover:text-foreground transition-colors">
-                    {language === 'en' ? "See the list of seminars and events" : "セミナー・イベント一覧を見る"}
+                    {lang === 'en' ? "See the list of seminars and events" : "セミナー・イベント一覧を見る"}
                     <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>

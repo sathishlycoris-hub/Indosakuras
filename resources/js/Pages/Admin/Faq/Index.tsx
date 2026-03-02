@@ -144,10 +144,10 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
                 <p className="whitespace-pre-line">{current.answer}</p>
               </div>
 
-              <div>
+              {/* <div>
                 <strong>Sort Order:</strong>{" "}
                 {current.sort_order ?? "-"}
-              </div>
+              </div> */}
             </div>
           )}
 
@@ -193,12 +193,12 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
                 }
               />
 
-              <Input
+              {/* <Input
                 type="number"
                 placeholder="Sort Order"
                 value={data.sort_order}
                 onChange={(e) => setData("sort_order", e.target.value)}
-              />
+              /> */}
 
               <Button
                 className="w-full"

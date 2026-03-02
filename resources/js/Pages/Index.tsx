@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/react';
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { usePage } from "@inertiajs/react";
 import { Head } from "@inertiajs/react";
 import { ArrowRight, ChevronDown, Cpu, Shield, Users, Sparkles, FileText, RefreshCw, Globe, Code, Database, Cloud, CheckCircle, MapPin, Phone, Mail, Building } from "lucide-react";
 // import { Link } from "react-router-dom";
@@ -18,6 +19,7 @@ interface NewsEvent {
   date: string;
   eventtype: string;
   short: string;
+  short_ja?: string | null;
 }
 
 interface IndexProps {
@@ -31,15 +33,19 @@ interface IndexProps {
 interface Service {
   id: number;
   title: string;
+  title_ja?: string | null;
   slug: string;
   hero_description?: string | null;
+  hero_description_ja?: string | null;
 }
 
 interface Solution {
   id: number;
   title: string;
+  title_ja?: string | null;
   slug: string;
   hero_description?: string | null;
+  hero_description_ja?: string | null;
 }
 
 
@@ -68,7 +74,10 @@ const getSolutionMeta = (index: number) => ({
 });
 
 
-const Index = ({ seo = null, updates = [], services = [], solutions = [], }: IndexProps) => {
+const Index = ({ seo = null, updates = [], services = [], solutions = [] }: IndexProps) => {
+
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
+
   useEffect(() => {
 
     AOS.init({
@@ -232,7 +241,12 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
   return (
     <Layout>
       <Head>
-        <title>{seo?.meta_title ?? "Indo Sakura Software Japan"}</title>
+        <title>
+          {seo?.meta_title ??
+            (lang === "en"
+              ? "Indo Sakura Software Japan"
+              : "インドサクラソフトウェアジャパン")}
+        </title>
 
         {seo?.meta_description && (
           <meta name="description" content={seo.meta_description} />
@@ -243,36 +257,36 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
         )}
       </Head>
       {/* Hero Section */}
-     {/* Hero Section with Background Image */}
+      {/* Hero Section with Background Image */}
       <section
-  className="
+        className="
     relative text-primary-foreground overflow-hidden
     min-h-[380px] sm:min-h-[420px] md:min-h-[460px] lg:min-h-[520px]
   "
->
-  {/* Background Image with Overlay */}
-  <div className="absolute inset-0">
-    <img
-      src="/image/osaka.jpg"
-      alt="Indo Sakura Software Japan"
-      className="w-full h-full object-cover object-center"
-    />
-    <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
-  </div>
+      >
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <img
+            src="/image/osaka.jpg"
+            alt="Indo Sakura Software Japan"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
+        </div>
 
-  <div
-    className="
+        <div
+          className="
       container relative z-10 mx-auto
       px-4 sm:px-6 lg:px-8
       py-10 sm:py-12 md:py-14 lg:py-16
     "
-  >
-    <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12">
+        >
+          <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12">
 
-      {/* RIGHT COLUMN - Info Card */}
-      <div className="flex-1 w-full lg:w-auto flex flex-col items-center lg:items-start mt-6 lg:mt-0">
-        <div
-          className="
+            {/* RIGHT COLUMN - Info Card */}
+            <div className="flex-1 w-full lg:w-auto flex flex-col items-center lg:items-start mt-6 lg:mt-0">
+              <div
+                className="
             relative
             rounded-xl
             p-4 sm:p-5 md:p-6 lg:p-4
@@ -283,35 +297,40 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
             border border-white/30
             bg-black/40
           "
-        >
-          {/* subtle inner overlay */}
-          <div className="absolute inset-0 rounded-xl bg-black/30 pointer-events-none" />
+              >
+                {/* subtle inner overlay */}
+                <div className="absolute inset-0 rounded-xl bg-black/30 pointer-events-none" />
 
-          {/* content */}
-          <div className="relative z-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-white">
-              20 Years of Legacy <br className="hidden md:block" />
-              Delivering
-            </h2>
+                {/* content */}
+                <div className="relative z-10">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 text-white">
+                    {lang === "en"
+                      ? "20 Years of Legacy Delivering"
+                      : "20年の実績と信頼"} <br className="hidden md:block" />
 
-            <p className="text-sm sm:text-base md:text-lg text-white/90 mb-3 sm:mb-4 leading-relaxed">
-              Since 2005, Indo-Sakura has been at the forefront of IT innovation,
-              delivering cutting-edge solutions that empower businesses worldwide.
-            </p>
+                  </h2>
 
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white">
-              Japanese Quality ✦ Indian Capability ✦ Global Innovation
-            </p>
+                  <p className="text-sm sm:text-base md:text-lg text-white/90 mb-3 sm:mb-4 leading-relaxed">
+                    {lang === "en"
+                      ? "Since 2005, Indo-Sakura has been at the forefront of IT innovation, delivering cutting-edge solutions that empower businesses worldwide."
+                      : "2005年の創業以来、インドサクラはIT革新の最前線で、世界中の企業に最先端のソリューションを提供してきました。"}
+                  </p>
+
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white">
+                    {lang === "en"
+                      ? "Japanese Quality ✦ Indian Capability ✦ Global Innovation"
+                      : "日本品質 ✦ インドの技術力 ✦ グローバルイノベーション"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
 
-    </div>
-  </div>
-
-  {/* Decorative bottom fade */}
-  <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 bg-gradient-to-t from-background/20 to-transparent" />
-</section>
+        {/* Decorative bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 bg-gradient-to-t from-background/20 to-transparent" />
+      </section>
 
 
       {/* Service Banner */}
@@ -322,26 +341,26 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
       </div> */}
 
       {/* Core Services */}
-       {/* Case Studies Section */}
+      {/* Case Studies Section */}
       <section className="py-16 relative overflow-hidden">
         {/* Dot pattern background */}
-        
-        
+
+
         <div className="max-w-6xl mx-auto px-4 lg:px-8 relative z-10 pt-8">
-          <div 
-           className="container absolute inset-0 opacity-15 pointer-events-none"
-          style={{
-            backgroundImage: 'url(/image/dot.jpg)',
-            backgroundRepeat: 'repeat',
-            backgroundSize: '200px auto',
-            backgroundPosition: 'center top'
-          }}
-        />
-           
-          {/* Header with line divider matching reference */} 
+          <div
+            className="container absolute inset-0 opacity-15 pointer-events-none"
+            style={{
+              backgroundImage: 'url(/image/dot.jpg)',
+              backgroundRepeat: 'repeat',
+              backgroundSize: '200px auto',
+              backgroundPosition: 'center top'
+            }}
+          />
+
+          {/* Header with line divider matching reference */}
           <div className="flex items-center gap-6 mb-10 section-divider">
             <h2 className="text-2xl font-semibold text-foreground uppercase tracking-wide whitespace-nowrap">
-              CASE STUDIES
+             {lang === "en" ? "CASE STUDIES" : "導入事例"}
             </h2>
             {/* <div className="flex-1 h-px bg-gradient-to-r from-border via-border to-transparent"></div> */}
           </div>
@@ -374,14 +393,14 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
 
                 {/* Arrow indicator on hover */}
                 <div className="mt-3 flex items-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-sm font-medium">View Details</span>
+                  <span className="text-sm font-medium">{lang === "en" ? "View Details" : "詳細を見る"}</span>
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </div>
               </div>
             ))}
           </div>
-          </div>
-        
+        </div>
+
       </section>
 
 
@@ -390,12 +409,14 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
         <div className="max-w-6xl mx-auto px-4 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div className="section-divider">
-              <h2 className="text-2xl font-semibold">Information</h2>
+              <h2 className="text-2xl font-semibold">{lang === "en" ? "Information" : "お知らせ"}</h2>
             </div>
             {/* <Link to="" className="text-primary text-sm font-medium hover:underline">View All</Link> */}
           </div>
           <p className="text-muted-foreground mb-8">
-            Stay updated with our latest news, announcements, and industry insights.
+            {lang === "en"
+              ? "Stay updated with our latest news, announcements, and industry insights."
+              : "最新ニュースやお知らせ、業界情報をご確認ください。"}
           </p>
           <div className="space-y-4">
             {safeUpdates.map((update, index) => (
@@ -421,7 +442,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
 
                   {/* TITLE (SHORT) */}
                   <p className="text-foreground overflow-hidden line-clamp-1">
-                    {update.short}
+                    {lang === "en" ? update.short : update.short_ja || update.short}
                   </p>
 
                   {/* ARROW */}
@@ -438,104 +459,143 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
       </section>
 
       {/* Corporate Section */}
-      <section className="py-20 bg-accent-pink text-primary-foreground">
-        <div className="container mx-auto px-4 lg:px-8">
+     <section className="py-20 bg-accent-pink text-primary-foreground">
+  <div className="container mx-auto px-4 lg:px-8">
 
-          {/* LABEL */}
-          <div className="section-divider mb-8 border-white/80">
-            <h2 className="text-2xl font-semibold text-white">Corporate Info</h2>
-          </div>
+    {/* LABEL */}
+    <div className="section-divider mb-8 border-white/80">
+      <h2 className="text-2xl font-semibold text-white">
+        {lang === "en" ? "Corporate Info" : "企業情報"}
+      </h2>
+    </div>
 
-          <div className="container grid lg:grid-cols-[65%_35%] gap-12">
+    <div className="container grid lg:grid-cols-[65%_35%] gap-12">
 
-            {/* LEFT — WIDER CONTENT */}
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-bold leading-snug mb-6">
-                Delivering Excellence Across Continents
-              </h2>
+      {/* LEFT */}
+      <div>
+        <h2 className="text-3xl lg:text-4xl font-bold leading-snug mb-6">
+          {lang === "en"
+            ? "Delivering Excellence Across Continents"
+            : "世界をつなぐ卓越したITサービス"}
+        </h2>
 
-              <p className="mb-4 font-bold leading-relaxed">
-                With two decades of experience spanning Japan, India, and the USA, Indo-Sakura has
-                established itself as a trusted partner for businesses seeking innovative IT solutions.
-                Our global presence combined with local expertise enables us to deliver world-class
-                services tailored to diverse markets.
-              </p>
+        <p className="mb-4 font-bold leading-relaxed">
+          {lang === "en"
+            ? "With two decades of experience spanning Japan, India, and the USA, Indo-Sakura has established itself as a trusted partner for businesses seeking innovative IT solutions. Our global presence combined with local expertise enables us to deliver world-class services tailored to diverse markets."
+            : "日本・インド・アメリカにまたがる20年以上の実績を持つインドサクラは、革新的なITソリューションを求める企業にとって信頼できるパートナーとして成長してきました。グローバルな展開と地域密着型の専門知識を融合し、多様な市場に最適化された世界水準のサービスを提供しています。"}
+        </p>
 
-              <p className="fontbold mb-8 leading-relaxed">
-                We serve 55 customers worldwide with a dedicated team of over 150 IT experts, focusing
-                on five key industry sectors where we bring deep domain knowledge and technical excellence.
-              </p>
+        <p className="mb-8 leading-relaxed">
+          {lang === "en"
+            ? "We serve 55 customers worldwide with a dedicated team of over 150 IT experts, focusing on five key industry sectors where we bring deep domain knowledge and technical excellence."
+            : "専門性の高いITエキスパートチームとともに、世界中のお客様へサービスを提供しています。重点分野において豊富な業界知識と高度な技術力を発揮しています。"}
+        </p>
 
-              <Button
-                asChild
-                variant="heroOutline"
-                className="mb-12 bg-white text-pink-600 border-white hover:bg-white/90 hover:text-pink-700"
-              >
-                <Link href="/corporate-info">
-                  About Indo-Sakura
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Link>
-              </Button>
-            </div>
+        <Button
+          asChild
+          variant="heroOutline"
+          className="mb-12 bg-white text-pink-600 border-white hover:bg-white/90 hover:text-pink-700"
+        >
+          <Link href="/corporate-info">
+            {lang === "en" ? "About Indo-Sakura" : "インドサクラについて"}
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </Link>
+        </Button>
+      </div>
 
-            {/* RIGHT — SMALLER CARDS */}
-            <div className="grid grid-cols-2 gap-4" data-aos="zoom-in">
-              <div className="bg-primary rounded-xl p-5">
-                <div className="text-3xl font-bold mb-1">20</div>
-                <p className="font-medium text-primary-foreground/90">Years of Excellence</p>
-                <p className="text-sm text-primary-foreground/90">Japan, India, USA</p>
-              </div>
+      {/* RIGHT — STATS CARDS */}
+      <div className="grid grid-cols-2 gap-4" data-aos="zoom-in">
 
-              <div className="bg-primary rounded-xl p-5">
-                <div className="text-3xl font-bold mb-1">155</div>
-                <p className="font-medium text-primary-foreground/90">Customers</p>
-                <p className="text-sm">Worldwide</p>
-              </div>
-
-              <div className="bg-primary rounded-xl p-5">
-                <div className="text-3xl font-bold mb-1">130</div>
-                <p className="font-medium text-primary-foreground/90">IT Experts</p>
-                <p className="text-sm text-primary-foreground/90">Dedicated Team</p>
-              </div>
-
-              <div className="bg-primary rounded-xl p-5">
-                <div className="text-3xl font-bold mb-1">8</div>
-                <p className="font-medium text-primary-foreground/90">Target Industry</p>
-                <p className="">Key Sectors</p>
-              </div>
-            </div>
-
-          </div>
-
-          {/* FULL-WIDTH FEATURE CARDS (BOTTOM) */}
-          <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16" data-aos="zoom-in">
-            <div className="bg-primary rounded-lg p-6 text-center">
-              <Globe className="w-6 h-6 mx-auto mb-3" />
-              <p className="font-medium">Global Reach</p>
-              <p className="">Operations in 3 continents</p>
-            </div>
-
-            <div className="bg-primary rounded-lg p-6 text-center">
-              <Users className="w-6 h-6 mx-auto mb-3" />
-              <p className="font-medium">Expert Team</p>
-              <p className="">150+ certified professionals</p>
-            </div>
-
-            <div className="bg-primary rounded-lg p-6 text-center">
-              <CheckCircle className="w-6 h-6 mx-auto mb-3" />
-              <p className="font-medium">Quality Focus</p>
-              <p className="">ISO certified processes</p>
-            </div>
-
-            <div className="bg-primary rounded-lg p-6 text-center">
-              <ArrowRight className="w-6 h-6 mx-auto mb-3" />
-              <p className="font-medium">Growth Partner</p>
-              <p className="">Long-term client relationships</p>
-            </div>
-          </div>
-
+        <div className="bg-primary rounded-xl p-5">
+          <div className="text-3xl font-bold mb-1">20</div>
+          <p className="font-medium text-primary-foreground/90">
+            {lang === "en" ? "Years of Excellence" : "20年の実績"}
+          </p>
+          <p className="text-sm text-primary-foreground/90">
+            {lang === "en" ? "Japan, India, USA" : "日本・インド・アメリカ"}
+          </p>
         </div>
-      </section>
+
+        <div className="bg-primary rounded-xl p-5">
+          <div className="text-3xl font-bold mb-1">155</div>
+          <p className="font-medium text-primary-foreground/90">
+            {lang === "en" ? "Customers" : "取引企業数"}
+          </p>
+          <p className="text-sm">
+            {lang === "en" ? "Worldwide" : "世界各国"}
+          </p>
+        </div>
+
+        <div className="bg-primary rounded-xl p-5">
+          <div className="text-3xl font-bold mb-1">130</div>
+          <p className="font-medium text-primary-foreground/90">
+            {lang === "en" ? "IT Experts" : "ITエキスパート"}
+          </p>
+          <p className="text-sm text-primary-foreground/90">
+            {lang === "en" ? "Dedicated Team" : "専門チーム"}
+          </p>
+        </div>
+
+        <div className="bg-primary rounded-xl p-5">
+          <div className="text-3xl font-bold mb-1">8</div>
+          <p className="font-medium text-primary-foreground/90">
+            {lang === "en" ? "Target Industry" : "主要業界"}
+          </p>
+          <p>
+            {lang === "en" ? "Key Sectors" : "重点分野"}
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    {/* FEATURE CARDS */}
+    <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16" data-aos="zoom-in">
+
+      <div className="bg-primary rounded-lg p-6 text-center">
+        <Globe className="w-6 h-6 mx-auto mb-3" />
+        <p className="font-medium">
+          {lang === "en" ? "Global Reach" : "グローバル展開"}
+        </p>
+        <p>
+          {lang === "en" ? "Operations in 3 continents" : "3大陸で事業展開"}
+        </p>
+      </div>
+
+      <div className="bg-primary rounded-lg p-6 text-center">
+        <Users className="w-6 h-6 mx-auto mb-3" />
+        <p className="font-medium">
+          {lang === "en" ? "Expert Team" : "専門チーム"}
+        </p>
+        <p>
+          {lang === "en" ? "150+ certified professionals" : "150名以上の専門家"}
+        </p>
+      </div>
+
+      <div className="bg-primary rounded-lg p-6 text-center">
+        <CheckCircle className="w-6 h-6 mx-auto mb-3" />
+        <p className="font-medium">
+          {lang === "en" ? "Quality Focus" : "品質重視"}
+        </p>
+        <p>
+          {lang === "en" ? "ISO certified processes" : "ISO認証プロセス"}
+        </p>
+      </div>
+
+      <div className="bg-primary rounded-lg p-6 text-center">
+        <ArrowRight className="w-6 h-6 mx-auto mb-3" />
+        <p className="font-medium">
+          {lang === "en" ? "Growth Partner" : "成長パートナー"}
+        </p>
+        <p>
+          {lang === "en" ? "Long-term client relationships" : "長期的なパートナーシップ"}
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
 
 
 
@@ -545,12 +605,13 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
         <div className="max-w-6xl mx-auto px-4 lg:px-8">
 
           <div className="section-divider mb-8">
-            <h2 className="text-2xl font-semibold">Services</h2>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Services" : "サービス"}</h2>
           </div>
 
           <p className="text-muted-foreground mb-8">
-            Comprehensive IT solutions with cutting-edge technology expertise. Our digital transformation
-            services help organizations modernize their infrastructure and processes.
+            {lang === "en"
+              ? "Comprehensive IT solutions with cutting-edge technology expertise..."
+              : "最先端技術を活用した包括的なITソリューションを提供します。"}
           </p>
 
 
@@ -570,13 +631,18 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
                   </div>
 
                   <h2 className="font-semibold mb-2 text-lg">
-                    {service.title}
+                    {lang === "en"
+                      ? service.title
+                      : service.title_ja || service.title}
                   </h2>
 
                   <div
                     className="text-muted-foreground mb-4 line-clamp-3 prose prose-sm max-w-none"
                     dangerouslySetInnerHTML={{
-                      __html: service.hero_description || "Learn more about this service",
+                      __html:
+                        lang === "en"
+                          ? service.hero_description || ""
+                          : service.hero_description_ja || service.hero_description || "",
                     }}
                   />
 
@@ -584,7 +650,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
                     href={`/services/${service.slug}`}
                     className="text-primary text-sm font-medium hover:underline inline-flex items-center gap-1 mt-auto"
                   >
-                    Learn More <ArrowRight className="w-4 h-4" />
+                    {lang === "en" ? "Learn More" : "詳しく見る"} <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               );
@@ -657,11 +723,13 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
         <div className="max-w-6xl mx-auto px-4 lg:px-8">
 
           <div className="section-divider mb-4">
-            <h2 className="text-2xl font-semibold">Solutions</h2>
+            <h2 className="text-2xl font-semibold">{lang === "en" ? "Solutions" : "ソリューション"}</h2>
           </div>
 
           <p className="text-muted-foreground mb-12">
-            Cutting-edge solutions to solve your business challenges and drive digital transformation
+            {lang === "en"
+              ? "Cutting-edge solutions to solve your business challenges and drive digital transformation"
+              : "ビジネス課題を解決し、デジタルトランスフォーメーションを推進する最先端ソリューション"}
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-aos="zoom-in">
@@ -686,21 +754,26 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
 
                     {/* TITLE */}
                     <h3 className="font-semibold text-lg mb-2">
-                      {solution.title}
+                      {lang === "en"
+                        ? solution.title
+                        : solution.title_ja || solution.title}
                     </h3>
 
                     {/* DESCRIPTION (HTML-safe) */}
                     <div
                       className="text-muted-foreground mb-6 line-clamp-3 prose prose-sm max-w-none"
                       dangerouslySetInnerHTML={{
-                        __html: solution.hero_description || "",
+                        __html:
+                          lang === "en"
+                            ? solution.hero_description || ""
+                            : solution.hero_description_ja || solution.hero_description || "",
                       }}
                     />
 
                     {/* EXACT EXISTING BUTTON */}
                     <Link href={`/solutions/${solution.slug}`} className="mt-auto">
                       <Button variant="viewDetails" className="w-full">
-                        View Details <ArrowRight className="w-4 h-4 ml-1" />
+                        {lang === "en" ? "View Details" : "詳細を見る"} <ArrowRight className="w-4 h-4 ml-1" />
                       </Button>
                     </Link>
                   </div>
@@ -712,7 +785,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
             <div className="rounded-lg p-6 hero-gradient text-white flex flex-col justify-between shadow-lg">
               <div>
                 <h3 className="text-xl font-semibold mb-3">
-                  Need a Custom Solution?
+                  {lang === "en" ? "Need a Custom Solution?" : "カスタムソリューションが必要ですか？"}
                 </h3>
                 <p className="opacity-90 mb-6">
                   Our team of experts can design and implement the perfect solution tailored to your unique business needs.
@@ -721,7 +794,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [], }: Ind
 
               <Link href="/contact">
                 <Button className="bg-white text-pink-600 hover:bg-gray-100">
-                  Contact Us <ArrowRight className="w-4 h-4 ml-1" />
+                  {lang === "en" ? "Contact Us" : "お問い合わせ"} <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </Link>
             </div>

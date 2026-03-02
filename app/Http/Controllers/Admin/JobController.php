@@ -39,9 +39,9 @@ class JobController extends Controller
             'about_role' => 'nullable|string',
 
             'title_ja' => 'nullable|string|max:255',
-            'department_ja' => 'nullable|string|max:255',
-            'location_ja' => 'nullable|string|max:255',
-            'employment_type_ja' => 'nullable|string|max:255',
+            // 'department_ja' => 'nullable|string|max:255',
+            // 'location_ja' => 'nullable|string|max:255',
+            // 'employment_type_ja' => 'nullable|string|max:255',
             'experience_ja' => 'nullable|string|max:255',
             'salary_ja' => 'nullable|string|max:255',
             'short_description_ja' => 'nullable|string',
@@ -68,9 +68,9 @@ class JobController extends Controller
             'about_role' => $data['about_role'] ?? null,
 
             'title_ja' => $data['title_ja'] ?? null,
-            'department_ja' => $data['department_ja'] ?? null,
-            'location_ja' => $data['location_ja'] ?? null,
-            'employment_type_ja' => $data['employment_type_ja'] ?? null,
+            // 'department_ja' => $data['department_ja'] ?? null,
+            // 'location_ja' => $data['location_ja'] ?? null,
+            // 'employment_type_ja' => $data['employment_type_ja'] ?? null,
             'experience_ja' => $data['experience_ja'] ?? null,
             'salary_ja' => $data['salary_ja'] ?? null,
             'short_description_ja' => $data['short_description_ja'] ?? null,
@@ -112,9 +112,9 @@ class JobController extends Controller
 
             'status' => 'nullable|in:draft,published',
             'title_ja' => 'nullable|string|max:255',
-            'department_ja' => 'nullable|string|max:255',
-            'location_ja' => 'nullable|string|max:255',
-            'employment_type_ja' => 'nullable|string|max:255',
+            // 'department_ja' => 'nullable|string|max:255',
+            // 'location_ja' => 'nullable|string|max:255',
+            // 'employment_type_ja' => 'nullable|string|max:255',
             'experience_ja' => 'nullable|string|max:255',
             'salary_ja' => 'nullable|string|max:255',
             'short_description_ja' => 'nullable|string',
@@ -128,40 +128,42 @@ class JobController extends Controller
         ]);
 
         // Update Job
-        $job->update([
-            'title' => $data['title'],
-            'slug' => Str::slug($data['title']),
-            'department' => $data['department'],
-            'location' => $data['location'],
-            'employment_type' => $data['employment_type'],
-            'experience' => $data['experience'],
-            'salary' => $data['salary'] ?? null,
-            'short_description' => $data['short_description'] ?? null,
-            'about_role' => $data['about_role'],
-            'title_ja' => $data['title_ja'] ?? null,
-            'department_ja' => $data['department_ja'] ?? null,
-            'location_ja' => $data['location_ja'] ?? null,
-            'employment_type_ja' => $data['employment_type_ja'] ?? null,
-            'experience_ja' => $data['experience_ja'] ?? null,
-            'salary_ja' => $data['salary_ja'] ?? null,
-            'short_description_ja' => $data['short_description_ja'] ?? null,
-            'about_role_ja' => $data['about_role_ja'] ?? null,
-            'status' => $data['status'],
-        ]);
+       $job->update([
+    'title' => $data['title'] ?? null,
+    'slug' => Str::slug(
+        $data['title']
+            ?? $data['title_ja']
+            ?? $job->slug
+    ),
+    'department' => $data['department'] ?? null,
+    'location' => $data['location'] ?? null,
+    'employment_type' => $data['employment_type'] ?? null,
+    'experience' => $data['experience'] ?? null,
+    'salary' => $data['salary'] ?? null,
+    'short_description' => $data['short_description'] ?? null,
+    'about_role' => $data['about_role'] ?? null,
+    'title_ja' => $data['title_ja'] ?? null,
+    'experience_ja' => $data['experience_ja'] ?? null,
+    'salary_ja' => $data['salary_ja'] ?? null,
+    'short_description_ja' => $data['short_description_ja'] ?? null,
+    'about_role_ja' => $data['about_role_ja'] ?? null,
+    'status' => $data['status'] ?? 'draft',
+]);
 
         // Replace sections cleanly
         $job->sections()->delete();
 
-        foreach ($data['sections'] as $index => $section) {
-            JobSection::create([
-                'job_id' => $job->id,
-                'section_type' => $section['type'],
-                'content' => $section['content'] ?? null,
-                'content_ja' => $section['content_ja'] ?? null,
-                'sort_order' => $index,
-            ]);
-        }
-
+       if (!empty($data['sections'])) {
+    foreach ($data['sections'] as $index => $section) {
+        JobSection::create([
+            'job_id' => $job->id,
+            'section_type' => $section['type'] ?? null,
+            'content' => $section['content'] ?? null,
+            'content_ja' => $section['content_ja'] ?? null,
+            'sort_order' => $index,
+        ]);
+    }
+}
         return redirect()
             ->route('admin.jobs.index')
             ->with('success', 'Job updated successfully');
@@ -185,10 +187,15 @@ class JobController extends Controller
                 ->get([
                     'id',
                     'title',
+                    'title_ja',
                     'department',
+                    // 'department_ja',
                     'location',
+                    // 'location_ja',
                     'employment_type',
+                    // 'employment_type_ja',
                     'experience',
+                    // 'experience_ja',
                     'salary',
                     'slug',
                 ]),

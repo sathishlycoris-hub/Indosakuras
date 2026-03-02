@@ -12,9 +12,13 @@ class SolutionCaseStudy extends Model
      protected $fillable = [
         'solution_id',
         'title',
+        'title_ja',
         'client',
+        'client_ja',
         'summary',
+        'summary_ja',
         'result',
+        'result_ja',
         'image',
         'sort_order',
     ];

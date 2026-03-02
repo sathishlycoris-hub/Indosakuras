@@ -37,7 +37,7 @@ const teamCategories = [
 
 export default function Index() {
   const { teams } = usePage().props as any;
-  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<any>(null);

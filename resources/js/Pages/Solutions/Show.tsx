@@ -33,7 +33,7 @@ const ICONS = [
 ];
 
 
-
+import { usePage } from "@inertiajs/react";
 import Layout from "@/components/layout/Layout";
 import Solutionhead from "@/components/layout/Solutionhead";
 import ContactCTA from "@/components/layout/Contact";
@@ -45,9 +45,16 @@ import "aos/dist/aos.css";
 interface Solution {
     id: number;
     title: string;
+    title_ja?: string;
+
     subtitle: string | null;
+    subtitle_ja?: string | null;
+
     hero_description: string | null;
+    hero_description_ja?: string | null;
+
     hero_image: string | null;
+
     features: any[];
     use_cases: any[];
     industries: any[];
@@ -62,7 +69,11 @@ AOS.init({
 });
 
 export default function Show({ solution }: { solution: Solution }) {
+    const { lang } = usePage<{ lang: "en" | "ja" }>().props;
 
+    const getValue = (en?: string | null, ja?: string | null) => {
+        return (lang === "ja" ? ja || en : en) || "";
+    };
     const getIconByIndex = (index: number) => {
         return ICONS[index % ICONS.length];
     };
@@ -76,19 +87,22 @@ export default function Show({ solution }: { solution: Solution }) {
 
                     <div>
                         <h1 className="text-4xl font-bold mb-3">
-                            {solution.title}
+                            {getValue(solution.title, solution.title_ja)}
                         </h1>
 
                         {solution.subtitle && (
                             <p className="text-lg text-primary mb-4">
-                                {solution.subtitle}
+                                {getValue(solution.subtitle, solution.subtitle_ja)}
                             </p>
                         )}
 
                         <div
                             className="text-muted-foreground mb-8 leading-relaxed prose max-w-none"
                             dangerouslySetInnerHTML={{
-                                __html: solution.hero_description ?? "",
+                                __html: getValue(
+                                    solution.hero_description,
+                                    solution.hero_description_ja
+                                ),
                             }}
                         />
 
@@ -98,7 +112,7 @@ export default function Show({ solution }: { solution: Solution }) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Learn More <ArrowRight className="w-4 h-4 ml-2" />
+                                {getValue("Learn More", "詳細を見る")} <ArrowRight className="w-4 h-4 ml-2" />
                             </a>
                         </Button>
                     </div>
@@ -117,7 +131,8 @@ export default function Show({ solution }: { solution: Solution }) {
             <section className="py-16">
                 <div className="container mx-auto">
                     <h2 className="text-2xl font-bold text-center mb-2" data-aos="fade-up">
-                        Key Features of {solution.title}
+                        {getValue("Key Features of", "主な機能")}{" "}
+                        {getValue(solution.title, solution.title_ja)}
                     </h2>
                     <div className="w-20 h-1 bg-primary mx-auto mb-12" />
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -131,11 +146,11 @@ export default function Show({ solution }: { solution: Solution }) {
                                     <div className="w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center mb-4">
                                         <Icon className="w-6 h-6" />
                                     </div>
-                                    <h3 className="font-bold text-primary">{f.title}</h3>
-                                    <p className="text-muted-foreground">{f.subtitle}</p>
+                                    <h3 className="font-bold text-primary">{getValue(f.title, f.title_ja)}</h3>
+                                    <p className="text-muted-foreground">{getValue(f.subtitle, f.subtitle_ja)}</p>
                                     <div
                                         className="prose mt-2"
-                                        dangerouslySetInnerHTML={{ __html: f.description ?? "" }}
+                                        dangerouslySetInnerHTML={{ __html: getValue(f.description, f.description_ja) ?? "" }}
                                     />
                                 </div>
                             );
@@ -152,7 +167,7 @@ export default function Show({ solution }: { solution: Solution }) {
 
                         {/* Header */}
                         <h2 className="text-2xl font-bold text-center mb-2">
-                            Use Cases
+                            {getValue("Use Cases", "活用事例")}
                         </h2>
 
                         {/* Underline */}
@@ -160,8 +175,10 @@ export default function Show({ solution }: { solution: Solution }) {
 
                         {/* Intro text */}
                         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-                            {solution.title} is designed to address real-world business challenges
-                            across industries through practical, AI-driven use cases.
+                            {getValue(
+                                `${solution.title} is designed to address real-world business challenges across industries through practical, AI-driven use cases.`,
+                                "実践的なAI活用事例を通じて、さまざまな業界の現実的なビジネス課題を解決します。"
+                            )}
                         </p>
 
                         {/* Cards */}
@@ -174,13 +191,13 @@ export default function Show({ solution }: { solution: Solution }) {
                                 >
                                     {/* Title */}
                                     <h3 className="font-semibold text-foreground mb-1">
-                                        {u.title}
+                                        {getValue(u.title, u.title_ja)}
                                     </h3>
 
                                     {/* Subtitle */}
                                     {u.subtitle && (
                                         <p className="text-sm text-primary mb-2">
-                                            {u.subtitle}
+                                            {getValue(u.subtitle, u.subtitle_ja)}
                                         </p>
                                     )}
 
@@ -188,7 +205,7 @@ export default function Show({ solution }: { solution: Solution }) {
                                     <div
                                         className="text-sm text-muted-foreground leading-relaxed prose prose-sm max-w-none"
                                         dangerouslySetInnerHTML={{
-                                            __html: u.description ?? "",
+                                            __html: getValue(u.description, u.description_ja),
                                         }}
                                     />
                                 </div>
@@ -208,13 +225,16 @@ export default function Show({ solution }: { solution: Solution }) {
                     {/* Heading */}
                     <div className="text-center mb-14">
                         <h2 className="text-3xl font-bold text-foreground">
-                            Industry We Serve
+                            {getValue("Industry We Serve", "対応業界")}
                         </h2>
 
                         <div className="w-16 h-1 bg-pink-500 mx-auto mt-3 mb-4 rounded-full" />
 
                         <p className="text-muted-foreground">
-                            Enterprise-grade AI workflows built for multiple industries
+                            {getValue(
+                                "Enterprise-grade AI workflows built for multiple industries",
+                                "複数業界向けに構築されたエンタープライズAIワークフロー"
+                            )}
                         </p>
                     </div>
 
@@ -237,12 +257,12 @@ export default function Show({ solution }: { solution: Solution }) {
 
                                     {/* Title */}
                                     <h3 className="font-semibold text-foreground mb-1">
-                                        {ind.title}
+                                        {getValue(ind.title, ind.title_ja)}
                                     </h3>
 
                                     {/* Subtitle */}
                                     <p className="text-sm text-muted-foreground">
-                                        {ind.description}
+                                        {getValue(ind.description, ind.description_ja)}
                                     </p>
                                 </div>
                             );
@@ -258,18 +278,20 @@ export default function Show({ solution }: { solution: Solution }) {
 
                 <div className="container mx-auto space-y-6">
                     <div className="section-divider mb-8" data-aos="fade-left">
-                        <h2 className="text-2xl font-semibold">Case Studies</h2>
+                        <h2 className="text-2xl font-semibold">{getValue("Case Studies", "導入事例")}</h2>
                     </div>
                     {solution.case_studies.map((c, i) => (
                         <div data-aos="fade-right"
                             data-aos-delay={i * 90} key={i} className="bg-card border rounded-lg p-6">
-                            <h3 className="font-semibold text-primary">{c.title}</h3>
+                            <h3 className="font-semibold text-primary">{getValue(c.title, c.title_ja)}</h3>
                             <div
                                 className="prose mt-2"
-                                dangerouslySetInnerHTML={{ __html: c.summary ?? "" }}
+                                dangerouslySetInnerHTML={{
+                                    __html: getValue(c.summary, c.summary_ja),
+                                }}
                             />
                             {c.result && (
-                                <p className="text-primary mt-3">{c.result}</p>
+                                <p className="text-primary mt-3">{getValue(c.result, c.result_ja)}</p>
                             )}
                         </div>
                     ))}

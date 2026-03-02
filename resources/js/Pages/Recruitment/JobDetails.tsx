@@ -110,35 +110,40 @@ export default function JobDetail({ job }: { job: Job }) {
               {/* About */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">
-                  About the Role
+                  {getLangValue(lang, "About the Role", "仕事内容")}
                 </h2>
+
                 <div
                   className="prose max-w-none"
                   dangerouslySetInnerHTML={{
-  __html: getLangValue(lang, job.short_description, job.short_description_ja),
-}}
+                    __html: getLangValue(
+                      lang,
+                      job.short_description,
+                      job.short_description_ja
+                    ),
+                  }}
                 />
               </div>
 
               {/* Sections */}
               {[
-  [
-    "responsibilities",
-    getLangValue(lang, "Key Responsibilities", "主な業務内容"),
-  ],
-  [
-    "requirements",
-    getLangValue(lang, "Requirements", "応募条件"),
-  ],
-  [
-    "preferred",
-    getLangValue(lang, "Preferred Qualifications", "歓迎条件"),
-  ],
-  [
-    "offer",
-    getLangValue(lang, "What We Offer", "待遇・福利厚生"),
-  ],
-].map(([type, title]) => {
+                [
+                  "responsibilities",
+                  getLangValue(lang, "Key Responsibilities", "主な業務内容"),
+                ],
+                [
+                  "requirements",
+                  getLangValue(lang, "Requirements", "応募条件"),
+                ],
+                [
+                  "preferred",
+                  getLangValue(lang, "Preferred Qualifications", "歓迎条件"),
+                ],
+                [
+                  "offer",
+                  getLangValue(lang, "What We Offer", "待遇・福利厚生"),
+                ],
+              ].map(([type, title]) => {
                 const items = getSection(
                   type as JobSection["section_type"]
                 );
@@ -157,7 +162,7 @@ export default function JobDetail({ job }: { job: Job }) {
                         >
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5" />
                           <span className="text-muted-foreground">
-                            {item.content}
+                            {getLangValue(lang, item.content, item.content_ja)}
                           </span>
                         </li>
                       ))}

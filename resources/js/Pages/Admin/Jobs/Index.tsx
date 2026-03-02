@@ -65,7 +65,7 @@ interface Job {
 
 export default function Index({ jobs }: { jobs: Job[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
-  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const [current, setCurrent] = useState<Job | null>(null);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -168,11 +168,11 @@ export default function Index({ jobs }: { jobs: Job[] }) {
       })),
 
       title_ja: job.title_ja ?? "",
-      department_ja: job.department_ja ?? "",
-      location_ja: job.location_ja ?? "",
-      employment_type_ja: job.employment_type_ja ?? "",
-      experience_ja: job.experience_ja ?? "",
-      salary_ja: job.salary_ja ?? "",
+      department_ja: job.department_ja ?? job.department ?? "",
+      location_ja: job.location_ja ??  job.location ?? "",
+      employment_type_ja: job.employment_type_ja ?? job.employment_type ?? "",
+      experience_ja: job.experience_ja ?? job.experience ?? "",
+      salary_ja: job.salary_ja ?? job.salary ?? "",
       short_description_ja: job.short_description_ja ?? "",
       about_role_ja: job.about_role_ja ?? "",
     });
@@ -331,12 +331,12 @@ export default function Index({ jobs }: { jobs: Job[] }) {
               </div>
 
               {/* SHORT DESCRIPTION */}
-              {current.short_description_ja && (
+              {/* {current.short_description_ja && (
                 <div>
                   <h3 className="font-semibold mb-1">Short Description</h3>
                   <p>{current.short_description_ja}</p>
                 </div>
-              )}
+              )} */}
 
               {/* ABOUT ROLE */}
               <div>
@@ -546,6 +546,7 @@ export default function Index({ jobs }: { jobs: Job[] }) {
               <div className="space-y-2">
                 <label className="text-sm font-medium">About Role</label>
                 <ReactQuill
+                key={activeLang}
                   theme="snow"
                   value={activeLang === "en" ? data.about_role : data.about_role_ja}
                   onChange={(value) => activeLang === "en" ? setData("about_role", value) : setData("about_role_ja", value)}
@@ -599,8 +600,8 @@ export default function Index({ jobs }: { jobs: Job[] }) {
           {filteredJobs.map((job, i) => (
             <TableRow key={job.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{job.title_ja ?? "-"}</TableCell>
-              <TableCell>{job.department_ja ?? "-"}</TableCell>
+              <TableCell>{job.title ?? "-"}</TableCell>
+              <TableCell>{job.department ?? "-"}</TableCell>
               <TableCell>{job.status}</TableCell>
               <TableCell className="space-x-2 text-center">
                 {/* <Button title="View" size="icon" onClick={() => openView(job)}>

@@ -16,14 +16,14 @@ class HomeController extends Controller
 
             'updates' => Newsevent::orderBy('date', 'desc')
                 ->take(6)
-                ->get(['id','date','eventtype','short']),
+                ->get(['id','date','eventtype','short', 'short_ja']),
 
             'services' => Service::select(
-                'id','title','slug','hero_description'
+                'id','title','slug','hero_description','title_ja','hero_description_ja'
             )->orderBy('id')->get(),
 
             'solutions' => Solution::select(
-                'id','title','slug','hero_description'
+                'id','title','slug','hero_description','title_ja','hero_description_ja'
             )->orderBy('id')->get(),
         ]);
     }

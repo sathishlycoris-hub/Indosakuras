@@ -30,25 +30,37 @@ class PolicyController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'title_ja' => 'nullable|string|max:255',
+
             'slug'  => 'required|string|max:255|unique:policies,slug',
+
             'intro' => 'required|string',
+            'intro_ja' => 'nullable|string',
 
             'sections' => 'required|array|min:1',
+
             'sections.*.title' => 'required|string|max:255',
+            'sections.*.title_ja' => 'nullable|string|max:255',
+
             'sections.*.description' => 'required|string',
+            'sections.*.description_ja' => 'nullable|string',
         ]);
 
         $policy = Policy::create([
             'title' => $data['title'],
+            'title_ja' => $data['title_ja'] ?? null,
             'slug' => Str::slug($data['slug']),
             'intro' => $data['intro'],
+            'intro_ja' => $data['intro_ja'] ?? null,
         ]);
 
         foreach ($data['sections'] as $index => $section) {
             PolicySection::create([
                 'policy_id' => $policy->id,
                 'title' => $section['title'],
+                'title_ja' => $section['title_ja'] ?? null,
                 'description' => $section['description'],
+                'description_ja' => $section['description_ja'] ?? null,
                 'sort_order' => $index,
             ]);
         }
@@ -65,28 +77,40 @@ class PolicyController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'title_ja' => 'nullable|string|max:255',
+
             'slug'  => 'required|string|max:255|unique:policies,slug,' . $policy->id,
+
             'intro' => 'required|string',
+            'intro_ja' => 'nullable|string',
 
             'sections' => 'required|array|min:1',
+
             'sections.*.title' => 'required|string|max:255',
+            'sections.*.title_ja' => 'nullable|string|max:255',
+
             'sections.*.description' => 'required|string',
+            'sections.*.description_ja' => 'nullable|string',
         ]);
 
         $policy->update([
             'title' => $data['title'],
+            'title_ja' => $data['title_ja'] ?? null,
             'slug' => Str::slug($data['slug']),
             'intro' => $data['intro'],
+            'intro_ja' => $data['intro_ja'] ?? null,
         ]);
 
-        // Replace sections (same as Jobs pattern)
+        // Remove old sections
         $policy->sections()->delete();
 
         foreach ($data['sections'] as $index => $section) {
             PolicySection::create([
                 'policy_id' => $policy->id,
                 'title' => $section['title'],
+                'title_ja' => $section['title_ja'] ?? null,
                 'description' => $section['description'],
+                'description_ja' => $section['description_ja'] ?? null,
                 'sort_order' => $index,
             ]);
         }

@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import { usePage } from "@inertiajs/react";
 
 
 /* ================= TYPES ================= */
@@ -23,14 +23,18 @@ import "aos/dist/aos.css";
 interface Highlight {
   id: number;
   title: string;
+  title_ja?: string;
   value?: string;
   description?: string;
+  description_ja?: string;
 }
 
 interface Benefit {
   id: number;
   title: string;
+  title_ja?: string;
   description?: string;
+  description_ja?: string;
 }
 
 interface Industry {
@@ -41,13 +45,15 @@ interface Industry {
 
 interface Service {
   title: string;
+  title_ja?: string;
   subtitle?: string;
+  subtitle_ja?: string;
   hero_description?: string;
-  hero_image?: string | null;
+  hero_description_ja?: string;
   how_it_works?: string;
+  how_it_works_ja?: string;
   highlights: Highlight[];
   benefits: Benefit[];
-  industries: Industry[];
 }
 
 interface Props {
@@ -77,8 +83,10 @@ AOS.init({
 /* ================= COMPONENT ================= */
 
 export default function Show({ service }: Props) {
-  const { language } = useLanguage();
-
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
+  const getValue = (en?: string | null, ja?: string | null): string => {
+    return (lang === "ja" ? ja || en : en) || "";
+  };
   return (
     <Layout>
       <Serviceshead />
@@ -90,18 +98,18 @@ export default function Show({ service }: Props) {
             <div
               className="prose prose-invert max-w-2xl mb-4 "
               dangerouslySetInnerHTML={{
-                __html: service.hero_description,
+                __html: getValue(service.hero_description, service.hero_description_ja),
               }}
             />
           )}
 
 
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            {service.title}
+            {getValue(service.title, service.title_ja)}
           </h1>
 
           {service.subtitle && (
-            <p className="text-lg opacity-90 mb-2 max-w-2xl">{service.subtitle}</p>
+            <p className="text-lg opacity-90 mb-2 max-w-2xl">{getValue(service.subtitle, service.subtitle_ja)}</p>
           )}
         </div>
       </section>
@@ -113,7 +121,7 @@ export default function Show({ service }: Props) {
 
             {/* Title */}
             <h2 className="text-4xl md:text-4xl font-bold text-center text-primary mb-16 tracking-tight">
-              Why {service.title}
+              Why {getValue(service.title, service.title_ja)}?
             </h2>
 
             {/* Highlights Grid */}
@@ -138,18 +146,18 @@ export default function Show({ service }: Props) {
 
                   {/* Title */}
                   <h3 data-aos="fade-up"
-                  data-aos-delay={index * 80} className="text-xl md:text-2xl font-semibold text-primary mb-6">
-                    {h.title}
+                    data-aos-delay={index * 80} className="text-xl md:text-2xl font-semibold text-primary mb-6">
+                    {getValue(h.title, h.title_ja)}
                   </h3>
 
                   {/* Description */}
                   {h.description && (
                     <div data-aos="fade-up"
-                  data-aos-delay={index * 80}
+                      data-aos-delay={index * 80}
                       className="text-sm md:text-base text-muted-foreground leading-relaxed
                            prose prose-sm max-w-none"
                       dangerouslySetInnerHTML={{
-                        __html: h.description,
+                        __html: getValue(h.description, h.description_ja),
                       }}
                     />
                   )}
@@ -175,15 +183,15 @@ export default function Show({ service }: Props) {
           <div className="container mx-auto px-6">
 
             {/* Title */}
-            <h2 className="text-[32px] font-semibold text-center text-primary mb-6"data-aos="fade-up">
-              {language === "en"
-                ? `Benefits of ${service.title}`
-                : `${service.title} のメリット`}
+            <h2 className="text-[32px] font-semibold text-center text-primary mb-6" data-aos="fade-up">
+              {lang === "en"
+                ? `Benefits of ${getValue(service.title, service.title_ja)}`
+                : `${getValue(service.title, service.title_ja)} のメリット`}
             </h2>
 
             {/* Intro */}
             <p className="text-center text-gray-700 max-w-3xl mx-auto mb-16 leading-relaxed" data-aos="fade-up">
-              {language === "en"
+              {lang === "en"
                 ? "AI-driven development transforms the development process by incorporating AI, solving traditional issues such as speed limitations, quality variations, and hidden costs."
                 : "AI駆動開発はAIを取り入れることで、従来の開発手法が抱える速度・品質・隠れコストなどの課題を根本的に解決します。"}
             </p>
@@ -191,13 +199,13 @@ export default function Show({ service }: Props) {
             {/* Benefit Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {service.benefits.map((b, index) => {
-                
+
                 const Icon = getBenefitIcon(index);
 
                 return (
                   <div
-                  data-aos="fade-up"
-                  data-aos-delay={index * 80}
+                    data-aos="fade-up"
+                    data-aos-delay={index * 80}
                     key={b.id}
                     className="bg-white p-10 rounded-xl border shadow-sm text-center"
                   >
@@ -206,8 +214,8 @@ export default function Show({ service }: Props) {
 
                     {/* Title */}
                     <h3 data-aos="fade-up"
-                  data-aos-delay={index * 80} className="text-lg font-semibold text-primary mb-2">
-                      {b.title}
+                      data-aos-delay={index * 80} className="text-lg font-semibold text-primary mb-2">
+                      {getValue(b.title, b.title_ja)}
                     </h3>
 
                     {/* Subtitle (optional) */}
@@ -220,11 +228,11 @@ export default function Show({ service }: Props) {
                     {/* Description (HTML) */}
                     {b.description && (
                       <div data-aos="fade-up"
-                  data-aos-delay={index * 80}
+                        data-aos-delay={index * 80}
                         className=" text-gray-600 leading-relaxed prose prose-sm max-w-none mx-auto"
                         dangerouslySetInnerHTML={{
-                          __html: b.description,
-                        }}
+                          __html: getValue(b.description, b.description_ja),
+                        }}  
                       />
                     )}
                   </div>

@@ -2,13 +2,21 @@ import { Link, usePage } from "@inertiajs/react";
 
 interface SolutionNavItem {
   title: string;
+  title_ja?: string
   slug: string;
 }
 
 export default function Solutionhead() {
   const { url, props } = usePage<{
     solutionNav?: SolutionNavItem[];
+    lang: "en" | "ja";
   }>();
+
+  const { lang } = props;
+
+  const getValue = (en?: string, ja?: string) => {
+    return lang === "ja" ? ja || en : en;
+  };
 
   const solutionNav = Array.isArray(props.solutionNav)
     ? props.solutionNav
@@ -16,12 +24,12 @@ export default function Solutionhead() {
 
   const tabs = [
     {
-      label: "Solutions TOP",
+      label: getValue("Solutions TOP", "ソリューショントップ"),
       path: "/solutions",
       exact: true,
     },
     ...solutionNav.map((solution) => ({
-      label: solution.title,
+      label: getValue(solution.title, solution.title_ja),
       path: `/solutions/${solution.slug}`,
     })),
   ];
@@ -41,11 +49,10 @@ export default function Solutionhead() {
             <div key={item.path} className="flex items-center">
               <Link
                 href={item.path}
-                className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(item)
-                    ? "text-primary border-b-2 border-primary"
-                    : "text-muted-foreground"
-                }`}
+                className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${isActive(item)
+                  ? "text-primary border-b-2 border-primary"
+                  : "text-muted-foreground"
+                  }`}
               >
                 {item.label}
               </Link>

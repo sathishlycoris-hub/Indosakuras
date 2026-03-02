@@ -23,23 +23,24 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Inertia::share([
+            'lang' => fn() => app()->getLocale(),
 
-            'lang' => fn() => session('lang', 'en'),
+            // 'lang' => fn() => session('lang', 'en'),
             'flash' => fn() => [
                 'success' => session('success'),
                 'error' => session('error'),
             ],
 
             //  GLOBAL service navigation
-            'serviceNav' => fn() => Service::select('title', 'slug')
+            'serviceNav' => fn() => Service::select('title', 'title_ja', 'slug')
                 ->orderBy('id')
                 ->get(),
 
             'footerServices' => fn() =>
-            Service::select('title', 'slug')->orderBy('slug')->get(),
+            Service::select('title', 'title_ja', 'slug')->orderBy('slug')->get(),
 
             'footerSolutions' => fn() =>
-            Solution::select('title', 'slug')->orderBy('id')->get(),
+            Solution::select('title', 'title_ja', 'slug')->orderBy('id')->get(),
         ]);
     }
 }

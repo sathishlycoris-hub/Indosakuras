@@ -12,8 +12,10 @@ class ServiceHighlight extends Model
     protected $fillable = [
         'service_id',
         'title',
+        'title_ja',
         'value',        // e.g. 99.9%, 50%+
         'description',
+        'description_ja',
         'sort_order',
     ];
 

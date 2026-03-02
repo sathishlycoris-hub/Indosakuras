@@ -12,8 +12,11 @@ class SolutionUseCase extends Model
      protected $fillable = [
         'solution_id',
         'title',
+        'title_ja',
         'subtitle',
+        'subtitle_ja',
         'description',
+        'description_ja',
         'image',
         'sort_order',
     ];

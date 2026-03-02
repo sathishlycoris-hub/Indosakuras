@@ -54,7 +54,7 @@ interface PageProps {
 
 export default function Index({ events, eventTypes }: PageProps) {
 
-  const [activeLang, setActiveLang] = useState<"en" | "ja">("ja");
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editItem, setEditItem] = useState<NewsEvent | null>(null);
   const [existingImage, setExistingImage] = useState<string | null>(null);
@@ -207,6 +207,8 @@ export default function Index({ events, eventTypes }: PageProps) {
 
               <Label>Description *</Label>
               <ReactQuill
+              key={activeLang}
+              
                 theme="snow"
                 value={activeLang === "en" ? data.description : data.description_ja}
                 onChange={(value) =>
@@ -381,6 +383,7 @@ export default function Index({ events, eventTypes }: PageProps) {
 
             <Label>Description *</Label>
             <ReactQuill
+              key={activeLang}
               theme="snow"
               value={activeLang === "en" ? data.description : data.description_ja}
               onChange={(value) =>

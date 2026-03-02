@@ -193,6 +193,13 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
           {mode !== "view" && (
             <div className="space-y-5 mt-6">
               <div className="flex gap-2">
+                <Button
+    type="button"
+    variant={activeLang === "ja" ? "default" : "outline"}
+    onClick={() => setActiveLang("ja")}
+  >
+    Japanese
+  </Button>
   <Button
     type="button"
     variant={activeLang === "en" ? "default" : "outline"}
@@ -201,13 +208,7 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
     English
   </Button>
 
-  <Button
-    type="button"
-    variant={activeLang === "ja" ? "default" : "outline"}
-    onClick={() => setActiveLang("ja")}
-  >
-    Japanese
-  </Button>
+  
 </div>
               {/* Title */}
               <div className="space-y-1">
@@ -226,6 +227,7 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
               <div className="space-y-2">
                 <label className="font-medium">Content</label>
                 <ReactQuill
+                key={activeLang}
                   value={activeLang === "en" ? data.content : data.content_ja}
                   onChange={(v) =>
                     activeLang === "en"
@@ -272,6 +274,7 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
               <div className="space-y-2">
                 <label className="font-medium">Description</label>
                 <ReactQuill
+                key={activeLang}
                   value={activeLang === "en" ? data.description : data.description_ja}
                   onChange={(v) =>
                     activeLang === "en"

@@ -176,6 +176,13 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
           {mode !== "view" && (
             <div className="space-y-5 mt-6">
               <div className="flex gap-2">
+                 <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
                 <Button
                   type="button"
                   variant={activeLang === "en" ? "default" : "outline"}
@@ -184,13 +191,7 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
                   English
                 </Button>
 
-                <Button
-                  type="button"
-                  variant={activeLang === "ja" ? "default" : "outline"}
-                  onClick={() => setActiveLang("ja")}
-                >
-                  Japanese
-                </Button>
+               
               </div>
 
               {/* Title */}
@@ -210,6 +211,7 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
               <div className="space-y-2">
                 <label className="font-medium">Description</label>
                 <ReactQuill
+                key={activeLang}
                   theme="snow"
                   value={activeLang === "en" ? data.description : data.description_ja}
                   onChange={(value) =>

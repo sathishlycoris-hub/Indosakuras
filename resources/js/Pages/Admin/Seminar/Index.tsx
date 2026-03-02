@@ -441,7 +441,7 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
                 </div>
 
                 {/* Tags */}
-                <div className="space-y-1">
+                {/* <div className="space-y-1">
                   <label className="font-medium">
                     Tags (comma separated)
                   </label>
@@ -450,7 +450,7 @@ export default function Index({ seminars }: { seminars: Seminar[] }) {
                     value={data.tags}
                     onChange={(e) => setData("tags", e.target.value)}
                   />
-                </div>
+                </div> */}
 
                 {/* Status */}
                 <div className="space-y-1">

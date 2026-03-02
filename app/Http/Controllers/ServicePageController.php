@@ -14,27 +14,41 @@ class ServicePageController extends Controller
     public function index()
     {
         return Inertia::render('Services', [
-             'lang' => app()->getLocale(),
-            'seo' => Seo::where('page', 'services')->first(), 
+            'lang' => app()->getLocale(),
+            'seo' => Seo::where('page', 'services')->first(),
             'services' => Service::select(
                 'id',
                 'title',
+                'title_ja',
                 'slug',
                 'subtitle',
+                'subtitle_ja',
                 'hero_image'
             )
                 ->orderBy('id')
                 ->get(),
 
-            'faqs' => Faq::select('id', 'question', 'question_ja','answer_ja', 'answer')
+            'faqs' => Faq::select(
+                'id',
+                'question',
+                'question_ja',
+                'answer',
+                'answer_ja'
+            )
                 ->orderBy('id')
                 ->get(),
 
-            'industries' => ServiceIndustry::orderBy('sort_order')->get(),
+            'industries' => ServiceIndustry::select(
+                'id',
+                'title',
+                'title_ja',
+                'description',
+                'description_ja'
+            )->orderBy('sort_order')->get(),
 
-            'serviceNav' => Service::select('title', 'slug')
-            ->orderBy('id')
-            ->get(),
+            'serviceNav' => Service::select('title', 'title_ja', 'slug')
+                ->orderBy('id')
+                ->get(),
         ]);
     }
 
@@ -46,10 +60,10 @@ class ServicePageController extends Controller
 
         return Inertia::render('Services/Show', [
             'service' => $service,
-            
-        'serviceNav' => Service::select('title', 'slug')
-            ->orderBy('id')
-            ->get(),
+
+            'serviceNav' => Service::select('title', 'slug')
+                ->orderBy('id')
+                ->get(),
         ]);
     }
 }

@@ -11,11 +11,15 @@ class Service extends Model
 
     protected $fillable = [
         'title',
+        'title_ja',
         'slug',
         'subtitle',
+        'subtitle_ja',
         'hero_description',
+        'hero_description_ja',
         'hero_image',
         'how_it_works',
+        'how_it_works_ja',
     ];
 
     public function highlights()

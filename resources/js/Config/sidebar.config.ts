@@ -41,12 +41,7 @@ export const sidebarItems: SidebarItem[] = [
     href: route("admin.job-applications.index"),
     role: ["admin"],
   },
-  {
-    label: "Add Jobs",
-    icon: FilePlus,
-    href: route("admin.jobs.index"),
-    role: ["admin"],
-  },
+  
   {
     label: "News Event",
     icon: Newspaper,
@@ -113,6 +108,12 @@ export const sidebarItems: SidebarItem[] = [
     href: route("admin.policy.index"),
     role: ["admin"],
   },
+   {
+    label: "Add Jobs",
+    icon: FilePlus,
+    href: route("admin.jobs.index"),
+    role: ["admin"],
+  },
   {
     label: "Solutions",
     icon: Puzzle,
@@ -137,4 +138,5 @@ export const sidebarItems: SidebarItem[] = [
     href: route("admin.seo.index"),
     role: ["admin"],
   },
+ 
 ];

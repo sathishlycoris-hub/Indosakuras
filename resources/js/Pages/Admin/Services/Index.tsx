@@ -20,33 +20,41 @@ import {
 import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { title } from "process";
 
 /* ================= TYPES ================= */
 
 interface Highlight {
   value: string;
   title: string;
+  title_ja?: string;
   description?: string;
 }
 
 interface Benefit {
   title: string;
+  title_ja?: string;
   description?: string;
 }
 
 interface Industry {
   title: string;
+  title_ja?: string;
   description?: string;
 }
 
 interface Service {
   id: number;
   title: string;
+  title_ja?: string;
   slug: string;
   subtitle?: string;
+  subtitle_ja?: string;
   hero_description?: string;
+  hero_description_ja?: string;
   hero_image?: string | null;
   how_it_works?: string;
+  how_it_works_ja?: string;
   highlights: Highlight[];
   benefits: Benefit[];
   // industries: Industry[];
@@ -62,15 +70,27 @@ export default function Index({ services }: { services: Service[] }) {
   const [current, setCurrent] = useState<Service | null>(null);
   const [open, setOpen] = useState(false);
 
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
+
   const { data, setData, reset, processing } = useForm({
     title: "",
+    title_ja: "",
+
     slug: "",
+
     subtitle: "",
+    subtitle_ja: "",
+
     hero_description: "",
+    hero_description_ja: "",
+
     how_it_works: "",
+    how_it_works_ja: "",
+
     hero_image: null as File | null,
-    highlights: [] as Highlight[],
-    benefits: [] as Benefit[],
+
+    highlights: [] as any[],
+    benefits: [] as any[],
     // industries: [] as Industry[],
   });
 
@@ -89,12 +109,16 @@ export default function Index({ services }: { services: Service[] }) {
     setOpen(true);
 
     setData({
-      title: service.title,
+      title: service.title || "",
+      title_ja: service.title_ja || "",
       slug: service.slug,
       subtitle: service.subtitle || "",
+      subtitle_ja: service.subtitle_ja || "",
       hero_description: service.hero_description || "",
+      hero_description_ja: service.hero_description_ja || "",
       hero_image: null,
       how_it_works: service.how_it_works || "",
+      how_it_works_ja: service.how_it_works_ja || "",
       highlights: service.highlights || [],
       benefits: service.benefits || [],
       // industries: service.industries || [],
@@ -111,41 +135,48 @@ export default function Index({ services }: { services: Service[] }) {
 
   /* ================= SAVE ================= */
 
-  const submit = () => {
-    const form = new FormData();
+ const submit = () => {
+  const form = new FormData();
 
-    form.append("title", data.title);
-    form.append("slug", data.slug);
-    form.append("subtitle", data.subtitle);
-    form.append("hero_description", data.hero_description);
-    form.append("how_it_works", data.how_it_works);
+  form.append("title", data.title || "");
+  form.append("title_ja", data.title_ja || "");
 
-    if (data.hero_image) {
-      form.append("hero_image", data.hero_image);
-    }
+  form.append("slug", data.slug || "");
 
-    form.append("highlights", JSON.stringify(data.highlights));
-    form.append("benefits", JSON.stringify(data.benefits));
-    // form.append("industries", JSON.stringify(data.industries));
+  form.append("subtitle", data.subtitle || "");
+  form.append("subtitle_ja", data.subtitle_ja || "");
 
-    if (mode === "edit" && current) {
-      form.append("_method", "PUT");
-      router.post(route("admin.services.update", current.id), form, {
-        onSuccess: () => {
-          reset();
-          setOpen(false);
-        },
-      });
-    } else {
-      router.post(route("admin.services.store"), form, {
-        onSuccess: () => {
-          reset();
-          setOpen(false);
-        },
-      });
-    }
-  };
+  form.append("hero_description", data.hero_description || "");
+  form.append("hero_description_ja", data.hero_description_ja || "");
 
+  form.append("how_it_works", data.how_it_works || "");
+  form.append("how_it_works_ja", data.how_it_works_ja || "");
+
+  if (data.hero_image) {
+    form.append("hero_image", data.hero_image);
+  }
+
+  form.append("highlights", JSON.stringify(data.highlights));
+  form.append("benefits", JSON.stringify(data.benefits));
+
+  if (mode === "edit" && current) {
+    form.append("_method", "PUT");
+
+    router.post(route("admin.services.update", current.id), form, {
+      onSuccess: () => {
+        reset();
+        setOpen(false);
+      },
+    });
+  } else {
+    router.post(route("admin.services.store"), form, {
+      onSuccess: () => {
+        reset();
+        setOpen(false);
+      },
+    });
+  }
+};
   const submitUpdate = () => {
     if (!current) return;
 
@@ -238,12 +269,34 @@ export default function Index({ services }: { services: Service[] }) {
           {mode !== "view" && (
             <div className="space-y-6 mt-6">
 
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+
+                <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
+              </div>
+
               {/* Title */}
               <div className="space-y-1">
                 <label className="font-medium">Title</label>
                 <Input
-                  value={data.title}
-                  onChange={(e) => setData("title", e.target.value)}
+                  value={activeLang === "en" ? data.title : data.title_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
                 />
               </div>
 
@@ -260,8 +313,12 @@ export default function Index({ services }: { services: Service[] }) {
               <div className="space-y-1">
                 <label className="font-medium">Subtitle</label>
                 <Input
-                  value={data.subtitle}
-                  onChange={(e) => setData("subtitle", e.target.value)}
+                  value={activeLang === "en" ? data.subtitle : data.subtitle_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("subtitle", e.target.value)
+                      : setData("subtitle_ja", e.target.value)
+                  }
                 />
               </div>
 
@@ -269,9 +326,18 @@ export default function Index({ services }: { services: Service[] }) {
               <div className="space-y-2">
                 <label className="font-medium">Hero Description</label>
                 <ReactQuill
+                  key={activeLang}
                   theme="snow"
-                  value={data.hero_description}
-                  onChange={(v) => setData("hero_description", v)}
+                  value={
+                    activeLang === "en"
+                      ? data.hero_description
+                      : data.hero_description_ja
+                  }
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("hero_description", v)
+                      : setData("hero_description_ja", v)
+                  }
                 />
               </div>
 
@@ -312,9 +378,18 @@ export default function Index({ services }: { services: Service[] }) {
               <div className="space-y-2">
                 <label className="font-medium">How It Works</label>
                 <ReactQuill
+                  key={`how-${activeLang}`}
                   theme="snow"
-                  value={data.how_it_works}
-                  onChange={(v) => setData("how_it_works", v)}
+                  value={
+                    activeLang === "en"
+                      ? data.how_it_works
+                      : data.how_it_works_ja
+                  }
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("how_it_works", v)
+                      : setData("how_it_works_ja", v)
+                  }
                 />
               </div>
 
@@ -326,6 +401,8 @@ export default function Index({ services }: { services: Service[] }) {
                   addItem("highlights", {
                     value: "",
                     title: "",
+                    title_ja: "",
+                    description_ja: "",
                     description: "",
                   })
                 }
@@ -342,17 +419,36 @@ export default function Index({ services }: { services: Service[] }) {
 
                     <Input
                       placeholder="Title"
-                      value={item.title}
+                      value={
+                        activeLang === "en"
+                          ? item.title
+                          : item.title_ja || ""
+                      }
                       onChange={(e) =>
-                        updateItem("highlights", i, "title", e.target.value)
+                        updateItem(
+                          "highlights",
+                          i,
+                          activeLang === "en" ? "title" : "title_ja",
+                          e.target.value
+                        )
                       }
                     />
 
                     <ReactQuill
+                      key={`${activeLang}-highlight-${i}`}
                       theme="snow"
-                      value={item.description || ""}
+                      value={
+                        activeLang === "en"
+                          ? item.description || ""
+                          : item.description_ja || ""
+                      }
                       onChange={(v) =>
-                        updateItem("highlights", i, "description", v)
+                        updateItem(
+                          "highlights",
+                          i,
+                          activeLang === "en" ? "description" : "description_ja",
+                          v
+                        )
                       }
                     />
                   </div>
@@ -364,24 +460,48 @@ export default function Index({ services }: { services: Service[] }) {
                 title="Benefits"
                 items={data.benefits}
                 onAdd={() =>
-                  addItem("benefits", { title: "", description: "" })
+                  addItem("benefits", {
+                    title: "",
+                    title_ja: "",
+                    description: "",
+                    description_ja: "",
+                  })
                 }
                 onRemove={(i) => removeItem("benefits", i)}
                 render={(item, i) => (
                   <div className="space-y-2">
                     <Input
                       placeholder="Title"
-                      value={item.title}
+                      value={
+                        activeLang === "en"
+                          ? item.title || ""
+                          : item.title_ja || ""
+                      }
                       onChange={(e) =>
-                        updateItem("benefits", i, "title", e.target.value)
+                        updateItem(
+                          "benefits",
+                          i,
+                          activeLang === "en" ? "title" : "title_ja",
+                          e.target.value
+                        )
                       }
                     />
 
                     <ReactQuill
+                      key={`${activeLang}-benefit-${i}`}
                       theme="snow"
-                      value={item.description || ""}
+                      value={
+                        activeLang === "en"
+                          ? item.description || ""
+                          : item.description_ja || ""
+                      }
                       onChange={(v) =>
-                        updateItem("benefits", i, "description", v)
+                        updateItem(
+                          "benefits",
+                          i,
+                          activeLang === "en" ? "description" : "description_ja",
+                          v
+                        )
                       }
                     />
                   </div>

@@ -12,7 +12,9 @@ class SolutionIndustry extends Model
     protected $fillable = [
     'solution_id',
     'title',
+    'title_ja',
     'description',
+    'description_ja',
     'sort_order',
     'icon',
     ];

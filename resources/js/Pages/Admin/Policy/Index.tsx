@@ -18,7 +18,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
-
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -26,18 +25,19 @@ import "react-quill/dist/quill.snow.css";
 
 interface PolicySection {
   title: string;
+  title_ja: string;
   description: string;
+  description_ja: string;
 }
 
 interface Policy {
   id: number;
   title: string;
+  title_ja?: string;
   slug: string;
   intro: string;
-  sections: {
-    title: string;
-    description: string;
-  }[];
+  intro_ja?: string;
+  sections: PolicySection[];
 }
 
 /* ================= COMPONENT ================= */
@@ -46,30 +46,32 @@ export default function Index({ policies }: { policies: Policy[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Policy | null>(null);
   const [open, setOpen] = useState(false);
+  const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
 
-  const { data, setData, post, reset, processing } = useForm<{
-    title: string;
-    slug: string;
-    intro: string;
-    sections: PolicySection[];
-  }>({
+  const { data, setData, post, put, reset, processing } = useForm({
     title: "",
+    title_ja: "",
     slug: "",
     intro: "",
-    sections: [],
+    intro_ja: "",
+    sections: [] as PolicySection[],
   });
 
   /* ================= OPEN ADD ================= */
   const openAdd = () => {
     reset();
-    setData({
-      title: "",
-      slug: "",
-      intro: "",
-      sections: [{ title: "", description: "" }],
-    });
     setMode("add");
     setCurrent(null);
+    setData({
+      title: "",
+      title_ja: "",
+      slug: "",
+      intro: "",
+      intro_ja: "",
+      sections: [
+        { title: "", title_ja: "", description: "", description_ja: "" },
+      ],
+    });
     setOpen(true);
   };
 
@@ -77,15 +79,20 @@ export default function Index({ policies }: { policies: Policy[] }) {
   const openEdit = (policy: Policy) => {
     setMode("edit");
     setCurrent(policy);
+    setActiveLang("en");
     setOpen(true);
 
     setData({
       title: policy.title,
+      title_ja: policy.title_ja || "",
       slug: policy.slug,
       intro: policy.intro,
+      intro_ja: policy.intro_ja || "",
       sections: policy.sections.map((s) => ({
-        title: s.title,
-        description: s.description,
+        title: s.title || "",
+        title_ja: s.title_ja || "",
+        description: s.description || "",
+        description_ja: s.description_ja || "",
       })),
     });
   };
@@ -100,15 +107,6 @@ export default function Index({ policies }: { policies: Policy[] }) {
   /* ================= SAVE ================= */
   const submitAdd = () => {
     post(route("admin.policy.store"), {
-      data: {
-        title: data.title,
-        slug: data.slug,
-        intro: data.intro,
-        sections: data.sections.map((s) => ({
-          title: s.title,
-          description: s.description,
-        })),
-      },
       onSuccess: () => {
         reset();
         setOpen(false);
@@ -116,48 +114,28 @@ export default function Index({ policies }: { policies: Policy[] }) {
     });
   };
 
-  const submitUpdate = () => {
-    if (!current) return;
+const submitUpdate = () => {
+  if (!current) return;
 
-    router.post(
-      route("admin.policy.update", current.id),
-      {
-        _method: "PUT",
-        title: data.title,
-        slug: data.slug,
-        intro: data.intro,
-        sections: data.sections.map((s) => ({
-          title: s.title,
-          description: s.description,
-        })),
-      },
-      {
-        onSuccess: () => {
-          reset();
-          setOpen(false);
-        },
-      }
-    );
-  };
-
-  /* ================= DELETE ================= */
-  const deleteItem = (id: number) => {
-    if (confirm("Delete this policy?")) {
-      router.delete(route("admin.policy.destroy", id));
-    }
-  };
+  put(route("admin.policy.update", current.id), {
+    onSuccess: () => {
+      reset();
+      setOpen(false);
+    },
+  });
+};
 
   /* ================= SECTION HELPERS ================= */
   const addSection = () => {
     setData("sections", [
       ...data.sections,
-      { title: "", description: "" },
+      { title: "", title_ja: "", description: "", description_ja: "" },
     ]);
   };
 
   const updateSection = (
     index: number,
-    field: "title" | "description",
+    field: keyof PolicySection,
     value: string
   ) => {
     const updated = [...data.sections];
@@ -171,11 +149,12 @@ export default function Index({ policies }: { policies: Policy[] }) {
     setData("sections", updated);
   };
 
+  /* ================= UI ================= */
+
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Policies</h2>}>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Policies</h1>
-
         <Button onClick={openAdd}>
           <Plus className="w-4 h-4 mr-2" />
           Add Policy
@@ -184,161 +163,205 @@ export default function Index({ policies }: { policies: Policy[] }) {
 
       {/* ================= SHEET ================= */}
       <Sheet open={open} onOpenChange={setOpen}>
-  <SheetContent className="w-[90%] sm:max-w-4xl overflow-y-auto">
-    <SheetHeader>
-      <SheetTitle>
-        {mode === "add" && "Add Policy"}
-        {mode === "edit" && "Edit Policy"}
-        {mode === "view" && "Policy Details"}
-      </SheetTitle>
-    </SheetHeader>
+        <SheetContent className="w-[90%] sm:max-w-4xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {mode === "add" && "Add Policy"}
+              {mode === "edit" && "Edit Policy"}
+              {mode === "view" && "Policy Details"}
+            </SheetTitle>
+          </SheetHeader>
 
-    {/* ================= VIEW ================= */}
-    {mode === "view" && current && (
-      <div className="space-y-6 mt-6">
-        <div>
-          <strong>Title</strong>
-          <p className="mt-1">{current.title}</p>
-        </div>
+          {/* ================= VIEW ================= */}
+          {mode === "view" && current && (
+            <div className="space-y-6 mt-6">
 
-        <div>
-          <strong>Slug</strong>
-          <p className="mt-1">{current.slug}</p>
-        </div>
+              <div className="flex gap-3">
+                <Button
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
+                </Button>
+                <Button
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
+              </div>
 
-        <div>
-          <strong>Intro</strong>
-          <div
-            className="prose max-w-none mt-2"
-            dangerouslySetInnerHTML={{ __html: current.intro }}
-          />
-        </div>
+              <div>
+                <strong>Title</strong>
+                <p className="mt-1">
+                  {activeLang === "en"
+                    ? current.title
+                    : current.title_ja || current.title}
+                </p>
+              </div>
 
-        <div>
-          <strong>Sections</strong>
-          <div className="space-y-6 mt-4">
-            {current.sections.map((s, i) => (
-              <div key={i}>
-                <h4 className="font-semibold">{s.title}</h4>
+              <div>
+                <strong>Intro</strong>
                 <div
                   className="prose max-w-none mt-2"
                   dangerouslySetInnerHTML={{
-                    __html: s.description,
+                    __html:
+                      activeLang === "en"
+                        ? current.intro
+                        : current.intro_ja || current.intro,
                   }}
                 />
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )}
 
-    {/* ================= ADD / EDIT ================= */}
-    {mode !== "view" && (
-      <div className="space-y-6 mt-6">
+              <div className="space-y-6">
+                {current.sections.map((s, i) => (
+                  <div key={i}>
+                    <h4 className="font-semibold">
+                      {activeLang === "en"
+                        ? s.title
+                        : s.title_ja || s.title}
+                    </h4>
+                    <div
+                      className="prose max-w-none mt-2"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          activeLang === "en"
+                            ? s.description
+                            : s.description_ja || s.description,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
-        {/* Policy Title */}
-        <div className="space-y-1">
-          <label className="font-medium">Policy Title</label>
-          <Input
-            placeholder="Policy Title"
-            value={data.title}
-            onChange={(e) => setData("title", e.target.value)}
-          />
-        </div>
+          {/* ================= ADD / EDIT ================= */}
+          {mode !== "view" && (
+            <div className="space-y-6 mt-6">
 
-        {/* Slug */}
-        <div className="space-y-1">
-          <label className="font-medium">Slug</label>
-          <Input
-            placeholder="privacy-policy"
-            value={data.slug}
-            onChange={(e) => setData("slug", e.target.value)}
-          />
-        </div>
-
-        {/* Intro */}
-        <div className="space-y-2">
-          <label className="font-medium">Intro</label>
-          <ReactQuill
-            theme="snow"
-            value={data.intro}
-            onChange={(v) => setData("intro", v)}
-          />
-        </div>
-
-        {/* Sections */}
-        <div className="space-y-3">
-          <label className="font-medium">Sections</label>
-
-          <div className="space-y-6">
-            {data.sections.map((section, i) => (
-              <div
-                key={i}
-                className="border rounded-md p-4 space-y-3"
-              >
-                <div className="space-y-1">
-                  <label className="font-medium">
-                    Section Title
-                  </label>
-                  <Input
-                    placeholder="Section Title"
-                    value={section.title}
-                    onChange={(e) =>
-                      updateSection(i, "title", e.target.value)
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="font-medium">
-                    Section Description
-                  </label>
-                  <ReactQuill
-                    theme="snow"
-                    value={section.description}
-                    onChange={(v) =>
-                      updateSection(i, "description", v)
-                    }
-                  />
-                </div>
-
+              {/* Language Toggle */}
+              <div className="flex gap-3">
                 <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => removeSection(i)}
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
                 >
-                  Remove Section
+                  English
+                </Button>
+                <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
                 </Button>
               </div>
-            ))}
-          </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-4"
-            onClick={addSection}
-          >
-            + Add Section
-          </Button>
-        </div>
+              {/* Title */}
+              <div>
+                <label className="font-medium">Title</label>
+                <Input
+                  value={activeLang === "en" ? data.title : data.title_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("title", e.target.value)
+                      : setData("title_ja", e.target.value)
+                  }
+                />
+              </div>
 
-        {/* Submit */}
-        <Button
-          className="w-full"
-          disabled={processing}
-          onClick={mode === "edit" ? submitUpdate : submitAdd}
-        >
-          {mode === "edit"
-            ? "Update Policy"
-            : "Save Policy"}
-        </Button>
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
+              {/* Slug */}
+              <div>
+                <label className="font-medium">Slug</label>
+                <Input
+                  value={data.slug}
+                  onChange={(e) => setData("slug", e.target.value)}
+                />
+              </div>
 
+              {/* Intro */}
+              <div>
+                <label className="font-medium">Intro</label>
+                <ReactQuill
+                  key={`intro-${activeLang}`}
+                  value={
+                    activeLang === "en" ? data.intro : data.intro_ja
+                  }
+                  onChange={(v) =>
+                    activeLang === "en"
+                      ? setData("intro", v)
+                      : setData("intro_ja", v)
+                  }
+                />
+              </div>
+
+              {/* Sections */}
+              <div className="space-y-6">
+                {data.sections.map((section, i) => (
+                  <div key={i} className="border p-4 rounded-md space-y-3">
+                    <Input
+                      placeholder="Section Title"
+                      value={
+                        activeLang === "en"
+                          ? section.title
+                          : section.title_ja
+                      }
+                      onChange={(e) =>
+                        updateSection(
+                          i,
+                          activeLang === "en" ? "title" : "title_ja",
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <ReactQuill
+                      key={`section-${i}-${activeLang}`}
+                      value={
+                        activeLang === "en"
+                          ? section.description
+                          : section.description_ja
+                      }
+                      onChange={(v) =>
+                        updateSection(
+                          i,
+                          activeLang === "en"
+                            ? "description"
+                            : "description_ja",
+                          v
+                        )
+                      }
+                    />
+
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => removeSection(i)}
+                    >
+                      Remove Section
+                    </Button>
+                  </div>
+                ))}
+
+                <Button variant="outline" onClick={addSection}>
+                  + Add Section
+                </Button>
+              </div>
+
+              <Button
+                className="w-full"
+                disabled={processing}
+                onClick={mode === "edit" ? submitUpdate : submitAdd}
+              >
+                {mode === "edit"
+                  ? "Update Policy"
+                  : "Save Policy"}
+              </Button>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
 
       {/* ================= TABLE ================= */}
       <Table>
@@ -347,32 +370,35 @@ export default function Index({ policies }: { policies: Policy[] }) {
             <TableHead className="text-white">#</TableHead>
             <TableHead className="text-white">Title</TableHead>
             <TableHead className="text-white">Slug</TableHead>
-           
             <TableHead className="text-white text-center">
               Actions
             </TableHead>
           </TableRow>
         </TableHeader>
 
-        <TableBody className="bg-white">
+        <TableBody>
           {policies.map((p, i) => (
             <TableRow key={p.id}>
               <TableCell>{i + 1}</TableCell>
-              <TableCell>{p.title}</TableCell>
+              <TableCell>
+                {activeLang === "en"
+                  ? p.title
+                  : p.title_ja || p.title}
+              </TableCell>
               <TableCell>{p.slug}</TableCell>
-              
-              <TableCell className="space-x-2 text-center">
-                <Button title="View" size="icon" onClick={() => openView(p)}>
+              <TableCell className="text-center space-x-2">
+                <Button size="icon" onClick={() => openView(p)}>
                   <Eye className="w-4 h-4" />
                 </Button>
-                <Button title="Edit" size="icon"  onClick={() => openEdit(p)}>
+                <Button size="icon" onClick={() => openEdit(p)}>
                   <Pencil className="w-4 h-4" />
                 </Button>
                 <Button
-                  title="Delete"
                   size="icon"
                   variant="destructive"
-                  onClick={() => deleteItem(p.id)}
+                  onClick={() =>
+                    router.delete(route("admin.policy.destroy", p.id))
+                  }
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>

@@ -170,13 +170,7 @@ export default function Index({ histories }: { histories: History[] }) {
           {mode !== "view" && (
             <div className="space-y-4 mt-6">
               <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant={activeLang === "en" ? "default" : "outline"}
-                  onClick={() => setActiveLang("en")}
-                >
-                  English
-                </Button>
+               
 
                 <Button
                   type="button"
@@ -184,6 +178,13 @@ export default function Index({ histories }: { histories: History[] }) {
                   onClick={() => setActiveLang("ja")}
                 >
                   Japanese
+                </Button>
+                 <Button
+                  type="button"
+                  variant={activeLang === "en" ? "default" : "outline"}
+                  onClick={() => setActiveLang("en")}
+                >
+                  English
                 </Button>
               </div>
               <Input
@@ -216,6 +217,7 @@ export default function Index({ histories }: { histories: History[] }) {
                   Description
                 </label>
                 <ReactQuill
+                key={activeLang}
                   value={
                     activeLang === "en"
                       ? data.description ?? ""
