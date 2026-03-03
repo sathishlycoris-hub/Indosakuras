@@ -69,7 +69,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
       sub_title: item.sub_title,
       content: item.content,
       sub_title_ja: item.sub_title_ja || "",
-      content_ja: item.content_ja || item.content || "",
+      content_ja: item.content_ja || "",
     });
   };
 
@@ -188,6 +188,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
                 value={data.title}
                 onChange={(e) => setData("title", e.target.value)}
               /> */}
+              <label className="font-medium">Title</label>
 
               <Input
                 placeholder="Title"
@@ -246,9 +247,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
               <TableCell>{i + 1}</TableCell>
               {/* <TableCell>{p.title}</TableCell> */}
               <TableCell>
-                {activeLang === "en"
-                  ? p.sub_title
-                  : p.sub_title_ja || p.sub_title}
+                {p.sub_title}
               </TableCell>
 
               <TableCell className="line-clamp-2 max-w-md">

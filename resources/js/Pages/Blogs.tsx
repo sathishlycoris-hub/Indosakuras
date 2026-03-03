@@ -12,6 +12,7 @@ interface Blog {
   short_description: string;
   short_description_ja?: string;
   category: string;
+  category_ja?: string;
   published_date: string;
   image?: string | null;
 }
@@ -75,7 +76,7 @@ const { blogs, lang } = usePage<{ blogs: Blog[]; lang: "en" | "ja" }>().props;
               <div className="p-6">
                 <div className="flex gap-3 text-xs mb-3">
                   <span className="bg-rose-100 text-rose-600 px-2 py-1 rounded flex items-center gap-1">
-                    <Tag size={12} /> {b.category}
+                    <Tag size={12} /> {getValue(b.category, b.category_ja)}
                   </span>
                   <span className="flex items-center gap-1 text-muted-foreground">
                     <Calendar size={12} /> {formatDateYYYYMMDD(b.published_date)}

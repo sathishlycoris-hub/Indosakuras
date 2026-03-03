@@ -19,12 +19,14 @@ class Blog extends Model
         'content_ja',
         'category',
         'author',
+        'category_ja',
+        'author_ja',
         'published_date',
         'image',
         'status',
     ];
 
-     protected $casts = [
+    protected $casts = [
         'published_date' => 'date',
     ];
 }

@@ -172,6 +172,7 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
 
 
               </div>
+             <label className="text-sm font-medium">Question</label>
               <Input
                 placeholder="Question"
                 value={activeLang === "en" ? data.question : data.question_ja}
@@ -181,7 +182,7 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
                     : setData("question_ja", e.target.value)
                 }
               />
-
+              <label className="text-sm font-medium">Answer</label>
               <Textarea
                 placeholder="Answer"
                 rows={5}
@@ -230,14 +231,10 @@ export default function Index({ faqs }: { faqs: Faq[] }) {
             <TableRow key={faq.id}>
               <TableCell>{faq.sort_order ?? i + 1}</TableCell>
               <TableCell>
-                {activeLang === "en"
-                  ? faq.question
-                  : faq.question_ja || faq.question}
+                {faq.question}
               </TableCell>
               <TableCell className="line-clamp-2 max-w-xl">
-                {activeLang === "en"
-                  ? faq.answer
-                  : faq.answer_ja || faq.answer}
+                {faq.answer}
               </TableCell>
               <TableCell className="space-x-2 text-center">
                 <Button title="View" size="icon" onClick={() => openView(faq)}>

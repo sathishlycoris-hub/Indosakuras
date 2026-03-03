@@ -43,10 +43,14 @@ interface Blog {
   content_ja?: string;
 
   category: string;
+  category_ja?: string;
+
   status: "published" | "draft";
   published_date: string;
 
   author?: string;
+  author_ja?: string;
+
   image?: string | null;
 }
 export default function AdminBlogIndex() {
@@ -62,6 +66,7 @@ export default function AdminBlogIndex() {
     title_ja: "",
 
     category: "",
+    category_ja: "",
 
     short_description: "",
     short_description_ja: "",
@@ -70,6 +75,7 @@ export default function AdminBlogIndex() {
     content_ja: "",
 
     author: "",
+    author_ja: "",
     published_date: "",
     status: "draft",
 
@@ -91,7 +97,7 @@ export default function AdminBlogIndex() {
     );
   });
 
-  console.warn({filteredBlogs})
+  console.warn({ filteredBlogs })
   /* ================= OPEN ADD ================= */
   const openAdd = () => {
     reset();
@@ -107,20 +113,22 @@ export default function AdminBlogIndex() {
     setOpen(true);
 
     setData({
-      title: blog.title  || "",
+      title: blog.title || "",
       title_ja: blog.title_ja || "",
 
-      category: blog.category  || "",
+      category: blog.category || "",
+      category_ja: blog.category_ja || "",
 
       short_description: blog.short_description || "",
       short_description_ja: blog.short_description_ja || "",
 
-      content: blog.content || blog.content_ja || "",
-      content_ja: blog.content_ja || blog.content ||  "", 
+      content: blog.content || "",
+      content_ja: blog.content_ja || "",
 
       author: blog.author || "",
-      published_date: blog.published_date  || "",
-      status: blog.status  || "",
+      author_ja: blog.author_ja || "",
+      published_date: blog.published_date || "",
+      status: blog.status || "",
 
       image: null,
     });
@@ -219,7 +227,7 @@ export default function AdminBlogIndex() {
           {/* ================= VIEW ================= */}
           {mode === "view" && current && (
             <div className="space-y-4 mt-6">
-              <p><strong>Title:</strong> {current.title_ja}</p>
+              <p><strong>Title:</strong> {current.title}</p>
               <p><strong>Category:</strong> {current.category}</p>
               <p><strong>Status:</strong> {current.status}</p>
               <p>
@@ -229,17 +237,17 @@ export default function AdminBlogIndex() {
 
               <div>
                 <strong>Short Description:</strong>
-                <p>{current.short_description_ja || "No Description available"}</p>
+                <p>{current.short_description || "No Description available"}</p>
               </div>
 
               <div>
                 <strong>Content:</strong>
 
-                {current.content_ja ? (
+                {current.content ? (
                   <div
                     className="prose mt-2 max-w-none"
                     dangerouslySetInnerHTML={{
-                      __html: current.content_ja,
+                      __html: current.content,
                     }}
                   />
                 ) : (
@@ -303,9 +311,12 @@ export default function AdminBlogIndex() {
               <div className="space-y-1">
                 <label className="font-medium">Category</label>
                 <Input
-                  placeholder="Category"
-                  value={data.category}
-                  onChange={(e) => setData("category", e.target.value)}
+                  value={activeLang === "en" ? data.category : data.category_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("category", e.target.value)
+                      : setData("category_ja", e.target.value)
+                  }
                 />
               </div>
 
@@ -336,7 +347,7 @@ export default function AdminBlogIndex() {
                 </label>
 
                 <ReactQuill
-                key={activeLang}
+                  key={activeLang}
                   theme="snow"
                   value={
                     activeLang === "en"
@@ -355,9 +366,12 @@ export default function AdminBlogIndex() {
               <div className="space-y-1">
                 <label className="font-medium">Author</label>
                 <Input
-                  placeholder="Author"
-                  value={data.author}
-                  onChange={(e) => setData("author", e.target.value)}
+                  value={activeLang === "en" ? data.author : data.author_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("author", e.target.value)
+                      : setData("author_ja", e.target.value)
+                  }
                 />
               </div>
 

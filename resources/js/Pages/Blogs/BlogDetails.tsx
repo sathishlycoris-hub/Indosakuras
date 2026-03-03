@@ -14,7 +14,9 @@ interface Blog {
   content: string;
   content_ja?: string;
   category: string;
+  category_ja?: string;
   author?: string;
+  author_ja?: string;
   published_date: string;
   image?: string | null;
 }
@@ -51,18 +53,18 @@ export default function BlogDetails() {
 
                 <span className="inline-flex items-center gap-1 px-4 py-1.5 bg-rose-200 text-rose-700 font-semibold rounded-full uppercase text-xs">
                   <Tag size={12} />
-                  {blog.category}
+                  {getValue(blog.category, blog.category_ja)}  
                 </span>
 
                 <span className="flex items-center gap-1 text-muted-foreground">
                   <Calendar size={14} /> {formatDateYYYYMMDD(blog.published_date)}
                 </span>
 
-                {/* {blog.author && (
+                {blog.author && (
                   <span className="flex items-center gap-1 text-muted-foreground">
-                    <User size={14} /> {blog.author}
+                    <User size={14} /> {getValue(blog.author, blog.author_ja)}
                   </span>
-                )} */}
+                )}
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold mb-4">

@@ -74,10 +74,10 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
     setData({
       title: item.title,
       title_ja: item.title_ja || "",
-      content: item.content || item.content_ja || "",
-      content_ja: item.content_ja || item.content || "",
-      description: item.description || item.description_ja || "",
-      description_ja: item.description_ja || item.description || "",
+      content: item.content || "",
+      content_ja: item.content_ja ||  "",
+      description: item.description || "",
+      description_ja: item.description_ja || "",
       image: null,
     });
   };
@@ -320,9 +320,7 @@ export default function Index({ philosophies }: { philosophies: Philosophy[] }) 
             <TableRow key={p.id}>
               <TableCell>{i + 1}</TableCell>
               <TableCell>
-                {activeLang === "en"
-                  ? p.title
-                  : p.title_ja || p.title}
+                {p.title}
               </TableCell>
 
               <TableCell className="line-clamp-2 max-w-md">

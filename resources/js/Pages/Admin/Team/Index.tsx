@@ -182,9 +182,11 @@ export default function Index() {
                   title="Delete"
                   size="icon"
                   variant="destructive"
-                  onClick={() =>
-                    router.delete(route("admin.team.destroy", t.id))
-                  }
+                  onClick={() => {
+                    if (confirm("Are you sure you want to delete this team member?")) {
+                      router.delete(route("admin.team.destroy", t.id));
+                    }
+                  }}
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>

@@ -289,9 +289,7 @@ export default function Index({ greetings }: { greetings: Greeting[] }) {
             <TableRow key={item.id}>
               <TableCell>{i + 1}</TableCell>
               <TableCell>
-                {activeLang === "en"
-                  ? item.title
-                  : item.title_ja || item.title}
+                {item.title}
               </TableCell>
               <TableCell>
                 {item.image && (

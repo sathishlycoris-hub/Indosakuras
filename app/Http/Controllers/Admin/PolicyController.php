@@ -29,20 +29,20 @@ class PolicyController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'title_ja' => 'nullable|string|max:255',
 
-            'slug'  => 'required|string|max:255|unique:policies,slug',
+            'slug'  => 'nullable|string|max:255|unique:policies,slug',
 
-            'intro' => 'required|string',
+            'intro' => 'nullable|string',
             'intro_ja' => 'nullable|string',
 
-            'sections' => 'required|array|min:1',
+            'sections' => 'nullable|array|min:1',
 
-            'sections.*.title' => 'required|string|max:255',
+            'sections.*.title' => 'nullable|string|max:255',
             'sections.*.title_ja' => 'nullable|string|max:255',
 
-            'sections.*.description' => 'required|string',
+            'sections.*.description' => 'nullable|string',
             'sections.*.description_ja' => 'nullable|string',
         ]);
 
@@ -76,20 +76,20 @@ class PolicyController extends Controller
     public function update(Request $request, Policy $policy)
     {
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'title_ja' => 'nullable|string|max:255',
 
-            'slug'  => 'required|string|max:255|unique:policies,slug,' . $policy->id,
+            'slug'  => 'nullable|string|max:255|unique:policies,slug,' . $policy->id,
 
-            'intro' => 'required|string',
+            'intro' => 'nullable|string',
             'intro_ja' => 'nullable|string',
 
-            'sections' => 'required|array|min:1',
+            'sections' => 'nullable|array|min:1',
 
-            'sections.*.title' => 'required|string|max:255',
+            'sections.*.title' => 'nullable|string|max:255',
             'sections.*.title_ja' => 'nullable|string|max:255',
 
-            'sections.*.description' => 'required|string',
+            'sections.*.description' => 'nullable|string',
             'sections.*.description_ja' => 'nullable|string',
         ]);
 

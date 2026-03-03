@@ -176,7 +176,7 @@ const submitUpdate = () => {
           {mode === "view" && current && (
             <div className="space-y-6 mt-6">
 
-              <div className="flex gap-3">
+              {/* <div className="flex gap-3">
                 <Button
                   variant={activeLang === "en" ? "default" : "outline"}
                   onClick={() => setActiveLang("en")}
@@ -189,7 +189,7 @@ const submitUpdate = () => {
                 >
                   Japanese
                 </Button>
-              </div>
+              </div> */}
 
               <div>
                 <strong>Title</strong>
@@ -242,6 +242,13 @@ const submitUpdate = () => {
 
               {/* Language Toggle */}
               <div className="flex gap-3">
+                 <Button
+                  type="button"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
                 <Button
                   type="button"
                   variant={activeLang === "en" ? "default" : "outline"}
@@ -249,13 +256,7 @@ const submitUpdate = () => {
                 >
                   English
                 </Button>
-                <Button
-                  type="button"
-                  variant={activeLang === "ja" ? "default" : "outline"}
-                  onClick={() => setActiveLang("ja")}
-                >
-                  Japanese
-                </Button>
+               
               </div>
 
               {/* Title */}
@@ -381,9 +382,7 @@ const submitUpdate = () => {
             <TableRow key={p.id}>
               <TableCell>{i + 1}</TableCell>
               <TableCell>
-                {activeLang === "en"
-                  ? p.title
-                  : p.title_ja || p.title}
+                {p.title}
               </TableCell>
               <TableCell>{p.slug}</TableCell>
               <TableCell className="text-center space-x-2">

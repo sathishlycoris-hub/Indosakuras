@@ -168,11 +168,11 @@ export default function Index({ jobs }: { jobs: Job[] }) {
       })),
 
       title_ja: job.title_ja ?? "",
-      department_ja: job.department_ja ?? job.department ?? "",
-      location_ja: job.location_ja ??  job.location ?? "",
-      employment_type_ja: job.employment_type_ja ?? job.employment_type ?? "",
-      experience_ja: job.experience_ja ?? job.experience ?? "",
-      salary_ja: job.salary_ja ?? job.salary ?? "",
+      department_ja: job.department_ja ?? "",
+      location_ja: job.location_ja ?? "",
+      employment_type_ja: job.employment_type_ja ?? "",
+      experience_ja: job.experience_ja ?? "",
+      salary_ja: job.salary_ja ?? "",
       short_description_ja: job.short_description_ja ?? "",
       about_role_ja: job.about_role_ja ?? "",
     });
@@ -229,23 +229,24 @@ export default function Index({ jobs }: { jobs: Job[] }) {
     updated[index].content = value;
     setData("sections", updated);
   };
+  const removeSectionPoint = (index: number) => {
+  const updated = [...data.sections];
+  updated.splice(index, 1);
+  setData("sections", updated);
+};
 
-  const renderSection = (type: string, title: string) => (
-    <div className="space-y-2">
-      <h4 className="font-semibold">{title}</h4>
+const renderSection = (type: string, title: string) => (
+  <div className="space-y-3">
+    <h4 className="font-semibold">{title}</h4>
 
-      {data.sections
-        .map((s, i) => ({ ...s, i }))
-        .filter((s) => s.type === type)
-        .map(({ content, content_ja, i }) => (
+    {data.sections
+      .map((s, i) => ({ ...s, i }))
+      .filter((s) => s.type === type)
+      .map(({ content, content_ja, i }) => (
+        <div key={i} className="flex gap-2 items-center">
           <Input
-            key={i}
             disabled={mode === "view"}
-            value={
-              activeLang === "en"
-                ? content
-                : content_ja
-            }
+            value={activeLang === "en" ? content : content_ja}
             onChange={(e) => {
               const updated = [...data.sections];
 
@@ -259,26 +260,37 @@ export default function Index({ jobs }: { jobs: Job[] }) {
             }}
             placeholder="Enter point"
           />
-        ))}
 
-      {mode !== "view" && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            setData("sections", [
-              ...data.sections,
-              { type, content: "", content_ja: "" },
-            ])
-          }
-        >
-          + Add Point
-        </Button>
-      )}
-    </div>
-  );
+          {mode !== "view" && (
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              onClick={() => removeSectionPoint(i)}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+      ))}
 
+    {mode !== "view" && (
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={() =>
+          setData("sections", [
+            ...data.sections,
+            { type, content: "", content_ja: "" },
+          ])
+        }
+      >
+        + Add Point
+      </Button>
+    )}
+  </div>
+);
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Jobs</h2>}>
 

@@ -12,7 +12,7 @@ class History extends Model
         'year',
         // 'year_ja',
         'month',
-        // 'month_ja',
+        'month_ja',
         'description',
         'description_ja',
     ];

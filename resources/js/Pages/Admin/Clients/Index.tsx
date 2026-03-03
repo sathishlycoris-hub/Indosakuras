@@ -139,6 +139,12 @@ const submitUpdate = () => {
   );
 };
 
+const removeSectionItem = (index: number) => {
+  const updated = [...data.sections];
+  updated.splice(index, 1);
+  setData("sections", updated);
+};
+
   /* ================= DELETE ================= */
   const deleteItem = (id: number) => {
     if (confirm("Delete this client record?")) {
@@ -164,19 +170,19 @@ const submitUpdate = () => {
     setData("sections", updated);
   };
 
-  const renderSection = (
-    type: ClientSection["type"],
-    title: string
-  ) => (
-    <div className="space-y-2">
-      <h4 className="font-semibold">{title}</h4>
+ const renderSection = (
+  type: ClientSection["type"],
+  title: string
+) => (
+  <div className="space-y-2">
+    <h4 className="font-semibold">{title}</h4>
 
-      {data.sections
-        .map((s, i) => ({ ...s, i }))
-        .filter((s) => s.type === type)
-        .map(({ i }) => (
+    {data.sections
+      .map((s, i) => ({ ...s, i }))
+      .filter((s) => s.type === type)
+      .map(({ i }) => (
+        <div key={i} className="flex gap-2 items-center">
           <Input
-            key={i}
             disabled={mode === "view"}
             value={
               activeLang === "en"
@@ -190,20 +196,32 @@ const submitUpdate = () => {
             }
             placeholder="Company name"
           />
-        ))}
 
-      {mode !== "view" && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => addSection(type)}
-        >
-          + Add Company
-        </Button>
-      )}
-    </div>
-  );
+          {mode !== "view" && (
+            <Button
+              type="button"
+              size="icon"
+              variant="destructive"
+              onClick={() => removeSectionItem(i)}
+            >
+            <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+      ))}
+
+    {mode !== "view" && (
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={() => addSection(type)}
+      >
+        + Add Company
+      </Button>
+    )}
+  </div>
+);
 
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Clients</h2>}>
@@ -229,22 +247,23 @@ const submitUpdate = () => {
             <div className="space-y-6 mt-6">
               {/* Language Toggle */}
               <div className="flex gap-2 mb-2">
+                 <Button
+                  type="button"
+                  size="sm"
+                  variant={activeLang === "ja" ? "default" : "outline"}
+                  onClick={() => setActiveLang("ja")}
+                >
+                  Japanese
+                </Button>
                 <Button
                   type="button"
                   size="sm"
                   variant={activeLang === "en" ? "default" : "outline"}
                   onClick={() => setActiveLang("en")}
                 >
-                  EN
+                  English
                 </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={activeLang === "ja" ? "default" : "outline"}
-                  onClick={() => setActiveLang("ja")}
-                >
-                  JA
-                </Button>
+               
               </div>
 
               {renderSection("customer", "Customer Companies")}

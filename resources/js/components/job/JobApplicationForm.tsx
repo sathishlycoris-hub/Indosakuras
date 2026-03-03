@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Upload } from "lucide-react";
-// import ReCAPTCHA from "react-google-recaptcha";
 
 interface JobApplicationFormProps {
   jobId: number;
 }
 
 const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
-  //  local frontend validation error (NO browser alert)
+  const { lang } = usePage<{ lang: "en" | "ja" }>().props;
+
   const [localError, setLocalError] = useState<string | null>(null);
 
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -20,7 +20,6 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
     cover_letter: "",
     resume: null as File | null,
     agree_terms: false,
-    // recaptcha: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,18 +28,19 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
 
     if (!data.agree_terms) {
       setLocalError(
-        "You must agree to the privacy policy and terms of service."
+        lang === "ja"
+          ? "プライバシーポリシーおよび利用規約に同意する必要があります。"
+          : "You must agree to the privacy policy and terms of service."
       );
       return;
     }
 
-    // if (!data.recaptcha) {
-    //   setLocalError("Please verify you are not a robot.");
-    //   return;
-    // }
-
     if (data.email !== data.confirm_email) {
-      setLocalError("Email and Confirm Email must match.");
+      setLocalError(
+        lang === "ja"
+          ? "メールアドレスが一致しません。"
+          : "Email and Confirm Email must match."
+      );
       return;
     }
 
@@ -48,7 +48,6 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
       forceFormData: true,
       onSuccess: () => {
         reset();
-        // window.grecaptcha?.reset();
         setLocalError(null);
       },
     });
@@ -56,19 +55,25 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
 
   return (
     <div className="sticky top-24 bg-card border border-border rounded-lg p-6">
-      <h3 className="font-semibold mb-4">Apply for this Position</h3>
-
-      {/*  Inline designed alert (frontend validation) */}
+      <h3 className="font-semibold mb-4">
+        {lang === "ja"
+          ? "このポジションに応募する"
+          : "Apply for this Position"}
+      </h3>
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Full Name */}
         <div>
           <label className="block text-sm font-medium mb-1">
-            Full Name *
+            {lang === "ja" ? "氏名 *" : "Full Name *"}
           </label>
           <input
             type="text"
-            placeholder="Enter your full name"
+            placeholder={
+              lang === "ja"
+                ? "氏名を入力してください"
+                : "Enter your full name"
+            }
             value={data.full_name}
             onChange={(e) => setData("full_name", e.target.value)}
             className="w-full px-4 py-2 border border-input rounded-lg bg-background text-sm"
@@ -83,7 +88,7 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
         {/* Email */}
         <div>
           <label className="block text-sm font-medium mb-1">
-            Email *
+            {lang === "ja" ? "メールアドレス *" : "Email *"}
           </label>
           <input
             type="email"
@@ -102,7 +107,9 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
         {/* Confirm Email */}
         <div>
           <label className="block text-sm font-medium mb-1">
-            Email (Confirm) *
+            {lang === "ja"
+              ? "メールアドレス（確認） *"
+              : "Email (Confirm) *"}
           </label>
           <input
             type="email"
@@ -118,32 +125,33 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
         {/* Phone */}
         <div>
           <label className="block text-sm font-medium mb-1">
-            Phone Number
+            {lang === "ja" ? "電話番号" : "Phone Number"}
           </label>
           <input
             type="tel"
-            placeholder="Enter your phone number"
+            placeholder={
+              lang === "ja"
+                ? "電話番号を入力してください"
+                : "Enter your phone number"
+            }
             value={data.phone}
             onChange={(e) => setData("phone", e.target.value)}
             className="w-full px-4 py-2 border border-input rounded-lg bg-background text-sm"
           />
-          {errors.phone && (
-            <p className="text-xs text-red-500 mt-1">
-              {errors.phone}
-            </p>
-          )}
         </div>
 
         {/* Resume */}
         <div>
           <label className="block text-sm font-medium mb-1">
-            Resume / CV *
+            {lang === "ja" ? "履歴書 / CV *" : "Resume / CV *"}
           </label>
 
           <label className="border-2 border-dashed border-input rounded-lg p-6 text-center cursor-pointer hover:border-primary transition-colors block">
             <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
             <p className="text-sm text-muted-foreground">
-              Click to upload or drag and drop
+              {lang === "ja"
+                ? "クリックまたはドラッグ＆ドロップ"
+                : "Click to upload or drag and drop"}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               PDF, DOC, DOCX (Max 5MB)
@@ -157,22 +165,20 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
               }
             />
           </label>
-
-          {errors.resume && (
-            <p className="text-xs text-red-500 mt-1">
-              {errors.resume}
-            </p>
-          )}
         </div>
 
         {/* Cover Letter */}
         <div>
           <label className="block text-sm font-medium mb-1">
-            Cover Letter
+            {lang === "ja" ? "志望動機" : "Cover Letter"}
           </label>
           <textarea
             rows={4}
-            placeholder="Tell us why you're interested in this position..."
+            placeholder={
+              lang === "ja"
+                ? "志望理由をご記入ください..."
+                : "Tell us why you're interested in this position..."
+            }
             value={data.cover_letter}
             onChange={(e) =>
               setData("cover_letter", e.target.value)
@@ -180,11 +186,13 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
             className="w-full px-4 py-2 border border-input rounded-lg bg-background text-sm resize-none"
           />
         </div>
+
         {localError && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800 text-sm">
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800 text-sm">
             {localError}
           </div>
         )}
+
         {/* Agree Terms */}
         <div className="flex items-start gap-2">
           <input
@@ -197,45 +205,22 @@ const JobApplicationForm = ({ jobId }: JobApplicationFormProps) => {
           />
 
           <label className="text-xs text-muted-foreground mt-1">
-            I agree to the{" "}
-            <a
-              href="/policy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary underline"
-            >
-              privacy policy
-            </a>{" "}
-            and{" "}
-            <a
-              href="/terms"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary underline"
-            >
-              terms of service
-            </a>
+            {lang === "ja"
+              ? "プライバシーポリシーおよび利用規約に同意します"
+              : "I agree to the privacy policy and terms of service"}
           </label>
         </div>
 
-
-
-        {/* reCAPTCHA */}
-        {/* <ReCAPTCHA
-          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-          onChange={(token) =>
-            setData("recaptcha", token || "")
-          }
-        /> */}
-
         {/* Submit */}
         <Button className="w-full" type="submit" disabled={processing}>
-          Submit Application <ArrowRight className="w-4 h-4 ml-1" />
+          {lang === "ja" ? "応募する" : "Submit Application"}
+          <ArrowRight className="w-4 h-4 ml-1" />
         </Button>
 
         <p className="text-xs text-muted-foreground text-center">
-          Our platform accepts resumes to submit your career passport.
-          Start today and unlock your full potential.
+          {lang === "ja"
+            ? "履歴書を送信してキャリアの第一歩を踏み出しましょう。"
+            : "Submit your resume today and unlock your full potential."}
         </p>
       </form>
     </div>

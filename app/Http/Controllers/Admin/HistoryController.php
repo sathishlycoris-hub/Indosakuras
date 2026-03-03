@@ -51,7 +51,7 @@ class HistoryController extends Controller
             'year'        => 'required|string|max:10',
             // 'year_ja'     => 'nullable|string|max:10',
             'month'       => 'required|string|max:20',
-            // 'month_ja'    => 'nullable|string|max:20',
+            'month_ja'    => 'nullable|string|max:20',
             'description' => 'required|string',
             'description_ja' => 'nullable|string',
         ]);

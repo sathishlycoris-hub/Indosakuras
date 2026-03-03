@@ -34,15 +34,18 @@ class BlogController extends Controller
     {
         //
         $data = $request->validate([
-            
+
             'title' => 'nullable|string',
             'title_ja' => 'nullable|string',
             'short_description' => 'nullable|string',
             'short_description_ja' => 'nullable|string',
-            'content' => 'nullable',    
+            'content' => 'nullable',
             'content_ja' => 'nullable',
             'category' => 'nullable|string',
+            'category_ja' => 'nullable|string',
+
             'author' => 'nullable|string',
+            'author_ja' => 'nullable|string',
             'published_date' => 'nullable|date',
             'status' => 'nullable|in:published,draft',
             'image' => 'nullable|image',
@@ -88,7 +91,9 @@ class BlogController extends Controller
             'content' => 'nullable',
             'content_ja' => 'nullable',
             'category' => 'nullable|string',
+            'category_ja' => 'nullable|string',
             'author' => 'nullable|string',
+            'author_ja' => 'nullable|string',
             'published_date' => 'nullable|date',
             'status' => 'nullable|in:published,draft',
             'image' => 'nullable|image',

@@ -25,7 +25,6 @@ import "react-quill/dist/quill.snow.css";
 interface History {
   id: number;
   year: string;
-  year_ja?: string | null;
   month: string;
   month_ja?: string | null;
   description: string;
@@ -41,14 +40,12 @@ export default function Index({ histories }: { histories: History[] }) {
     year: string;
     month: string;
     description: string;
-    year_ja?: string | null;
     month_ja?: string | null;
     description_ja?: string | null;
   }>({
     year: "",
     month: "",
     description: "",
-    year_ja: "",
     month_ja: "",
     description_ja: "",
   });
@@ -71,11 +68,10 @@ export default function Index({ histories }: { histories: History[] }) {
 
     setData({
       year: item.year,
-      year_ja: item.year_ja || "",
       month: item.month,
       month_ja: item.month_ja || "",
-      description: item.description || item.description_ja || "",
-      description_ja: item.description_ja || item.description || "",
+      description: item.description || "",
+      description_ja: item.description_ja || "",
     });
   };
 
@@ -170,7 +166,7 @@ export default function Index({ histories }: { histories: History[] }) {
           {mode !== "view" && (
             <div className="space-y-4 mt-6">
               <div className="flex gap-2">
-               
+
 
                 <Button
                   type="button"
@@ -179,7 +175,7 @@ export default function Index({ histories }: { histories: History[] }) {
                 >
                   Japanese
                 </Button>
-                 <Button
+                <Button
                   type="button"
                   variant={activeLang === "en" ? "default" : "outline"}
                   onClick={() => setActiveLang("en")}
@@ -187,18 +183,12 @@ export default function Index({ histories }: { histories: History[] }) {
                   English
                 </Button>
               </div>
+              <label className="font-medium text-sm">Year</label>
               <Input
-                value={
-                  activeLang === "en"
-                    ? data.year ?? ""
-                    : data.year_ja ?? ""
-                }
-                onChange={(e) =>
-                  activeLang === "en"
-                    ? setData("year", e.target.value)
-                    : setData("year_ja", e.target.value)
-                }
+                value={data.year ?? ""}
+                onChange={(e) => setData("year", e.target.value)}
               />
+              <label className="font-medium text-sm">Month</label>
               <Input
                 value={
                   activeLang === "en"
@@ -217,7 +207,7 @@ export default function Index({ histories }: { histories: History[] }) {
                   Description
                 </label>
                 <ReactQuill
-                key={activeLang}
+                  key={activeLang}
                   value={
                     activeLang === "en"
                       ? data.description ?? ""
@@ -264,24 +254,18 @@ export default function Index({ histories }: { histories: History[] }) {
             <TableRow key={h.id}>
               <TableCell>{i + 1}</TableCell>
               <TableCell>
-                {activeLang === "en"
-                  ? h.year
-                  : h.year_ja || h.year}
+                {h.year}
               </TableCell>
 
               <TableCell>
-                {activeLang === "en"
-                  ? h.month
-                  : h.month_ja || h.month}
+                {h.month}
               </TableCell>
 
               <TableCell className="line-clamp-2 max-w-md">
                 <div
                   dangerouslySetInnerHTML={{
                     __html:
-                      activeLang === "en"
-                        ? h.description
-                        : h.description_ja || h.description,
+                      h.description
                   }}
                 />
               </TableCell>
