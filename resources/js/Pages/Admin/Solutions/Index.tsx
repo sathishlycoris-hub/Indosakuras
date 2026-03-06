@@ -335,6 +335,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
               <ReactQuill
                 key={activeLang}
                 theme="snow"
+                style={{ height: "200px", marginBottom: "50px" }}
                 value={
                   activeLang === "en"
                     ? data.hero_description
@@ -413,6 +414,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
                     <ReactQuill
                       key={`${activeLang}-${i}`}
                       theme="snow"
+                      style={{ height: "200px", marginBottom: "50px" }}
                       value={
                         activeLang === "en"
                           ? item.description || ""
@@ -463,6 +465,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
                     <ReactQuill
                       key={`${activeLang}-uc-${i}`}
                       theme="snow"
+                      style={{ height: "200px", marginBottom: "50px" }}
                       value={
                         activeLang === "en"
                           ? item.description || ""
@@ -511,6 +514,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
                     <ReactQuill
                       key={`${activeLang}-cs-${i}`}
                       theme="snow"
+                      style={{ height: "200px", marginBottom: "50px" }}
                       value={
                         activeLang === "en"
                           ? item.summary || ""

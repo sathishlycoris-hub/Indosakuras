@@ -281,7 +281,7 @@ Route::prefix('admin')
 
         /* Admin */
 
-        Route::get('/job-applications', [AdminJobApplicationController::class, 'index'])
+        Route::get('/job-applications/{job?}', [AdminJobApplicationController::class, 'index'])
             ->name('job-applications.index');
 
         Route::delete('/job-applications/{jobApplication}', [AdminJobApplicationController::class, 'destroy'])

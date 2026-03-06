@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { router } from "@inertiajs/react";
+import { router, Link } from "@inertiajs/react";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
+
 import {
   Table,
   TableBody,
@@ -79,10 +80,19 @@ export default function Index({ applications }: { applications: Application[] })
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Job Applications</h2>}>
 
+      <div className="flex items-center gap-3 mb-4">
+        <Link
+          href={route("admin.jobs.index")}
+          className="text-sm text-pink-600 hover:underline"
+        >
+          ← Back to Jobs
+        </Link>
+      </div>
+
       <h1 className="text-2xl font-bold mb-4">Job Applications</h1>
 
       {/* 🔍 SEARCH */}
-      <div className="mb-4 max-w-sm relative">
+      {/* <div className="mb-4 max-w-sm relative">
         <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
         <input
           type="text"
@@ -91,7 +101,7 @@ export default function Index({ applications }: { applications: Application[] })
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-9 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
-      </div>
+      </div> */}
 
       <Table className="w-full border text-sm bg-white">
         <TableHeader className="bg-primary text-white text-left">
@@ -166,16 +176,16 @@ export default function Index({ applications }: { applications: Application[] })
               {current.resume && (
                 <div>
                   <strong>Resume:</strong>
-                  
-                    <a
-                      href={`/storage/${current.resume}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-primary underline"
-                    >
-                      View Resume
-                    </a>
-                  
+
+                  <a
+                    href={`/storage/${current.resume}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-primary underline"
+                  >
+                    View Resume
+                  </a>
+
                 </div>
               )}
 

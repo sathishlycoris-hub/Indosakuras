@@ -204,6 +204,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
                 <label className="text-sm font-medium">Content</label>
                 <ReactQuill
                 key={activeLang}
+                style={{ height: "200px", marginBottom: "50px" }}
                   value={activeLang === "en" ? data.content : data.content_ja}
                   onChange={(v) =>
                     activeLang === "en"

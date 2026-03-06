@@ -208,6 +208,7 @@ export default function Index({ histories }: { histories: History[] }) {
                 </label>
                 <ReactQuill
                   key={activeLang}
+                  style={{ height: "200px", marginBottom: "50px" }}
                   value={
                     activeLang === "en"
                       ? data.description ?? ""

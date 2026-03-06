@@ -210,6 +210,7 @@ export default function Index({ events, eventTypes }: PageProps) {
               key={activeLang}
               
                 theme="snow"
+                style={{ height: "200px", marginBottom: "50px" }}
                 value={activeLang === "en" ? data.description : data.description_ja}
                 onChange={(value) =>
                   activeLang === "en"
@@ -385,6 +386,7 @@ export default function Index({ events, eventTypes }: PageProps) {
             <ReactQuill
               key={activeLang}
               theme="snow"
+              style={{ height: "200px", marginBottom: "50px" }}
               value={activeLang === "en" ? data.description : data.description_ja}
               onChange={(value) =>
                 activeLang === "en"

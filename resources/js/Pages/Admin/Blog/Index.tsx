@@ -349,6 +349,7 @@ export default function AdminBlogIndex() {
                 <ReactQuill
                   key={activeLang}
                   theme="snow"
+                   style={{ height: "200px", marginBottom: "50px" }}
                   value={
                     activeLang === "en"
                       ? data.content

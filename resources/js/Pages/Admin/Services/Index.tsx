@@ -328,6 +328,7 @@ export default function Index({ services }: { services: Service[] }) {
                 <ReactQuill
                   key={activeLang}
                   theme="snow"
+                  style={{ height: "200px", marginBottom: "50px" }}
                   value={
                     activeLang === "en"
                       ? data.hero_description
@@ -380,6 +381,7 @@ export default function Index({ services }: { services: Service[] }) {
                 <ReactQuill
                   key={`how-${activeLang}`}
                   theme="snow"
+                  style={{ height: "200px", marginBottom: "50px" }}
                   value={
                     activeLang === "en"
                       ? data.how_it_works
@@ -437,6 +439,7 @@ export default function Index({ services }: { services: Service[] }) {
                     <ReactQuill
                       key={`${activeLang}-highlight-${i}`}
                       theme="snow"
+                      style={{ height: "200px", marginBottom: "50px" }}
                       value={
                         activeLang === "en"
                           ? item.description || ""
@@ -490,6 +493,7 @@ export default function Index({ services }: { services: Service[] }) {
                     <ReactQuill
                       key={`${activeLang}-benefit-${i}`}
                       theme="snow"
+                      style={{ height: "200px", marginBottom: "50px" }}
                       value={
                         activeLang === "en"
                           ? item.description || ""

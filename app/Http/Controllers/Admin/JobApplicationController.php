@@ -10,12 +10,16 @@ use Inertia\Inertia;
 class JobApplicationController extends Controller
 {
     //
-      public function index()
+    public function index(Request $request, $job = null)
     {
+        $query = JobApplication::with('job')->latest();
+
+        if ($job) {
+            $query->where('job_id', $job);
+        }
+
         return Inertia::render('Admin/JobApplication/Index', [
-            'applications' => JobApplication::with('job')
-                ->latest()
-                ->get(),
+            'applications' => $query->get(),
         ]);
     }
 

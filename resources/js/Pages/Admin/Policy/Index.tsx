@@ -286,6 +286,7 @@ const submitUpdate = () => {
                 <label className="font-medium">Intro</label>
                 <ReactQuill
                   key={`intro-${activeLang}`}
+                  style={{ height: "200px", marginBottom: "50px" }}
                   value={
                     activeLang === "en" ? data.intro : data.intro_ja
                   }
@@ -319,6 +320,7 @@ const submitUpdate = () => {
 
                     <ReactQuill
                       key={`section-${i}-${activeLang}`}
+                      style={{ height: "200px", marginBottom: "50px" }}
                       value={
                         activeLang === "en"
                           ? section.description

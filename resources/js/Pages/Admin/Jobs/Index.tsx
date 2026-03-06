@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pencil, Trash2, Plus, Eye, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, Eye, Search, Link as LinkIcon } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -123,7 +123,7 @@ export default function Index({ jobs }: { jobs: Job[] }) {
       salary: "",
       short_description: "",
       about_role: "",
-      status: "draft",
+      status: "published",
       sections: [
         { type: "responsibilities", content: "", content_ja: "" },
         { type: "requirements", content: "", content_ja: "" },
@@ -230,67 +230,67 @@ export default function Index({ jobs }: { jobs: Job[] }) {
     setData("sections", updated);
   };
   const removeSectionPoint = (index: number) => {
-  const updated = [...data.sections];
-  updated.splice(index, 1);
-  setData("sections", updated);
-};
+    const updated = [...data.sections];
+    updated.splice(index, 1);
+    setData("sections", updated);
+  };
 
-const renderSection = (type: string, title: string) => (
-  <div className="space-y-3">
-    <h4 className="font-semibold">{title}</h4>
+  const renderSection = (type: string, title: string) => (
+    <div className="space-y-3">
+      <h4 className="font-semibold">{title}</h4>
 
-    {data.sections
-      .map((s, i) => ({ ...s, i }))
-      .filter((s) => s.type === type)
-      .map(({ content, content_ja, i }) => (
-        <div key={i} className="flex gap-2 items-center">
-          <Input
-            disabled={mode === "view"}
-            value={activeLang === "en" ? content : content_ja}
-            onChange={(e) => {
-              const updated = [...data.sections];
+      {data.sections
+        .map((s, i) => ({ ...s, i }))
+        .filter((s) => s.type === type)
+        .map(({ content, content_ja, i }) => (
+          <div key={i} className="flex gap-2 items-center">
+            <Input
+              disabled={mode === "view"}
+              value={activeLang === "en" ? content : content_ja}
+              onChange={(e) => {
+                const updated = [...data.sections];
 
-              if (activeLang === "en") {
-                updated[i].content = e.target.value;
-              } else {
-                updated[i].content_ja = e.target.value;
-              }
+                if (activeLang === "en") {
+                  updated[i].content = e.target.value;
+                } else {
+                  updated[i].content_ja = e.target.value;
+                }
 
-              setData("sections", updated);
-            }}
-            placeholder="Enter point"
-          />
+                setData("sections", updated);
+              }}
+              placeholder="Enter point"
+            />
 
-          {mode !== "view" && (
-            <Button
-              type="button"
-              variant="destructive"
-              size="icon"
-              onClick={() => removeSectionPoint(i)}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          )}
-        </div>
-      ))}
+            {mode !== "view" && (
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => removeSectionPoint(i)}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+        ))}
 
-    {mode !== "view" && (
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() =>
-          setData("sections", [
-            ...data.sections,
-            { type, content: "", content_ja: "" },
-          ])
-        }
-      >
-        + Add Point
-      </Button>
-    )}
-  </div>
-);
+      {mode !== "view" && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            setData("sections", [
+              ...data.sections,
+              { type, content: "", content_ja: "" },
+            ])
+          }
+        >
+          + Add Point
+        </Button>
+      )}
+    </div>
+  );
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Jobs</h2>}>
 
@@ -444,16 +444,16 @@ const renderSection = (type: string, title: string) => (
               </div>
 
               {/* Location */}
-               <div className="space-y-1">
+              <div className="space-y-1">
                 <label className="text-sm font-medium">Location</label>
-              <Input
-                value={activeLang === "en" ? data.location : data.location_ja}
-                onChange={(e) =>
-                  activeLang === "en"
-                    ? setData("location", e.target.value)
-                    : setData("location_ja", e.target.value)
-                }
-              />
+                <Input
+                  value={activeLang === "en" ? data.location : data.location_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("location", e.target.value)
+                      : setData("location_ja", e.target.value)
+                  }
+                />
               </div>
 
               {/* Employment Type */}
@@ -476,16 +476,16 @@ const renderSection = (type: string, title: string) => (
               {/* Experience */}
               <div className="space-y-1">
                 <label className="text-sm font-medium">Experience</label>
-              <Input
-                value={activeLang === "en"
-                  ? data.experience
-                  : data.experience_ja}
-                onChange={(e) =>
-                  activeLang === "en"
-                    ? setData("experience", e.target.value)
-                    : setData("experience_ja", e.target.value)
-                }
-              /></div>
+                <Input
+                  value={activeLang === "en"
+                    ? data.experience
+                    : data.experience_ja}
+                  onChange={(e) =>
+                    activeLang === "en"
+                      ? setData("experience", e.target.value)
+                      : setData("experience_ja", e.target.value)
+                  }
+                /></div>
 
               {/* Salary */}
               <div className="space-y-1">
@@ -548,8 +548,9 @@ const renderSection = (type: string, title: string) => (
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
                     <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    
                   </SelectContent>
                 </Select>
               </div>
@@ -558,8 +559,9 @@ const renderSection = (type: string, title: string) => (
               <div className="space-y-2">
                 <label className="text-sm font-medium">About Role</label>
                 <ReactQuill
-                key={activeLang}
+                  key={activeLang}
                   theme="snow"
+                  style={{ height: "200px", marginBottom: "50px" }}
                   value={activeLang === "en" ? data.about_role : data.about_role_ja}
                   onChange={(value) => activeLang === "en" ? setData("about_role", value) : setData("about_role_ja", value)}
                 />
@@ -596,6 +598,7 @@ const renderSection = (type: string, title: string) => (
             <TableHead className="text-white">Title</TableHead>
             <TableHead className="text-white">Department</TableHead>
             <TableHead className="text-white">Status</TableHead>
+             <TableHead className="text-white">Applications</TableHead>
             <TableHead className="text-white text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -615,10 +618,22 @@ const renderSection = (type: string, title: string) => (
               <TableCell>{job.title ?? "-"}</TableCell>
               <TableCell>{job.department ?? "-"}</TableCell>
               <TableCell>{job.status}</TableCell>
+              <TableCell className="text-start">
+  <button
+    onClick={() =>
+      router.visit(route("admin.job-applications.index", { job: job.id }))
+    }
+    className="text-pink-600 hover:underline font-medium"
+  >
+    View Applications
+  </button>
+</TableCell>
               <TableCell className="space-x-2 text-center">
                 {/* <Button title="View" size="icon" onClick={() => openView(job)}>
                   <Eye className="w-4 h-4" />
                 </Button> */}
+
+               
                 <Button title="Edit" size="icon" onClick={() => openEdit(job)}>
                   <Pencil className="w-4 h-4" />
                 </Button>

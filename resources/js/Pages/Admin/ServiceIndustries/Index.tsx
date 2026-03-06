@@ -212,6 +212,7 @@ export default function Index({ industries }: { industries: Industry[] }) {
                 <ReactQuill
                   key={activeLang}
                   theme="snow"
+                  style={{ height: "200px", marginBottom: "50px" }}
                   value={
                     activeLang === "en"
                       ? data.description
