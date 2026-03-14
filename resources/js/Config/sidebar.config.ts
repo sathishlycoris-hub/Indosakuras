@@ -55,6 +55,8 @@ export const sidebarItems: SidebarItem[] = [
     href: route("admin.solutions.index"),
     role: ["admin"],
   },
+
+
   {
     label: "Services",
     icon: IdCard, // you can change icon
@@ -95,7 +97,14 @@ export const sidebarItems: SidebarItem[] = [
   },
 
   {
-    label: "Corporate",
+    label: "CaseStudies",
+    icon: Briefcase,
+    href: route("admin.casestudies.index"),
+    role: ["admin"],
+  },
+
+  {
+    label: "Corporate Info",
     icon: Factory, // you can change icon
     role: ["admin"],
     children: [

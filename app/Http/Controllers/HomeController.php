@@ -7,6 +7,8 @@ use App\Models\Service;
 use App\Models\Solution;
 use App\Models\Newsevent;
 use App\Models\Seo;
+use App\Models\CaseStudy;
+
 class HomeController extends Controller
 {
     public function index()
@@ -25,6 +27,17 @@ class HomeController extends Controller
             'solutions' => Solution::select(
                 'id','title','slug','hero_description','title_ja','hero_description_ja'
             )->orderBy('id')->get(),
+
+            'caseStudies' => CaseStudy::select(
+            'subtitle',
+            'subtitle_ja',
+            'slug',
+            'hero_image',
+            'tags'
+        )
+        ->latest()
+        ->take(4)
+        ->get(),
         ]);
     }
 }

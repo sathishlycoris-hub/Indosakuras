@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SolutionDetailController;
 use App\Http\Controllers\Admin\NewseventController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\SeminarController;
+use App\Http\Controllers\Admin\AdminCaseStudyController;
 
 use App\Http\Controllers\TeamPageController;
 use App\Http\Controllers\SeminarPageController;
@@ -41,6 +42,8 @@ use App\Http\Controllers\PolicyPageController;
 use App\Http\Controllers\SolutionPageController;
 use App\Http\Controllers\ServicePageController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CaseStudyController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -116,7 +119,6 @@ Route::post('/set-language', function (\Illuminate\Http\Request $request) {
     app()->setLocale($lang);
 
     return redirect()->back();
-
 })->name('set.language');
 
 /* Contact & Utility */
@@ -125,22 +127,26 @@ Route::get('/sitemap', fn() => Inertia::render('Sitemap'));
 Route::get('/usage', fn() => Inertia::render('Usage'));
 
 /* Case Studies */
-Route::get('/casestudies', fn() => Inertia::render('Casestudies'));
+// Route::get('/casestudies', fn() => Inertia::render('Casestudies'));
 
-Route::get('/casestudies/{id}', function ($id) {
-    return match ($id) {
-        '1' => Inertia::render('Casestudies/Casestudies1'),
-        '2' => Inertia::render('Casestudies/Casestudies2'),
-        '3' => Inertia::render('Casestudies/Casestudies3'),
-        '4' => Inertia::render('Casestudies/Casestudies4'),
-        '5' => Inertia::render('Casestudies/Casestudies5'),
-        '6' => Inertia::render('Casestudies/Casestudies6'),
-        '7' => Inertia::render('Casestudies/Casestudies7'),
-        '8' => Inertia::render('Casestudies/Casestudies8'),
-        '9' => Inertia::render('Casestudies/Casestudies9'),
-        default => abort(404),
-    };
-});
+// Route::get('/casestudies/{id}', function ($id) {
+//     return match ($id) {
+//         '1' => Inertia::render('Casestudies/Casestudies1'),
+//         '2' => Inertia::render('Casestudies/Casestudies2'),
+//         '3' => Inertia::render('Casestudies/Casestudies3'),
+//         '4' => Inertia::render('Casestudies/Casestudies4'),
+//         '5' => Inertia::render('Casestudies/Casestudies5'),
+//         '6' => Inertia::render('Casestudies/Casestudies6'),
+//         '7' => Inertia::render('Casestudies/Casestudies7'),
+//         '8' => Inertia::render('Casestudies/Casestudies8'),
+//         '9' => Inertia::render('Casestudies/Casestudies9'),
+//         default => abort(404),
+//     };
+// });
+
+Route::get('/casestudies', [CaseStudyController::class,'index']);
+
+Route::get('/casestudies/{slug}', [CaseStudyController::class,'show']);
 /* Corporate info */
 Route::get('/corporate-info', fn() => Inertia::render('CorporateInfo'));
 // Route::get('/corporate/greetings', fn() => Inertia::render('Corporate/Greetings'));
@@ -344,6 +350,18 @@ Route::prefix('admin')
 
         Route::get('seo', [SeoController::class, 'index'])->name('seo.index');
         Route::post('seo', [SeoController::class, 'store'])->name('seo.store');
+
+        Route::get('/case-studies', [AdminCaseStudyController::class, 'index'])
+            ->name('casestudies.index');
+
+        Route::post('/case-studies', [AdminCaseStudyController::class, 'store'])
+            ->name('casestudies.store');
+
+        Route::put('/case-studies/{caseStudy}', [AdminCaseStudyController::class, 'update'])
+            ->name('casestudies.update');
+
+        Route::delete('/case-studies/{caseStudy}', [AdminCaseStudyController::class, 'destroy'])
+            ->name('casestudies.destroy');
     });
 
 /* =======================

@@ -21,13 +21,12 @@ interface NewsEvent {
   short: string;
   short_ja?: string | null;
 }
-
 interface IndexProps {
-  seo?: Seo | null;
-  updates?: NewsEvent[];
-  services: Service[];
-  solutions?: Solution[];
-
+  seo?: Seo | null
+  updates?: NewsEvent[]
+  services: Service[]
+  solutions?: Solution[]
+  caseStudies?: CaseStudy[]
 }
 
 interface Service {
@@ -48,6 +47,13 @@ interface Solution {
   hero_description_ja?: string | null;
 }
 
+interface CaseStudy {
+  subtitle: string
+  subtitle_ja?: string
+  slug: string
+  hero_image?: string | null
+  tags?: string
+}
 
 
 const serviceIcons = [Cpu, Database, Building, Code, Cloud];
@@ -74,7 +80,7 @@ const getSolutionMeta = (index: number) => ({
 });
 
 
-const Index = ({ seo = null, updates = [], services = [], solutions = [] }: IndexProps) => {
+const Index = ({ seo = null, updates = [], services = [], solutions = [],  caseStudies = [] }: IndexProps) => {
 
   const { lang } = usePage<{ lang: "en" | "ja" }>().props;
 
@@ -90,28 +96,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [] }: Inde
   const safeServices = Array.isArray(services) ? services : [];
   const safeUpdates = Array.isArray(updates) ? updates : [];
   const safeSolutions = Array.isArray(solutions) ? solutions : [];
-  const caseStudies = [
-    {
-      image: "/image/case1.jpg",
-      title: "Over 20 years of experience in developing and operating core systems",
-      tags: ["Application Development", "Services"]
-    },
-    {
-      image: "/image/case2.jpg",
-      title: "Migrating a complex big data infrastructure to Snowflake, enabling rapid analysis and cost reduction",
-      tags: ["Bigdata", "BI", "DX", "Snowflake", "Kansai Office"]
-    },
-    {
-      image: "/image/case3.jpg",
-      title: "Responsible for cloud development and functionality improvement of DigiOn's IoT device management solution \"DiXiM IoT Platform\"",
-      tags: ["#DX", "#Application Development", "#Cloud"]
-    },
-    {
-      image: "/image/case4.jpg",
-      title: "Digital transformation of manufacturing workflows through custom automation solutions",
-      tags: ["DX", "Automation", "Manufacturing", "Consulting"]
-    }
-  ];
+
 
 
 
@@ -360,7 +345,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [] }: Inde
           {/* Header with line divider matching reference */}
           <div className="flex items-center gap-6 mb-10 section-divider">
             <h2 className="text-2xl font-semibold text-foreground uppercase tracking-wide whitespace-nowrap">
-             {lang === "en" ? "CASE STUDIES" : "導入事例"}
+              {lang === "en" ? "CASE STUDIES" : "導入事例"}
             </h2>
             {/* <div className="flex-1 h-px bg-gradient-to-r from-border via-border to-transparent"></div> */}
           </div>
@@ -368,15 +353,17 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [] }: Inde
           {/* Case Study Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {caseStudies.map((study, index) => (
-              <div
-                key={index}
+              <Link
+                key={study.slug}
+                href={`/casestudies/${study.slug}`}
                 className="group cursor-pointer"
               >
-                {/* Image Container */}
+
+                {/* Image */}
                 <div className="relative overflow-hidden rounded-lg mb-4">
                   <img
-                    src={study.image}
-                    alt={study.title}
+                    src={`/storage/${study.hero_image}`}
+                    alt={study.subtitle}
                     className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
@@ -384,19 +371,27 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [] }: Inde
                 {/* Content */}
                 <div>
                   <h3 className="font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    {study.title}
+                    {lang === "en"
+                      ? study.subtitle
+                      : study.subtitle_ja || study.subtitle}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                    {study.tags.join(" • ")}
-                  </p>
+
+                  {study.tags && (
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      #{study.tags}
+                    </p>
+                  )}
                 </div>
 
-                {/* Arrow indicator on hover */}
+                {/* Arrow */}
                 <div className="mt-3 flex items-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-sm font-medium">{lang === "en" ? "View Details" : "詳細を見る"}</span>
+                  <span className="text-sm font-medium">
+                    {lang === "en" ? "View Details" : "詳細を見る"}
+                  </span>
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </div>
-              </div>
+
+              </Link>
             ))}
           </div>
         </div>
@@ -459,143 +454,143 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [] }: Inde
       </section>
 
       {/* Corporate Section */}
-     <section className="py-20 bg-accent-pink text-primary-foreground">
-  <div className="container mx-auto px-4 lg:px-8">
+      <section className="py-20 bg-accent-pink text-primary-foreground">
+        <div className="container mx-auto px-4 lg:px-8">
 
-    {/* LABEL */}
-    <div className="section-divider mb-8 border-white/80">
-      <h2 className="text-2xl font-semibold text-white">
-        {lang === "en" ? "Corporate Info" : "企業情報"}
-      </h2>
-    </div>
+          {/* LABEL */}
+          <div className="section-divider mb-8 border-white/80">
+            <h2 className="text-2xl font-semibold text-white">
+              {lang === "en" ? "Corporate Info" : "企業情報"}
+            </h2>
+          </div>
 
-    <div className="container grid lg:grid-cols-[65%_35%] gap-12">
+          <div className="container grid lg:grid-cols-[65%_35%] gap-12">
 
-      {/* LEFT */}
-      <div>
-        <h2 className="text-3xl lg:text-4xl font-bold leading-snug mb-6">
-          {lang === "en"
-            ? "Delivering Excellence Across Continents"
-            : "世界をつなぐ卓越したITサービス"}
-        </h2>
+            {/* LEFT */}
+            <div>
+              <h2 className="text-3xl lg:text-4xl font-bold leading-snug mb-6">
+                {lang === "en"
+                  ? "Delivering Excellence Across Continents"
+                  : "世界をつなぐ卓越したITサービス"}
+              </h2>
 
-        <p className="mb-4 font-bold leading-relaxed">
-          {lang === "en"
-            ? "With two decades of experience spanning Japan, India, and the USA, Indo-Sakura has established itself as a trusted partner for businesses seeking innovative IT solutions. Our global presence combined with local expertise enables us to deliver world-class services tailored to diverse markets."
-            : "日本・インド・アメリカにまたがる20年以上の実績を持つインドサクラは、革新的なITソリューションを求める企業にとって信頼できるパートナーとして成長してきました。グローバルな展開と地域密着型の専門知識を融合し、多様な市場に最適化された世界水準のサービスを提供しています。"}
-        </p>
+              <p className="mb-4 font-bold leading-relaxed">
+                {lang === "en"
+                  ? "With two decades of experience spanning Japan, India, and the USA, Indo-Sakura has established itself as a trusted partner for businesses seeking innovative IT solutions. Our global presence combined with local expertise enables us to deliver world-class services tailored to diverse markets."
+                  : "日本・インド・アメリカにまたがる20年以上の実績を持つインドサクラは、革新的なITソリューションを求める企業にとって信頼できるパートナーとして成長してきました。グローバルな展開と地域密着型の専門知識を融合し、多様な市場に最適化された世界水準のサービスを提供しています。"}
+              </p>
 
-        <p className="mb-8 leading-relaxed">
-          {lang === "en"
-            ? "We serve 55 customers worldwide with a dedicated team of over 150 IT experts, focusing on five key industry sectors where we bring deep domain knowledge and technical excellence."
-            : "専門性の高いITエキスパートチームとともに、世界中のお客様へサービスを提供しています。重点分野において豊富な業界知識と高度な技術力を発揮しています。"}
-        </p>
+              <p className="mb-8 leading-relaxed">
+                {lang === "en"
+                  ? "We serve 55 customers worldwide with a dedicated team of over 150 IT experts, focusing on five key industry sectors where we bring deep domain knowledge and technical excellence."
+                  : "専門性の高いITエキスパートチームとともに、世界中のお客様へサービスを提供しています。重点分野において豊富な業界知識と高度な技術力を発揮しています。"}
+              </p>
 
-        <Button
-          asChild
-          variant="heroOutline"
-          className="mb-12 bg-white text-pink-600 border-white hover:bg-white/90 hover:text-pink-700"
-        >
-          <Link href="/corporate-info">
-            {lang === "en" ? "About Indo-Sakura" : "インドサクラについて"}
-            <ArrowRight className="w-4 h-4 ml-1" />
-          </Link>
-        </Button>
-      </div>
+              <Button
+                asChild
+                variant="heroOutline"
+                className="mb-12 bg-white text-pink-600 border-white hover:bg-white/90 hover:text-pink-700"
+              >
+                <Link href="/corporate-info">
+                  {lang === "en" ? "About Indo-Sakura" : "インドサクラについて"}
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </Button>
+            </div>
 
-      {/* RIGHT — STATS CARDS */}
-      <div className="grid grid-cols-2 gap-4" data-aos="zoom-in">
+            {/* RIGHT — STATS CARDS */}
+            <div className="grid grid-cols-2 gap-4" data-aos="zoom-in">
 
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">20</div>
-          <p className="font-medium text-primary-foreground/90">
-            {lang === "en" ? "Years of Excellence" : "20年の実績"}
-          </p>
-          <p className="text-sm text-primary-foreground/90">
-            {lang === "en" ? "Japan, India, USA" : "日本・インド・アメリカ"}
-          </p>
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">20</div>
+                <p className="font-medium text-primary-foreground/90">
+                  {lang === "en" ? "Years of Excellence" : "20年の実績"}
+                </p>
+                <p className="text-sm text-primary-foreground/90">
+                  {lang === "en" ? "Japan, India, USA" : "日本・インド・アメリカ"}
+                </p>
+              </div>
+
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">155</div>
+                <p className="font-medium text-primary-foreground/90">
+                  {lang === "en" ? "Customers" : "取引企業数"}
+                </p>
+                <p className="text-sm">
+                  {lang === "en" ? "Worldwide" : "世界各国"}
+                </p>
+              </div>
+
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">130</div>
+                <p className="font-medium text-primary-foreground/90">
+                  {lang === "en" ? "IT Experts" : "ITエキスパート"}
+                </p>
+                <p className="text-sm text-primary-foreground/90">
+                  {lang === "en" ? "Dedicated Team" : "専門チーム"}
+                </p>
+              </div>
+
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">8</div>
+                <p className="font-medium text-primary-foreground/90">
+                  {lang === "en" ? "Target Industry" : "主要業界"}
+                </p>
+                <p>
+                  {lang === "en" ? "Key Sectors" : "重点分野"}
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          {/* FEATURE CARDS */}
+          <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16" data-aos="zoom-in">
+
+            <div className="bg-primary rounded-lg p-6 text-center">
+              <Globe className="w-6 h-6 mx-auto mb-3" />
+              <p className="font-medium">
+                {lang === "en" ? "Global Reach" : "グローバル展開"}
+              </p>
+              <p>
+                {lang === "en" ? "Operations in 3 continents" : "3大陸で事業展開"}
+              </p>
+            </div>
+
+            <div className="bg-primary rounded-lg p-6 text-center">
+              <Users className="w-6 h-6 mx-auto mb-3" />
+              <p className="font-medium">
+                {lang === "en" ? "Expert Team" : "専門チーム"}
+              </p>
+              <p>
+                {lang === "en" ? "150+ certified professionals" : "150名以上の専門家"}
+              </p>
+            </div>
+
+            <div className="bg-primary rounded-lg p-6 text-center">
+              <CheckCircle className="w-6 h-6 mx-auto mb-3" />
+              <p className="font-medium">
+                {lang === "en" ? "Quality Focus" : "品質重視"}
+              </p>
+              <p>
+                {lang === "en" ? "ISO certified processes" : "ISO認証プロセス"}
+              </p>
+            </div>
+
+            <div className="bg-primary rounded-lg p-6 text-center">
+              <ArrowRight className="w-6 h-6 mx-auto mb-3" />
+              <p className="font-medium">
+                {lang === "en" ? "Growth Partner" : "成長パートナー"}
+              </p>
+              <p>
+                {lang === "en" ? "Long-term client relationships" : "長期的なパートナーシップ"}
+              </p>
+            </div>
+
+          </div>
+
         </div>
-
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">155</div>
-          <p className="font-medium text-primary-foreground/90">
-            {lang === "en" ? "Customers" : "取引企業数"}
-          </p>
-          <p className="text-sm">
-            {lang === "en" ? "Worldwide" : "世界各国"}
-          </p>
-        </div>
-
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">130</div>
-          <p className="font-medium text-primary-foreground/90">
-            {lang === "en" ? "IT Experts" : "ITエキスパート"}
-          </p>
-          <p className="text-sm text-primary-foreground/90">
-            {lang === "en" ? "Dedicated Team" : "専門チーム"}
-          </p>
-        </div>
-
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">8</div>
-          <p className="font-medium text-primary-foreground/90">
-            {lang === "en" ? "Target Industry" : "主要業界"}
-          </p>
-          <p>
-            {lang === "en" ? "Key Sectors" : "重点分野"}
-          </p>
-        </div>
-
-      </div>
-    </div>
-
-    {/* FEATURE CARDS */}
-    <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16" data-aos="zoom-in">
-
-      <div className="bg-primary rounded-lg p-6 text-center">
-        <Globe className="w-6 h-6 mx-auto mb-3" />
-        <p className="font-medium">
-          {lang === "en" ? "Global Reach" : "グローバル展開"}
-        </p>
-        <p>
-          {lang === "en" ? "Operations in 3 continents" : "3大陸で事業展開"}
-        </p>
-      </div>
-
-      <div className="bg-primary rounded-lg p-6 text-center">
-        <Users className="w-6 h-6 mx-auto mb-3" />
-        <p className="font-medium">
-          {lang === "en" ? "Expert Team" : "専門チーム"}
-        </p>
-        <p>
-          {lang === "en" ? "150+ certified professionals" : "150名以上の専門家"}
-        </p>
-      </div>
-
-      <div className="bg-primary rounded-lg p-6 text-center">
-        <CheckCircle className="w-6 h-6 mx-auto mb-3" />
-        <p className="font-medium">
-          {lang === "en" ? "Quality Focus" : "品質重視"}
-        </p>
-        <p>
-          {lang === "en" ? "ISO certified processes" : "ISO認証プロセス"}
-        </p>
-      </div>
-
-      <div className="bg-primary rounded-lg p-6 text-center">
-        <ArrowRight className="w-6 h-6 mx-auto mb-3" />
-        <p className="font-medium">
-          {lang === "en" ? "Growth Partner" : "成長パートナー"}
-        </p>
-        <p>
-          {lang === "en" ? "Long-term client relationships" : "長期的なパートナーシップ"}
-        </p>
-      </div>
-
-    </div>
-
-  </div>
-</section>
+      </section>
 
 
 

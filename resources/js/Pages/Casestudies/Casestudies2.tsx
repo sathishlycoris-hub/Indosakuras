@@ -92,19 +92,26 @@ const Casestudies2 = () => {
           </div>
 
           {/* Intro Paragraphs (same spacing + font size) */}
-          <div className="prose prose-lg max-w-none mb-12">
+           <div className="prose prose-lg max-w-none mb-12">
             <p className="text-muted-foreground">
-              {language === "en"
-                ? "The customer was analyzing big data…"
-                : "お客様は製品販売やキャンペーン状況を分析するために…"}
+              {language === 'en'
+                ? "From the initial development to the present, we have been maintaining, managing and additionally developing travel business core systems and Internet reservation systems for travel agencies."
+                : "初期開発から現在に至るまで、旅行代理店向けの旅行業務基幹システムおよびインターネット予約システムの保守・管理・追加開発を行っています。"}
             </p>
 
             <p className="text-muted-foreground mt-4">
-              {language === "en"
-                ? "We provide total support…"
-                : "分析環境を含むビッグデータプラットフォームの構築から…"}
+              {language === 'en'
+                ? "The core system for travel business has functions from planning to sales and settlement necessary for travel operations, and is also linked to external systems such as Internet reservation systems and airline arrangements."
+                : "旅行業務基幹システムは、旅行業務に必要な企画から販売・精算までの機能を備え、インターネット予約システムや航空会社手配などの外部システムとも連携しています。"}
+            </p>
+
+            <p className="text-muted-foreground mt-4">
+              {language === 'en'
+                ? "In travel operations that require detailed responses to changes in the situation and system, we have flexibly responded to functions that are difficult to respond to immediately with packaged software, and as a prime vendor, we have built relationships with customers for many years and accumulated business know-how."
+                : "状況やシステムの変化に詳細な対応が求められる旅行業務において、パッケージソフトでは即座に対応しにくい機能にも柔軟に対応し、プライムベンダーとして長年にわたりお客様との関係を構築し、業務ノウハウを蓄積してきました。"}
             </p>
           </div>
+
 
           {/* SUBJECT & EFFECT (same grid spacing & card design as Casestudies1) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -149,50 +156,7 @@ const Casestudies2 = () => {
             </div>
           </div>
 
-          {/* BEFORE / AFTER (same layout as Casestudies1 diagram) */}
-          <div className="bg-muted/30 rounded-lg p-8 mb-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-
-              <div className="bg-card border border-border rounded-lg p-6">
-                <h3 className="text-sm font-medium mb-2">
-                  {language === "en" ? "Before" : "導入前"}
-                </h3>
-                <div className="bg-muted rounded p-2 text-xs text-muted-foreground">
-                  {language === "en" ? "Multiple batch scripts" : "複数のバッチスクリプト"}
-                </div>
-              </div>
-
-              <div className="flex justify-center items-center text-3xl">→</div>
-
-              <div className="bg-card border border-primary rounded-lg p-6">
-                <h3 className="text-sm font-medium text-primary mb-2">
-                  {language === "en" ? "After" : "導入後"}
-                </h3>
-                <div className="bg-primary/10 rounded p-2 text-xs text-primary">
-                  Snowflake
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Additional Explanation */}
-          <div className="prose prose-lg max-w-none mb-12">
-            <h3>{language === "en" ? "Via Snowflake" : "Snowflake経由"}</h3>
-
-            <p className="text-muted-foreground">
-              {language === "en"
-                ? "Raw data is quickly imported…"
-                : "生データはSnowflakeに素早くインポートされます…"}
-            </p>
-
-            <p className="text-muted-foreground mt-4">
-              {language === "en"
-                ? "Snowflake is flexible and powerful…"
-                : "Snowflakeは柔軟でパワフルです…"}
-            </p>
-          </div>
-
+         
           {/* Related Cases (same structure & spacing as Casestudies1) */}
         </div>
       </article>
