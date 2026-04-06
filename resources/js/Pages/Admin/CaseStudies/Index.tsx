@@ -58,7 +58,7 @@ interface CaseStudy {
   tags?: string;
 
   hero_image?: string | null;
-   secondary_image?: string | null; 
+  secondary_image?: string | null;
 }
 
 export default function Index({ caseStudies }: { caseStudies: CaseStudy[] }) {
@@ -201,6 +201,13 @@ export default function Index({ caseStudies }: { caseStudies: CaseStudy[] }) {
 
     form.append("title", data.title);
     form.append("title_ja", data.title_ja);
+
+    form.append("subtitle", data.subtitle);       
+    form.append("subtitle_ja", data.subtitle_ja); 
+
+    form.append("content", data.content);        
+    form.append("content_ja", data.content_ja);
+
     form.append("slug", data.slug);
 
     form.append("hero_description", data.hero_description);
@@ -370,21 +377,21 @@ export default function Index({ caseStudies }: { caseStudies: CaseStudy[] }) {
                   onChange={(e) => setData("tags", e.target.value)}
                 />
               </div>
-                  <div>
-              <label className="font-medium">Descritption Image</label>
+              <div>
+                <label className="font-medium">Description Image</label>
 
-              <Input
-                type="file"
-                onChange={(e) =>
-                  setData("secondary_image", e.target.files?.[0] || null)
-                }
-              />
-              {mode === "edit" && current?.secondary_image && (
-                <img
-                  src={`/storage/${current.secondary_image}`}
-                  className="h-32 rounded border"
+                <Input
+                  type="file"
+                  onChange={(e) =>
+                    setData("secondary_image", e.target.files?.[0] || null)
+                  }
                 />
-              )}
+                {mode === "edit" && current?.secondary_image && (
+                  <img
+                    src={`/storage/${current.secondary_image}`}
+                    className="h-32 rounded border"
+                  />
+                )}
               </div>
 
               {/* HERO DESCRIPTION */}

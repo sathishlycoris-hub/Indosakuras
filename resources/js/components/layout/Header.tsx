@@ -12,7 +12,7 @@ const Header = () => {
 
   const navItems = [
     {
-      label_en: "Solutions",
+      label_en: "Products",
       label_ja: "ソリューション",
       href: "/solutions",
     },
@@ -22,7 +22,7 @@ const Header = () => {
       href: "/services",
     },
     {
-      label_en: "Case Studies",
+      label_en: "Insights",
       label_ja: "導入事例",
       href: "/casestudies",
     },
@@ -32,7 +32,7 @@ const Header = () => {
       href: "/corporate-info",
     },
     {
-      label_en: "Recruitment",
+      label_en: "Careers",
       label_ja: "採用情報",
       href: "/recruitment",
     },

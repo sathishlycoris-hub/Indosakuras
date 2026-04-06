@@ -144,9 +144,9 @@ Route::get('/usage', fn() => Inertia::render('Usage'));
 //     };
 // });
 
-Route::get('/casestudies', [CaseStudyController::class,'index']);
+Route::get('/casestudies', [CaseStudyController::class, 'index']);
 
-Route::get('/casestudies/{slug}', [CaseStudyController::class,'show']);
+Route::get('/casestudies/{slug}', [CaseStudyController::class, 'show']);
 /* Corporate info */
 Route::get('/corporate-info', fn() => Inertia::render('CorporateInfo'));
 // Route::get('/corporate/greetings', fn() => Inertia::render('Corporate/Greetings'));
@@ -249,6 +249,8 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
+
+
         Route::post('newsevent/{newsevent}', [NewseventController::class, 'update'])
             ->name('newsevent.update');
         Route::resource('newsevent', NewseventController::class)
@@ -261,6 +263,9 @@ Route::prefix('admin')
 
         Route::resource('team', TeamController::class)
             ->except(['update', 'show']);
+
+      
+            
 
         // Route::post('seminars/{seminar}', [SeminarController::class, 'update'])
         //     ->name('seminars.update');
@@ -308,6 +313,10 @@ Route::prefix('admin')
         Route::resource('profile', AdminProfileController::class)
             ->only(['index', 'store', 'update', 'destroy'])
             ->names('profile');
+
+        Route::post('profile/reorder', [AdminProfileController::class, 'reorder'])
+            ->name('profile.reorder');
+            
 
         Route::resource('history', HistoryController::class)
             ->only(['index', 'store', 'update', 'destroy'])

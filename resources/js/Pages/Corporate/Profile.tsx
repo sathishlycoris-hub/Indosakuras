@@ -86,24 +86,24 @@ services and more, ensuring your business stays ahead in innovation.`
     image: "/image/LocationEng.png"
   };
 
-const FeatureCard = ({
-  icon,
-  title,
-  subtitle,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  subtitle: string;
-  description: string;
-}) => (
-  <div className="bg-primary rounded-lg p-6 text-center">
-    {icon}
-    <p className="font-medium">{title}</p>
-    <p className="text-white">{subtitle}</p>
-    <p className="mt-2 text-white leading-relaxed">{description}</p>
-  </div>
-);
+  const FeatureCard = ({
+    icon,
+    title,
+    subtitle,
+    description,
+  }: {
+    icon: React.ReactNode;
+    title: string;
+    subtitle: string;
+    description: string;
+  }) => (
+    <div className="bg-primary rounded-lg p-6 text-center">
+      {icon}
+      <p className="font-medium">{title}</p>
+      <p className="text-white">{subtitle}</p>
+      <p className="mt-2 text-white leading-relaxed">{description}</p>
+    </div>
+  );
 
   return (
     <Layout>
@@ -224,148 +224,148 @@ const FeatureCard = ({
 
       {/* Our Strengths */}
       {/* Our Strengths */}
-<section className="py-20 bg-accent-pink text-primary-foreground">
-  <div className="container mx-auto px-4 lg:px-8" data-aos="fade-up">
+      <section className="py-20 bg-accent-pink text-primary-foreground">
+        <div className="container mx-auto px-4 lg:px-8" data-aos="fade-up">
 
-    {/* SECTION LABEL */}
-    <div className="section-divider mb-8 border-white/80">
-      <h2 className="text-3xl font-semibold text-white">
-        {lang === "ja" ? "当社の強み" : "Our Strengths"}
-      </h2>
-    </div>
+          {/* SECTION LABEL */}
+          <div className="section-divider mb-8 border-white/80">
+            <h2 className="text-3xl font-semibold text-white">
+              {lang === "ja" ? "当社の強み" : "Our Strengths"}
+            </h2>
+          </div>
 
-    <div className="grid lg:grid-cols-[65%_35%] gap-12">
+          <div className="grid lg:grid-cols-[65%_35%] gap-12">
 
-      {/* LEFT CONTENT */}
-      <div>
-        <h2 className="text-3xl lg:text-4xl font-bold leading-snug mb-6">
-          {lang === "ja"
-            ? "専門知識を融合し、革新を実現"
-            : "Combining Expertise for Innovation"}
-        </h2>
+            {/* LEFT CONTENT */}
+            <div>
+              <h2 className="text-3xl lg:text-4xl font-bold leading-snug mb-6">
+                {lang === "ja"
+                  ? "専門知識を融合し、革新を実現"
+                  : "Combining Expertise for Innovation"}
+              </h2>
 
-        <p className="text-white mb-4 leading-relaxed">
-          {lang === "ja"
-            ? "当社のエンジニアは革新的なITソリューションを専門とし、約20年の経験を活かして高品質で最適な成果を提供します。世界中の企業の成長と成功を支える、最適化されたソリューションをお届けします。"
-            : "Our engineers specialize in innovative IT solutions, ensuring high-quality performance and optimal results with nearly 20 years of experience. We deliver tailored, effective solutions that drive growth and success for businesses worldwide."}
-        </p>
+              <p className="text-white mb-4 leading-relaxed">
+                {lang === "ja"
+                  ? "当社のエンジニアは革新的なITソリューションを専門とし、約20年の経験を活かして高品質で最適な成果を提供します。世界中の企業の成長と成功を支える、最適化されたソリューションをお届けします。"
+                  : "Our engineers specialize in innovative IT solutions, ensuring high-quality performance and optimal results with nearly 20 years of experience. We deliver tailored, effective solutions that drive growth and success for businesses worldwide."}
+              </p>
 
-        <p className="text-white mb-8 leading-relaxed">
-          {lang === "ja"
-            ? "GenAI、機械学習、クラウドサービスなどの最先端技術を活用し、日本とインドをつなぐバイリンガル体制で、企業の革新を支援します。"
-            : "We embrace cutting-edge technologies like GenAI, machine learning, and cloud services, ensuring your business stays ahead in innovation while maintaining our bilingual capabilities for seamless Japan-India collaboration."}
-        </p>
+              <p className="text-white mb-8 leading-relaxed">
+                {lang === "ja"
+                  ? "GenAI、機械学習、クラウドサービスなどの最先端技術を活用し、日本とインドをつなぐバイリンガル体制で、企業の革新を支援します。"
+                  : "We embrace cutting-edge technologies like GenAI, machine learning, and cloud services, ensuring your business stays ahead in innovation while maintaining our bilingual capabilities for seamless Japan-India collaboration."}
+              </p>
 
-        <Link href="/contact">
-          <Button
-            variant="heroOutline"
-            className="bg-white text-sm font-semibold text-pink-800 hover:bg-white/90 rounded-3xl px-8 py-4"
-          >
-            {lang === "ja"
-              ? "革新への第一歩を踏み出しましょう"
-              : "Ready to innovate and drive an impact?"}
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </Link>
-      </div>
+              <Link href="/contact">
+                <Button
+                  variant="heroOutline"
+                  className="bg-white text-sm font-semibold text-pink-800 hover:bg-white/90 rounded-3xl px-8 py-4"
+                >
+                  {lang === "ja"
+                    ? "革新への第一歩を踏み出しましょう"
+                    : "Ready to innovate and drive an impact?"}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </div>
 
-      {/* RIGHT STATS */}
-      <div className="grid grid-cols-2 gap-4">
+            {/* RIGHT STATS */}
+            <div className="grid grid-cols-2 gap-4">
 
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">19+</div>
-          <p className="font-medium text-white">
-            {lang === "ja" ? "年の実績" : "Years Experience"}
-          </p>
-          <p className="text-white">
-            {lang === "ja" ? "日本企業向け" : "Japanese Companies"}
-          </p>
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">19+</div>
+                <p className="font-medium text-white">
+                  {lang === "ja" ? "年の実績" : "Years Experience"}
+                </p>
+                <p className="text-white">
+                  {lang === "ja" ? "日本企業向け" : "Japanese Companies"}
+                </p>
+              </div>
+
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">150+</div>
+                <p className="font-medium text-white">
+                  {lang === "ja" ? "ITエンジニア" : "IT Engineers"}
+                </p>
+                <p className="text-white">
+                  {lang === "ja" ? "高い技術力" : "High Performing"}
+                </p>
+              </div>
+
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">2</div>
+                <p className="font-medium text-white">
+                  {lang === "ja" ? "言語対応" : "Languages"}
+                </p>
+                <p className="text-white">
+                  {lang === "ja" ? "日本語・英語" : "Japanese & English"}
+                </p>
+              </div>
+
+              <div className="bg-primary rounded-xl p-5">
+                <div className="text-3xl font-bold mb-1">Hybrid</div>
+                <p className="font-medium text-white">
+                  {lang === "ja" ? "開発モデル" : "Development"}
+                </p>
+                <p className="text-white">
+                  {lang === "ja" ? "柔軟かつ高品質" : "Flexible & Cost-Effective"}
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          {/* FEATURE CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+
+            <FeatureCard
+              icon={<Users className="w-6 h-6 mx-auto mb-3" />}
+              title={lang === "ja" ? "確かな実績" : "Proven Excellence"}
+              subtitle={lang === "ja" ? "高品質なパフォーマンス" : "High-quality performance"}
+              description={
+                lang === "ja"
+                  ? "革新的なITソリューションを提供し、企業の成功を支えます。"
+                  : "Our engineers deliver innovative IT solutions ensuring top performance."
+              }
+            />
+
+            <FeatureCard
+              icon={<Globe className="w-6 h-6 mx-auto mb-3" />}
+              title={lang === "ja" ? "バイリンガルチーム" : "Bilingual Team"}
+              subtitle={lang === "ja" ? "円滑なコミュニケーション" : "Seamless communication"}
+              description={
+                lang === "ja"
+                  ? "日本語と英語に対応し、円滑な連携を実現します。"
+                  : "Bridging language barriers for effective collaboration."
+              }
+            />
+
+            <FeatureCard
+              icon={<CheckCircle className="w-6 h-6 mx-auto mb-3" />}
+              title={lang === "ja" ? "最先端技術" : "Cutting-Edge Tech"}
+              subtitle="GenAI & Cloud"
+              description={
+                lang === "ja"
+                  ? "最新技術で企業の成長を加速します。"
+                  : "Leveraging GenAI and cloud services for innovation."
+              }
+            />
+
+            <FeatureCard
+              icon={<ArrowRight className="w-6 h-6 mx-auto mb-3" />}
+              title={lang === "ja" ? "ハイブリッドモデル" : "Hybrid Model"}
+              subtitle={lang === "ja" ? "柔軟な開発体制" : "On-site & Offshore"}
+              description={
+                lang === "ja"
+                  ? "柔軟でコスト効率の高い開発体制を提供します。"
+                  : "Flexible and scalable development model."
+              }
+            />
+
+          </div>
+
         </div>
-
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">150+</div>
-          <p className="font-medium text-white">
-            {lang === "ja" ? "ITエンジニア" : "IT Engineers"}
-          </p>
-          <p className="text-white">
-            {lang === "ja" ? "高い技術力" : "High Performing"}
-          </p>
-        </div>
-
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">2</div>
-          <p className="font-medium text-white">
-            {lang === "ja" ? "言語対応" : "Languages"}
-          </p>
-          <p className="text-white">
-            {lang === "ja" ? "日本語・英語" : "Japanese & English"}
-          </p>
-        </div>
-
-        <div className="bg-primary rounded-xl p-5">
-          <div className="text-3xl font-bold mb-1">Hybrid</div>
-          <p className="font-medium text-white">
-            {lang === "ja" ? "開発モデル" : "Development"}
-          </p>
-          <p className="text-white">
-            {lang === "ja" ? "柔軟かつ高品質" : "Flexible & Cost-Effective"}
-          </p>
-        </div>
-
-      </div>
-    </div>
-
-    {/* FEATURE CARDS */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
-
-      <FeatureCard
-        icon={<Users className="w-6 h-6 mx-auto mb-3" />}
-        title={lang === "ja" ? "確かな実績" : "Proven Excellence"}
-        subtitle={lang === "ja" ? "高品質なパフォーマンス" : "High-quality performance"}
-        description={
-          lang === "ja"
-            ? "革新的なITソリューションを提供し、企業の成功を支えます。"
-            : "Our engineers deliver innovative IT solutions ensuring top performance."
-        }
-      />
-
-      <FeatureCard
-        icon={<Globe className="w-6 h-6 mx-auto mb-3" />}
-        title={lang === "ja" ? "バイリンガルチーム" : "Bilingual Team"}
-        subtitle={lang === "ja" ? "円滑なコミュニケーション" : "Seamless communication"}
-        description={
-          lang === "ja"
-            ? "日本語と英語に対応し、円滑な連携を実現します。"
-            : "Bridging language barriers for effective collaboration."
-        }
-      />
-
-      <FeatureCard
-        icon={<CheckCircle className="w-6 h-6 mx-auto mb-3" />}
-        title={lang === "ja" ? "最先端技術" : "Cutting-Edge Tech"}
-        subtitle="GenAI & Cloud"
-        description={
-          lang === "ja"
-            ? "最新技術で企業の成長を加速します。"
-            : "Leveraging GenAI and cloud services for innovation."
-        }
-      />
-
-      <FeatureCard
-        icon={<ArrowRight className="w-6 h-6 mx-auto mb-3" />}
-        title={lang === "ja" ? "ハイブリッドモデル" : "Hybrid Model"}
-        subtitle={lang === "ja" ? "柔軟な開発体制" : "On-site & Offshore"}
-        description={
-          lang === "ja"
-            ? "柔軟でコスト効率の高い開発体制を提供します。"
-            : "Flexible and scalable development model."
-        }
-      />
-
-    </div>
-
-  </div>
-</section>
+      </section>
 
 
 
@@ -393,16 +393,16 @@ const FeatureCard = ({
               return (
                 <div
                   key={row.id}
-                  className="grid grid-cols-3 border-b border-gray-300"
+                  className="grid grid-cols-[300px,1fr] border-b border-gray-300"   // ← Changed here
                 >
-                  {/* LEFT COLUMN */}
+                  {/* LEFT COLUMN - Now narrower */}
                   <div className="bg-pink-100 p-4 font-semibold leading-relaxed">
                     {title}
                   </div>
 
                   {/* RIGHT COLUMN */}
                   <div
-                    className="col-span-2 p-4 space-y-1 leading-relaxed prose max-w-none"
+                    className="p-4 space-y-1 leading-relaxed prose max-w-none"
                     dangerouslySetInnerHTML={{ __html: content }}
                   />
                 </div>

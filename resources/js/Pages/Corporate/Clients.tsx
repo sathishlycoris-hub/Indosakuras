@@ -59,7 +59,7 @@ export default function Clients() {
       <section className="py-12">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-primary text-3xl lg:text-4xl font-bold mb-8">
-            {lang === "en" ? "Customer Company" : "取引先企業"}
+            {lang === "en" ? "Customer Company" : "顧客企業"}
           </h2>
 
           {renderCompanyList(getCompanies("customer"))}
@@ -70,7 +70,7 @@ export default function Clients() {
       <section className="py-8 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-xl font-bold mb-6 pb-2 border-b border-primary">
-            {lang === "en" ? "Alliance Companies" : "提携企業"}
+            {lang === "en" ? "Alliance Companies" : "アライアンス企業"}
           </h2>
 
           {renderCompanyList(getCompanies("alliance"))}
@@ -82,8 +82,8 @@ export default function Clients() {
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-xl font-bold mb-6 pb-2 border-b border-primary">
             {lang === "en"
-              ? "Product / Service Agency Contract Companies"
-              : "代理店契約企業"}
+              ? "Product/Service Agency Companies"
+              : "製品/サービス代理店契約企業"}
           </h2>
 
           {renderCompanyList(getCompanies("contract"))}

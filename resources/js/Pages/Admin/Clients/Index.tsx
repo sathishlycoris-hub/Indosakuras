@@ -4,6 +4,17 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -97,53 +108,57 @@ export default function Index({ clients }: { clients: Client[] }) {
   };
 
   /* ================= SAVE ================= */
-const submitAdd = () => {
-  post(route("admin.clients.store"), {
-    data: {
-      description: data.description,
-      description_ja: data.description_ja,
-      sections: data.sections.map((s) => ({
-        type: s.type,
-        name: s.name,
-        name_ja: s.name_ja,
-      })),
-    },
-    onSuccess: () => {
-      reset();
-      setOpen(false);
-    },
-  });
-};
-
-const submitUpdate = () => {
-  if (!current) return;
-
-  router.post(
-    route("admin.clients.update", current.id),
-    {
-      _method: "PUT",
-      description: data.description,
-      description_ja: data.description_ja,
-      sections: data.sections.map((s) => ({
-        type: s.type,
-        name: s.name,
-        name_ja: s.name_ja,
-      })),
-    },
-    {
+  const submitAdd = () => {
+    post(route("admin.clients.store"), {
+      data: {
+        description: data.description,
+        description_ja: data.description_ja,
+       sections: data.sections
+        .filter((s) => s.name.trim() !== "")  // ✅ remove empty sections
+        .map((s) => ({
+          type: s.type,
+          name: s.name,
+          name_ja: s.name_ja,
+        })),
+      },
       onSuccess: () => {
         reset();
         setOpen(false);
       },
-    }
-  );
-};
+    });
+  };
 
-const removeSectionItem = (index: number) => {
-  const updated = [...data.sections];
-  updated.splice(index, 1);
-  setData("sections", updated);
-};
+  const submitUpdate = () => {
+    if (!current) return;
+
+    router.post(
+      route("admin.clients.update", current.id),
+      {
+        _method: "PUT",
+        description: data.description,
+        description_ja: data.description_ja,
+          sections: data.sections
+        .filter((s) => s.name.trim() !== "")  // ✅ remove empty sections
+        .map((s) => ({
+          type: s.type,
+          name: s.name,
+          name_ja: s.name_ja,
+        })),
+      },
+      {
+        onSuccess: () => {
+          reset();
+          setOpen(false);
+        },
+      }
+    );
+  };
+
+  const removeSectionItem = (index: number) => {
+    const updated = [...data.sections];
+    updated.splice(index, 1);
+    setData("sections", updated);
+  };
 
   /* ================= DELETE ================= */
   const deleteItem = (id: number) => {
@@ -170,67 +185,93 @@ const removeSectionItem = (index: number) => {
     setData("sections", updated);
   };
 
- const renderSection = (
-  type: ClientSection["type"],
-  title: string
-) => (
-  <div className="space-y-2">
-    <h4 className="font-semibold">{title}</h4>
+  const renderSection = (
+    type: ClientSection["type"],
+    title: string
+  ) => (
+    <div className="space-y-2">
+      <h4 className="font-semibold">{title}</h4>
 
-    {data.sections
-      .map((s, i) => ({ ...s, i }))
-      .filter((s) => s.type === type)
-      .map(({ i }) => (
-        <div key={i} className="flex gap-2 items-center">
-          <Input
-            disabled={mode === "view"}
-            value={
-              activeLang === "en"
-                ? data.sections[i].name
-                : data.sections[i].name_ja
-            }
-            onChange={(e) =>
-              activeLang === "en"
-                ? updateSection(i, "name", e.target.value)
-                : updateSection(i, "name_ja", e.target.value)
-            }
-            placeholder="Company name"
-          />
+      {data.sections
+        .map((s, i) => ({ ...s, i }))
+        .filter((s) => s.type === type)
+        .map(({ i }) => (
+          <div key={i} className="flex gap-2 items-center">
+            <Input
+              disabled={mode === "view"}
+              value={
+                activeLang === "en"
+                  ? data.sections[i].name
+                  : data.sections[i].name_ja
+              }
+              onChange={(e) =>
+                activeLang === "en"
+                  ? updateSection(i, "name", e.target.value)
+                  : updateSection(i, "name_ja", e.target.value)
+              }
+              placeholder="Company name"
+            />
+             {/* ✅ hint for empty fields */}
+            {/* {data.sections[i].name.trim() === "" && (
+              <p className="text-xs text-gray-400 mt-1">
+                Empty entries will not be saved.
+              </p>
+            )} */}
 
-          {mode !== "view" && (
-            <Button
-              type="button"
-              size="icon"
-              variant="destructive"
-              onClick={() => removeSectionItem(i)}
-            >
-            <Trash2 className="w-4 h-4" />
-            </Button>
-          )}
-        </div>
-      ))}
+            {mode !== "view" && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="destructive"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Remove Company?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to remove this company? This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-primary"
+                      onClick={() => removeSectionItem(i)}
+                    >
+                      Remove
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
+        ))}
 
-    {mode !== "view" && (
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() => addSection(type)}
-      >
-        + Add Company
-      </Button>
-    )}
-  </div>
-);
+      {mode !== "view" && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => addSection(type)}
+        >
+          + Add Company
+        </Button>
+      )}
+    </div>
+  );
 
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Clients</h2>}>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Clients</h1>
-        <Button onClick={openAdd}>
+        {/* <Button onClick={openAdd}>
           <Plus className="w-4 h-4 mr-2" />
           Add Clients
-        </Button>
+        </Button> */}
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
@@ -247,7 +288,7 @@ const removeSectionItem = (index: number) => {
             <div className="space-y-6 mt-6">
               {/* Language Toggle */}
               <div className="flex gap-2 mb-2">
-                 <Button
+                <Button
                   type="button"
                   size="sm"
                   variant={activeLang === "ja" ? "default" : "outline"}
@@ -263,18 +304,18 @@ const removeSectionItem = (index: number) => {
                 >
                   English
                 </Button>
-               
+
               </div>
 
-              {renderSection("customer", "Customer Companies")}
+              {renderSection("customer", "Customer Company")}
               {renderSection("alliance", "Alliance Companies")}
-              {renderSection("contract", "Contract Companies")}
+              {renderSection("contract", "Product/Service Agency Companies")}
               {renderSection("partner", "Partner Companies")}
 
               <div>
                 <label className="text-sm font-medium">Description</label>
                 <ReactQuill
-                key={activeLang}
+                  key={activeLang}
                   theme="snow"
                   style={{ height: "200px", marginBottom: "50px" }}
                   value={
@@ -309,41 +350,48 @@ const removeSectionItem = (index: number) => {
         <TableHeader className="bg-primary">
           <TableRow>
             <TableHead className="text-white">#</TableHead>
-            <TableHead className="text-white">Customer</TableHead>
-            <TableHead className="text-white">Alliance</TableHead>
-            <TableHead className="text-white">Contract</TableHead>
-            <TableHead className="text-white">Partner</TableHead>
+            <TableHead className="text-white">Customer company</TableHead>
+            <TableHead className="text-white">Alliance companies</TableHead>
+            <TableHead className="text-white">Product/Service Agency Companies
+            </TableHead>
+            <TableHead className="text-white">Partner Companies</TableHead>
             <TableHead className="text-white text-center">
               Actions
             </TableHead>
           </TableRow>
         </TableHeader>
-
         <TableBody className="bg-white">
           {clients.map((c, i) => (
             <TableRow key={c.id}>
-              <TableCell>{i + 1}</TableCell>
-              {["customer", "alliance", "contract", "partner"].map(
-                (type) => (
-                  <TableCell key={type}>
-                    {c.sections
-                      .filter((s) => s.section_type === type)
-                      .map((s) => s.name)
-                      .join(", ") || "-"}
-                  </TableCell>
-                )
-              )}
-              <TableCell className="space-x-2 text-center">
+              <TableCell className="align-top">{i + 1}</TableCell>
+              {["customer", "alliance", "contract", "partner"].map((type) => (
+                <TableCell key={type} className="align-top">
+                  {c.sections.filter((s) => s.section_type === type).length === 0 ? (
+                    <span className="text-gray-400">-</span>
+                  ) : (
+                    <ul className="list-disc list-inside space-y-1">
+                      {c.sections
+                        .filter((s) => s.section_type === type)
+                        .map((s, idx) => (
+                          <li key={idx} className="text-sm text-gray-700">
+                            {s.name}
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </TableCell>
+              ))}
+              <TableCell className="align-top text-center space-x-2">
                 <Button size="icon" onClick={() => openEdit(c)}>
                   <Pencil className="w-4 h-4" />
                 </Button>
-                <Button
+                {/* <Button
                   size="icon"
                   variant="destructive"
                   onClick={() => deleteItem(c.id)}
                 >
                   <Trash2 className="w-4 h-4" />
-                </Button>
+                </Button> */}
               </TableCell>
             </TableRow>
           ))}

@@ -12,7 +12,7 @@ class ProfilePageController extends Controller
     {
         return Inertia::render('Corporate/Profile', [
             // ONLY company profile rows
-            'companyProfiles' => Profile::orderBy('id')->get(),
+           'companyProfiles' => Profile::orderBy('sort_order')->get(),
         ]);
     }
 }

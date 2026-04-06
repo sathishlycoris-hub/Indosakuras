@@ -13,7 +13,7 @@ class ProfileController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Profile/Index', [
-            'profiles' => Profile::latest()->get(),
+            'profiles' => Profile::orderBy('sort_order')->get(),
         ]);
     }
 
@@ -65,5 +65,16 @@ class ProfileController extends Controller
         $profile->delete();
 
         return back()->with('success', 'Profile deleted successfully');
+    }
+
+    public function reorder(Request $request)
+    {
+        $request->validate(['ids' => 'required|array']);
+
+        foreach ($request->ids as $index => $id) {
+            Profile::where('id', $id)->update(['sort_order' => $index]);
+        }
+
+        return redirect()->route('admin.profile.index');
     }
 }

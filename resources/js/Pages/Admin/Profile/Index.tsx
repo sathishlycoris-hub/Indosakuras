@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm, router } from "@inertiajs/react";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -17,37 +18,73 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
+import { Plus, Eye, Pencil, Trash2, GripVertical } from "lucide-react";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 interface Profile {
   id: number;
+  sort_order: number;
   sub_title: string;
   sub_title_ja?: string | null;
   content: string;
   content_ja?: string | null;
 }
 
-export default function Index({ profiles }: { profiles: Profile[] }) {
+export default function Index({ profiles: initialProfiles }: { profiles: Profile[] }) {
+  const [profiles, setProfiles] = useState<Profile[]>(initialProfiles);
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
   const [current, setCurrent] = useState<Profile | null>(null);
   const [open, setOpen] = useState(false);
   const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
+
+  // Drag state
+  const dragIndex = useRef<number | null>(null);
+  const dragOverIndex = useRef<number | null>(null);
+  const [dragging, setDragging] = useState<number | null>(null);
+
   const { data, setData, post, reset, processing } = useForm<{
-    // title: string;
     sub_title: string;
     content: string;
     sub_title_ja?: string;
     content_ja?: string;
   }>({
-    // title: "",
     sub_title: "",
     content: "",
     sub_title_ja: "",
     content_ja: "",
   });
+
+  /* ================= DRAG & DROP ================= */
+  const handleDragStart = (index: number) => {
+    dragIndex.current = index;
+    setDragging(index);
+  };
+
+  const handleDragEnter = (index: number) => {
+    dragOverIndex.current = index;
+
+    if (dragIndex.current === null || dragIndex.current === index) return;
+
+    const updated = [...profiles];
+    const dragged = updated.splice(dragIndex.current, 1)[0];
+    updated.splice(index, 0, dragged);
+
+    dragIndex.current = index;
+    setProfiles(updated);
+  };
+
+ const handleDragEnd = () => {
+    setDragging(null);
+    dragIndex.current = null;
+    dragOverIndex.current = null;
+
+    const ids = profiles.map((p) => p.id);
+
+    // Use axios directly — avoids Inertia expecting a full page response
+    axios.post(route("admin.profile.reorder"), { ids });
+};
 
   /* ================= OPEN ADD ================= */
   const openAdd = () => {
@@ -63,9 +100,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
     setMode("edit");
     setCurrent(item);
     setOpen(true);
-
     setData({
-      //   title: item.title,
       sub_title: item.sub_title,
       content: item.content,
       sub_title_ja: item.sub_title_ja || "",
@@ -92,13 +127,9 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
 
   const submitUpdate = () => {
     if (!current) return;
-
     router.post(
       route("admin.profile.update", current.id),
-      {
-        _method: "PUT",
-        ...data,
-      },
+      { _method: "PUT", ...data },
       {
         onSuccess: () => {
           reset();
@@ -111,15 +142,23 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
   /* ================= DELETE ================= */
   const deleteItem = (id: number) => {
     if (confirm("Delete this profile item?")) {
-      router.delete(route("admin.profile.destroy", id));
+      router.delete(route("admin.profile.destroy", id), {
+        onSuccess: () => {
+          setProfiles((prev) => prev.filter((p) => p.id !== id));
+        },
+      });
     }
   };
 
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Profile</h2>}>
       <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Profile</h1>
-
+        <div>
+          <h1 className="text-2xl font-bold">Profile</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Drag rows to reorder — changes save automatically.
+          </p>
+        </div>
         <Button onClick={openAdd}>
           <Plus className="w-4 h-4 mr-2" />
           Add Profile
@@ -137,33 +176,24 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
             </SheetTitle>
           </SheetHeader>
 
-          {/* ================= VIEW ================= */}
+          {/* VIEW */}
           {mode === "view" && current && (
             <div className="space-y-6 mt-6">
-              {/* <p>
-                <strong>Title:</strong> {current.title}
-              </p> */}
-
               <p>
                 <strong>Title:</strong> {current.sub_title}
               </p>
-
               <div>
                 <strong>Content:</strong>
                 <div
                   className="prose max-w-none mt-2"
-                  dangerouslySetInnerHTML={{
-                    __html: current.content,
-                  }}
+                  dangerouslySetInnerHTML={{ __html: current.content }}
                 />
               </div>
             </div>
           )}
 
-          {/* ================= ADD / EDIT ================= */}
+          {/* ADD / EDIT */}
           {mode !== "view" && (
-
-
             <div className="space-y-4 mt-6">
               <div className="flex gap-2">
                 <Button
@@ -180,16 +210,9 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
                 >
                   English
                 </Button>
-
-                
               </div>
-              {/* <Input
-                placeholder="Title"
-                value={data.title}
-                onChange={(e) => setData("title", e.target.value)}
-              /> */}
-              <label className="font-medium">Title</label>
 
+              <label className="font-medium">Title</label>
               <Input
                 placeholder="Title"
                 value={activeLang === "en" ? data.sub_title : data.sub_title_ja}
@@ -203,8 +226,8 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
               <div>
                 <label className="text-sm font-medium">Content</label>
                 <ReactQuill
-                key={activeLang}
-                style={{ height: "200px", marginBottom: "50px" }}
+                  key={activeLang}
+                  style={{ height: "200px", marginBottom: "50px" }}
                   value={activeLang === "en" ? data.content : data.content_ja}
                   onChange={(v) =>
                     activeLang === "en"
@@ -219,9 +242,7 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
                 disabled={processing}
                 onClick={mode === "edit" ? submitUpdate : submitAdd}
               >
-                {mode === "edit"
-                  ? "Update Profile"
-                  : "Save Profile"}
+                {mode === "edit" ? "Update Profile" : "Save Profile"}
               </Button>
             </div>
           )}
@@ -232,48 +253,45 @@ export default function Index({ profiles }: { profiles: Profile[] }) {
       <Table>
         <TableHeader className="bg-primary">
           <TableRow>
-            <TableHead className="text-white">#</TableHead>
-            {/* <TableHead className="text-white">Title</TableHead> */}
+            <TableHead className="text-white w-10"></TableHead>
+            <TableHead className="text-white w-10">#</TableHead>
             <TableHead className="text-white">Title</TableHead>
             <TableHead className="text-white">Content</TableHead>
-            <TableHead className="text-white text-center">
-              Actions
-            </TableHead>
+            <TableHead className="text-white text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody className="bg-white">
           {profiles.map((p, i) => (
-            <TableRow key={p.id}>
-              <TableCell>{i + 1}</TableCell>
-              {/* <TableCell>{p.title}</TableCell> */}
-              <TableCell>
-                {p.sub_title}
+            <TableRow
+              key={p.id}
+              draggable
+              onDragStart={() => handleDragStart(i)}
+              onDragEnter={() => handleDragEnter(i)}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => e.preventDefault()}
+              className={`transition-opacity ${
+                dragging === i ? "opacity-40" : "opacity-100"
+              }`}
+            >
+              {/* Drag Handle */}
+              <TableCell className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600">
+                <GripVertical className="w-4 h-4" />
               </TableCell>
 
+              <TableCell>{i + 1}</TableCell>
+
+              <TableCell>{p.sub_title}</TableCell>
+
               <TableCell className="line-clamp-2 max-w-md">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: p.content,
-                  }}
-                />
+                <div dangerouslySetInnerHTML={{ __html: p.content }} />
               </TableCell>
 
               <TableCell className="space-x-2 text-center">
-                <Button
-                  title="View"
-                  size="icon"
-
-                  onClick={() => openView(p)}
-                >
+                <Button title="View" size="icon" onClick={() => openView(p)}>
                   <Eye className="w-4 h-4" />
                 </Button>
-                <Button
-                  title="Edit"
-                  size="icon"
-
-                  onClick={() => openEdit(p)}
-                >
+                <Button title="Edit" size="icon" onClick={() => openEdit(p)}>
                   <Pencil className="w-4 h-4" />
                 </Button>
                 <Button

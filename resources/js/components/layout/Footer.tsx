@@ -44,7 +44,7 @@ const Footer = () => {
       path: "/corporate-info",
     },
     {
-      name: getValue("Case Studies", "導入事例"),
+      name: getValue("Insights", "導入事例"),
       path: "/casestudies",
     },
     {
