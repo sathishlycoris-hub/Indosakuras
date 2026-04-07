@@ -1,16 +1,16 @@
 import Layout from "@/components/layout/Layout";
-import Serviceshead from "@/components/layout/Serviceshead";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 // import { Link } from "react-router-dom";
 import ContactCTA from "@/components/layout/Contact";
+import Insightshead from "@/components/layout/InsightsHead";
 
 const Blog1 = () => {
   const { language } = useLanguage();
 
   return (
     <Layout>
-      <Serviceshead />
+      <Insightshead />
 
 
       {/* Article */}

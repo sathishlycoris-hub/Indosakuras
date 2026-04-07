@@ -121,7 +121,7 @@ const Sitemap = () => {
             </h2>
 
             <ul className="space-y-2 ml-4">
-              <li><Link href="/services/blogs-index" className="text-grey hover:underline inline-flex items-center gap-1">Blog<ChevronRight className="w-4 h-4" /></Link></li>
+              <li><Link href="/blogs-index" className="text-grey hover:underline inline-flex items-center gap-1">Blog<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/contact" className="text-grey hover:underline inline-flex items-center gap-1">Support<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/corporate/policy" className="text-grey hover:underline inline-flex items-center gap-1">Privacy Policy<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/usage" className="text-grey hover:underline inline-flex items-center gap-1">Terms of Service<ChevronRight className="w-4 h-4" /></Link></li>

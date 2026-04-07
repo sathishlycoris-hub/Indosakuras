@@ -194,7 +194,7 @@ Route::get('/seminars/{seminar}', [SeminarPageController::class, 'show']);
 Route::post('/contact/save', [ContactController::class, 'store'])
     ->name('contact.store');
 
-Route::get('services/blogs-index', [BlogPageController::class, 'index'])->name('blogs.index');
+Route::get('/blogs-index', [BlogPageController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/{blog}', [BlogPageController::class, 'show'])->name('blogs.show');
 
 Route::get('/recruitment', [JobController::class, 'recruitment'])

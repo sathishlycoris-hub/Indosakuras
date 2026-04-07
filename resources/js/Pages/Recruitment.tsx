@@ -58,34 +58,36 @@ export default function Recruitment({ jobs }: { jobs: Job[] }) {
 
   const benefits = lang === "en"
     ? [
-        "Work on innovative AI and enterprise solutions",
-        "Collaborate with global teams across three continents",
-        "Competitive compensation and benefits package",
-        "Continuous learning and career development opportunities",
-        "Flexible work arrangements and work-life balance",
-        "Modern office spaces with latest technology",
-      ]
+      "Work on innovative AI and enterprise solutions",
+      "Collaborate with global teams across three continents",
+      "Competitive compensation and benefits package",
+      "Continuous learning and career development opportunities",
+      "Flexible work arrangements and work-life balance",
+      "Modern office spaces with latest technology",
+    ]
     : [
-        "最先端のAIおよびエンタープライズソリューションに携わる機会",
-        "3大陸にわたるグローバルチームとの連携",
-        "競争力のある報酬と福利厚生制度",
-        "継続的な学習とキャリア開発支援",
-        "柔軟な働き方とワークライフバランス",
-        "最新設備を備えたモダンなオフィス環境",
-      ];
+      "最先端のAIおよびエンタープライズソリューションに携わる機会",
+      "3大陸にわたるグローバルチームとの連携",
+      "競争力のある報酬と福利厚生制度",
+      "継続的な学習とキャリア開発支援",
+      "柔軟な働き方とワークライフバランス",
+      "最新設備を備えたモダンなオフィス環境",
+    ];
 
   const getValue = (en?: string, ja?: string) =>
     lang === "ja" ? ja || en : en;
 
   return (
     <Layout>
-      <Recruitmenthead
-        jobs={jobs.map(({ id, title, title_ja, slug }) => ({
-          id,
-          title: getValue(title, title_ja),
-          slug,
-        }))}
-      />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Recruitmenthead
+          jobs={jobs.map(({ id, title, title_ja, slug }) => ({
+            id,
+            title: getValue(title, title_ja),
+            slug,
+          }))}
+        />
+      </div>
 
       {/* HERO */}
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">

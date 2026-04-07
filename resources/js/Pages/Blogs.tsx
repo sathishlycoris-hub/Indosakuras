@@ -1,10 +1,10 @@
 import Layout from "@/components/layout/Layout";
-import Serviceshead from "@/components/layout/Serviceshead";
 
 import { Link, usePage } from "@inertiajs/react";
 import { Calendar, ArrowRight, Tag } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Insightshead from "@/components/layout/InsightsHead";
 interface Blog {
   id: number;
   title: string;
@@ -29,13 +29,13 @@ export default function Blogs() {
     return `${yyyy}/${mm}/${dd}`;
   };
   const getValue = (en: string, ja?: string) => {
-  return lang === "ja" ? ja || en : en;
-};
+    return lang === "ja" ? ja || en : en;
+  };
 
   //  FIXED
-const { blogs, lang } = usePage<{ blogs: Blog[]; lang: "en" | "ja" }>().props;
+  const { blogs, lang } = usePage<{ blogs: Blog[]; lang: "en" | "ja" }>().props;
 
-  
+
   AOS.init({
     duration: 800,
     easing: "ease-out-cubic",
@@ -44,7 +44,9 @@ const { blogs, lang } = usePage<{ blogs: Blog[]; lang: "en" | "ja" }>().props;
   });
   return (
     <Layout>
-      <Serviceshead />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Insightshead />
+      </div>
 
       <section className="bg-primary py-20 text-white">
         <div className="container mx-auto px-4" data-aos="fade-right">
@@ -53,9 +55,9 @@ const { blogs, lang } = usePage<{ blogs: Blog[]; lang: "en" | "ja" }>().props;
           </h1>
           <p className="opacity-90">
             {getValue(
-  "Insights, updates, and thought leadership from our experts",
-  "専門家によるインサイトと最新情報"
-)}
+              "Insights, updates, and thought leadership from our experts",
+              "専門家によるインサイトと最新情報"
+            )}
           </p>
         </div>
       </section>

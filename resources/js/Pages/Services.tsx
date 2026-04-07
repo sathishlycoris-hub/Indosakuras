@@ -236,7 +236,9 @@ function Services({
         )}
       </Head>
 
-      <Serviceshead />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Serviceshead />
+      </div>
 
       {/* Hero Section */}
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">
@@ -402,7 +404,7 @@ function Services({
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Link
-              href="services/blogs-index"
+              href="/blogs-index"
               className="group relative h-64 rounded-lg overflow-hidden"
             >
               <img

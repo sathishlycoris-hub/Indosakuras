@@ -234,7 +234,7 @@ services and more, ensuring your business stays ahead in innovation.`
             </h2>
           </div>
 
-          <div className="grid lg:grid-cols-[65%_35%] gap-12">
+          <div className="grid lg:grid-cols-[65%_35%] gap-8">
 
             {/* LEFT CONTENT */}
             <div>

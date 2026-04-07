@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/Layout";
-import Serviceshead from "@/components/layout/Serviceshead";
+import Insightshead from "@/components/layout/InsightsHead";
 import { useLanguage } from "@/Contexts/LanguageContext";
 import { Calendar, User, ArrowLeft, Share2 } from "lucide-react";
 // import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ const Blog5 = () => {
 
   return (
     <Layout>
-      <Serviceshead />
+      <Insightshead />
 
       
 

@@ -60,7 +60,7 @@ const Footer = () => {
   const resources = [
     {
       name: getValue("Blog", "ブログ"),
-      path: "/services/blogs-index",
+      path: "/blogs-index",
     },
     {
       name: getValue("Support", "サポート"),

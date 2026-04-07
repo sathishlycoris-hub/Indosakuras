@@ -89,7 +89,9 @@ export default function Show({ service }: Props) {
   };
   return (
     <Layout>
-      <Serviceshead />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Serviceshead />
+      </div>
 
       {/* ================= HERO ================= */}
       <section className="hero-gradient text-primary-foreground py-20">
@@ -232,7 +234,7 @@ export default function Show({ service }: Props) {
                         className=" text-gray-600 leading-relaxed prose prose-sm max-w-none mx-auto"
                         dangerouslySetInnerHTML={{
                           __html: getValue(b.description, b.description_ja),
-                        }}  
+                        }}
                       />
                     )}
                   </div>

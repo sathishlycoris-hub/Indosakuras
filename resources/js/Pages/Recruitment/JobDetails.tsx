@@ -65,10 +65,12 @@ export default function JobDetail({ job }: { job: Job }) {
 
 
     <Layout>
-      <Recruitmenthead
-        jobs={jobs}
-        currentSlug={job.slug}
-      />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Recruitmenthead
+          jobs={jobs}
+          currentSlug={job.slug}
+        />
+      </div>
       {/* Job Header */}
       <section className="hero-gradient text-primary-foreground py-12">
         <div className="container mx-auto px-4 lg:px-8" data-aos="fade-right">

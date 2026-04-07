@@ -1,9 +1,9 @@
 import Layout from "@/components/layout/Layout";
-import Serviceshead from "@/components/layout/Serviceshead";
 import ContactCTA from "@/components/layout/Contact";
 
 import { usePage, Link } from "@inertiajs/react";
 import { Calendar, User, ArrowLeft, Tag } from "lucide-react";
+import Insightshead from "@/components/layout/InsightsHead";
 
 interface Blog {
   id: number;
@@ -41,7 +41,7 @@ export default function BlogDetails() {
 
   return (
     <Layout>
-      <Serviceshead />
+      <Insightshead />
 
       <article className="py-16 bg-section-light">
         <div className="container mx-auto px-4">
