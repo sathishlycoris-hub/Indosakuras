@@ -1,14 +1,14 @@
 import { Link, usePage } from "@inertiajs/react";
 
-interface ServiceNavItem {
+interface InsightNavItem {
   title: string;
   title_ja?: string;
   slug: string;
 }
 
-export default function Serviceshead() {
+export default function Insightshead() {
   const { url, props } = usePage<{
-    serviceNav?: ServiceNavItem[];
+    insightNav?: InsightNavItem[];
     lang: "en" | "ja";
   }>();
 
@@ -18,30 +18,27 @@ export default function Serviceshead() {
     return lang === "ja" ? ja || en : en;
   };
 
-  const serviceNav = Array.isArray(props.serviceNav)
-    ? props.serviceNav
+  const insightNav = Array.isArray(props.insightNav)
+    ? props.insightNav
     : [];
 
   const tabs = [
     {
-      label: getValue("Services TOP", "サービスTOP"),
-      path: "/services",
-      exact: true,
-    },
-    ...serviceNav.map((service) => ({
-      label: getValue(service.title, service.title_ja),
-      path: `/services/${service.slug}`,
-    })),
-    {
-      label: getValue("Seminar (Events)", "セミナー"),
-      path: "/services/seminars-index",
-      exact: true,
-    },
-    /* {
       label: getValue("Blogs", "ブログ"),
       path: "/blogs-index",
       exact: true,
-    }, */
+    },
+    {
+      label: getValue("Case Studies", "事例紹介"),
+      path: "/casestudies",
+      exact: true,
+    },
+    {
+      label: getValue("Infographics", "インフォグラフィックス"),
+      path: "#",
+      exact: true,
+    },
+    
   ];
 
   const isActive = (item: { path: string; exact?: boolean }) => {

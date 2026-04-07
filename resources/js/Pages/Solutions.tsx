@@ -42,9 +42,9 @@ const Solutions = ({
 
   const { lang } = usePage<{ lang: "en" | "ja" }>().props;
 
- const getValue = (en?: string | null, ja?: string | null): string => {
-  return (lang === "ja" ? ja || en : en) || "";
-};
+  const getValue = (en?: string | null, ja?: string | null): string => {
+    return (lang === "ja" ? ja || en : en) || "";
+  };
 
   const ICONS = [
     Sparkles,
@@ -68,27 +68,29 @@ const Solutions = ({
 
   return (
     <Layout>
-     <Head>
-  <title>
-    {getValue(seo?.meta_title, seo?.meta_title) || "Solutions | Indo Sakura"}
-  </title>
+      <Head>
+        <title>
+          {getValue(seo?.meta_title, seo?.meta_title) || "Solutions | Indo Sakura"}
+        </title>
 
-  {seo?.meta_description && (
-    <meta
-      name="description"
-      content={getValue(seo.meta_description, seo.meta_description)}
-    />
-  )}
+        {seo?.meta_description && (
+          <meta
+            name="description"
+            content={getValue(seo.meta_description, seo.meta_description)}
+          />
+        )}
 
-  {seo?.meta_keywords && (
-    <meta
-      name="keywords"
-      content={seo.meta_keywords ?? ""}
-    />
-  )}
-</Head>
+        {seo?.meta_keywords && (
+          <meta
+            name="keywords"
+            content={seo.meta_keywords ?? ""}
+          />
+        )}
+      </Head>
 
-      <Solutionhead />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Solutionhead />
+      </div>
 
       {/* Hero */}
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">

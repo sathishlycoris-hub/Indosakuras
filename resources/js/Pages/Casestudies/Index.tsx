@@ -5,6 +5,7 @@ import ContactCTA from "@/components/layout/Contact";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { getLangValue } from "@/utils/lang";
+import Insightshead from "@/components/layout/InsightsHead";
 
 interface CaseStudy {
   id: number;
@@ -35,6 +36,9 @@ export default function Casestudies({ caseStudies = [] }: PageProps) {
 
   return (
     <Layout>
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Insightshead />
+      </div>
 
       {/* HERO */}
       <section className="relative bg-primary py-20">

@@ -80,8 +80,9 @@ export default function Show({ solution }: { solution: Solution }) {
     };
     return (
         <Layout>
-            <Solutionhead />
-
+            <div className="sticky top-[102px] z-40 bg-white">
+                <Solutionhead />
+            </div>
             {/* HERO */}
             <section className="py-12 lg:py-20 bg-section-light">
                 <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center" data-aos="fade-left">

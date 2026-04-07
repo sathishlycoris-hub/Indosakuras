@@ -24,7 +24,7 @@ const Header = () => {
     {
       label_en: "Insights",
       label_ja: "導入事例",
-      href: "/casestudies",
+      href: "/blogs-index",
     },
     {
       label_en: "Corporate Info",
@@ -80,7 +80,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background border-b border-border">
+    <header className="sticky top-0 z-50 bg-background border-b border-border h-[102px]">
       <div className="container mx-auto px-4 lg:px-8">
 
         {/* ================= TOP RIGHT BAR ================= */}
