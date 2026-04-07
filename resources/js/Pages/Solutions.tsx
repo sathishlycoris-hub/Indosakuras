@@ -94,7 +94,7 @@ const Solutions = ({
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8" data-aos="fade-right">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-            {getValue("Solutions", "ソリューション")}
+            {getValue("Products", "ソリューション")}
           </h1>
 
           <p className="text-lg text-primary-foreground/90">
@@ -112,7 +112,7 @@ const Solutions = ({
 
           <div className="section-divider mb-4">
             <h2 className="text-2xl font-semibold">
-              {getValue("Solutions", "ソリューション一覧")}
+              {getValue("Products", "ソリューション一覧")}
             </h2>
           </div>
 

@@ -54,6 +54,7 @@ interface Solution {
     hero_description_ja?: string | null;
 
     hero_image: string | null;
+    link: string | null;
 
     features: any[];
     use_cases: any[];
@@ -106,14 +107,20 @@ export default function Show({ solution }: { solution: Solution }) {
                             }}
                         />
 
-                        <Button asChild size="lg">
-                            <a
-                                href="https://www.ibm.com/solutions/artificial-intelligence"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {getValue("Learn More", "詳細を見る")} <ArrowRight className="w-4 h-4 ml-2" />
-                            </a>
+                        <Button
+                            size="lg"
+                            onClick={() => {
+                                if (solution.link) {
+                                    if (solution.link.startsWith("http")) {
+                                        window.open(solution.link, "_blank");
+                                    } else {
+                                        window.location.href = solution.link;
+                                    }
+                                }
+                            }}
+                        >
+                            {getValue("Learn More", "詳細を見る")}
+                            <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
                     </div>
 

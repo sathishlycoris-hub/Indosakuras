@@ -4,17 +4,6 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,14 +17,17 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+
+/* ================= TYPES ================= */
 
 interface ClientSection {
   type: "customer" | "alliance" | "contract" | "partner";
   name: string;
   name_ja: string;
+  link?: string; // ✅ link added
 }
 
 interface Client {
@@ -46,8 +38,11 @@ interface Client {
     section_type: string;
     name: string;
     name_ja?: string;
+    link?: string;
   }[];
 }
+
+/* ================= COMPONENT ================= */
 
 export default function Index({ clients }: { clients: Client[] }) {
   const [mode, setMode] = useState<"add" | "edit" | "view">("add");
@@ -65,25 +60,8 @@ export default function Index({ clients }: { clients: Client[] }) {
     sections: [],
   });
 
-  /* ================= OPEN ADD ================= */
-  const openAdd = () => {
-    reset();
-    setData({
-      description: "",
-      description_ja: "",
-      sections: [
-        { type: "customer", name: "", name_ja: "" },
-        { type: "alliance", name: "", name_ja: "" },
-        { type: "contract", name: "", name_ja: "" },
-        { type: "partner", name: "", name_ja: "" },
-      ],
-    });
-    setMode("add");
-    setCurrent(null);
-    setOpen(true);
-  };
+  /* ================= OPEN ================= */
 
-  /* ================= OPEN EDIT ================= */
   const openEdit = (client: Client) => {
     setMode("edit");
     setCurrent(client);
@@ -96,37 +74,12 @@ export default function Index({ clients }: { clients: Client[] }) {
         type: s.section_type as ClientSection["type"],
         name: s.name ?? "",
         name_ja: s.name_ja ?? "",
+        link: s.link ?? "", // ✅ load link
       })),
     });
   };
 
-  /* ================= OPEN VIEW ================= */
-  const openView = (client: Client) => {
-    setMode("view");
-    setCurrent(client);
-    setOpen(true);
-  };
-
   /* ================= SAVE ================= */
-  const submitAdd = () => {
-    post(route("admin.clients.store"), {
-      data: {
-        description: data.description,
-        description_ja: data.description_ja,
-       sections: data.sections
-        .filter((s) => s.name.trim() !== "")  // ✅ remove empty sections
-        .map((s) => ({
-          type: s.type,
-          name: s.name,
-          name_ja: s.name_ja,
-        })),
-      },
-      onSuccess: () => {
-        reset();
-        setOpen(false);
-      },
-    });
-  };
 
   const submitUpdate = () => {
     if (!current) return;
@@ -137,13 +90,14 @@ export default function Index({ clients }: { clients: Client[] }) {
         _method: "PUT",
         description: data.description,
         description_ja: data.description_ja,
-          sections: data.sections
-        .filter((s) => s.name.trim() !== "")  // ✅ remove empty sections
-        .map((s) => ({
-          type: s.type,
-          name: s.name,
-          name_ja: s.name_ja,
-        })),
+        sections: data.sections
+          .filter((s) => s.name.trim() !== "")
+          .map((s) => ({
+            type: s.type,
+            name: s.name,
+            name_ja: s.name_ja,
+            link: s.link, // ✅ send link
+          })),
       },
       {
         onSuccess: () => {
@@ -154,30 +108,24 @@ export default function Index({ clients }: { clients: Client[] }) {
     );
   };
 
+  /* ================= HELPERS ================= */
+
   const removeSectionItem = (index: number) => {
     const updated = [...data.sections];
     updated.splice(index, 1);
     setData("sections", updated);
   };
 
-  /* ================= DELETE ================= */
-  const deleteItem = (id: number) => {
-    if (confirm("Delete this client record?")) {
-      router.delete(route("admin.clients.destroy", id));
-    }
-  };
-
-  /* ================= SECTION HELPERS ================= */
   const addSection = (type: ClientSection["type"]) => {
     setData("sections", [
       ...data.sections,
-      { type, name: "", name_ja: "" },
+      { type, name: "", name_ja: "", link: "" }, // ✅ include link
     ]);
   };
 
   const updateSection = (
     index: number,
-    field: "name" | "name_ja",
+    field: "name" | "name_ja" | "link",
     value: string
   ) => {
     const updated = [...data.sections];
@@ -185,20 +133,23 @@ export default function Index({ clients }: { clients: Client[] }) {
     setData("sections", updated);
   };
 
+  /* ================= SECTION UI ================= */
+
   const renderSection = (
     type: ClientSection["type"],
     title: string
   ) => (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <h4 className="font-semibold">{title}</h4>
 
       {data.sections
         .map((s, i) => ({ ...s, i }))
         .filter((s) => s.type === type)
         .map(({ i }) => (
-          <div key={i} className="flex gap-2 items-center">
+          <div key={i} className="border p-3 rounded space-y-2">
+
+            {/* Name */}
             <Input
-              disabled={mode === "view"}
               value={
                 activeLang === "en"
                   ? data.sections[i].name
@@ -211,137 +162,100 @@ export default function Index({ clients }: { clients: Client[] }) {
               }
               placeholder="Company name"
             />
-             {/* ✅ hint for empty fields */}
-            {/* {data.sections[i].name.trim() === "" && (
-              <p className="text-xs text-gray-400 mt-1">
-                Empty entries will not be saved.
-              </p>
-            )} */}
 
-            {mode !== "view" && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="destructive"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Remove Company?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to remove this company? This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-primary"
-                      onClick={() => removeSectionItem(i)}
-                    >
-                      Remove
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
+            {/* Link */}
+            <Input
+              placeholder="https://example.com"
+              value={data.sections[i].link || ""}
+              onChange={(e) =>
+                updateSection(i, "link", e.target.value)
+              }
+            />
+
+            {/* Remove */}
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => removeSectionItem(i)}
+            >
+              Remove
+            </Button>
           </div>
         ))}
 
-      {mode !== "view" && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => addSection(type)}
-        >
-          + Add Company
-        </Button>
-      )}
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => addSection(type)}
+      >
+        + Add Company
+      </Button>
     </div>
   );
 
+  /* ================= UI ================= */
+
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Clients</h2>}>
-      <div className="mb-5 flex items-center justify-between">
+      <div className="mb-5 flex justify-between">
         <h1 className="text-2xl font-bold">Clients</h1>
-        {/* <Button onClick={openAdd}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Clients
-        </Button> */}
       </div>
 
+      {/* SHEET */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent className="w-[90%] sm:max-w-3xl overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>
-              {mode === "add" && "Add Clients"}
-              {mode === "edit" && "Edit Clients"}
-              {mode === "view" && "Client Details"}
-            </SheetTitle>
+            <SheetTitle>Edit Clients</SheetTitle>
           </SheetHeader>
 
-          {mode !== "view" && (
-            <div className="space-y-6 mt-6">
-              {/* Language Toggle */}
-              <div className="flex gap-2 mb-2">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={activeLang === "ja" ? "default" : "outline"}
-                  onClick={() => setActiveLang("ja")}
-                >
-                  Japanese
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant={activeLang === "en" ? "default" : "outline"}
-                  onClick={() => setActiveLang("en")}
-                >
-                  English
-                </Button>
+          <div className="space-y-6 mt-6">
 
-              </div>
-
-              {renderSection("customer", "Customer Company")}
-              {renderSection("alliance", "Alliance Companies")}
-              {renderSection("contract", "Product/Service Agency Companies")}
-              {renderSection("partner", "Partner Companies")}
-
-              <div>
-                <label className="text-sm font-medium">Description</label>
-                <ReactQuill
-                  key={activeLang}
-                  theme="snow"
-                  style={{ height: "200px", marginBottom: "50px" }}
-                  value={
-                    activeLang === "en"
-                      ? data.description
-                      : data.description_ja
-                  }
-                  onChange={(v) =>
-                    activeLang === "en"
-                      ? setData("description", v)
-                      : setData("description_ja", v)
-                  }
-                />
-              </div>
-
+            {/* Language Toggle */}
+            <div className="flex gap-2">
               <Button
-                className="w-full"
-                disabled={processing}
-                onClick={mode === "edit" ? submitUpdate : submitAdd}
+                variant={activeLang === "ja" ? "default" : "outline"}
+                onClick={() => setActiveLang("ja")}
               >
-                {mode === "edit"
-                  ? "Update Clients"
-                  : "Save Clients"}
+                Japanese
+              </Button>
+              <Button
+                variant={activeLang === "en" ? "default" : "outline"}
+                onClick={() => setActiveLang("en")}
+              >
+                English
               </Button>
             </div>
-          )}
+
+            {renderSection("customer", "Customer Company")}
+            {renderSection("alliance", "Alliance Companies")}
+            {/* {renderSection("contract", "Contract Companies")} */}
+            {renderSection("partner", "Partner Companies")}
+
+            {/* Description */}
+            <ReactQuill
+              key={activeLang}
+              theme="snow"
+              style={{ height: "200px", marginBottom: "50px" }}
+              value={
+                activeLang === "en"
+                  ? data.description
+                  : data.description_ja
+              }
+              onChange={(v) =>
+                activeLang === "en"
+                  ? setData("description", v)
+                  : setData("description_ja", v)
+              }
+            />
+
+            <Button
+              disabled={processing}
+              className="w-full"
+              onClick={submitUpdate}
+            >
+              Update Clients
+            </Button>
+          </div>
         </SheetContent>
       </Sheet>
 
@@ -350,48 +264,47 @@ export default function Index({ clients }: { clients: Client[] }) {
         <TableHeader className="bg-primary">
           <TableRow>
             <TableHead className="text-white">#</TableHead>
-            <TableHead className="text-white">Customer company</TableHead>
-            <TableHead className="text-white">Alliance companies</TableHead>
-            <TableHead className="text-white">Product/Service Agency Companies
-            </TableHead>
-            <TableHead className="text-white">Partner Companies</TableHead>
+            <TableHead className="text-white">Customer</TableHead>
+            <TableHead className="text-white">Alliance</TableHead>
+            {/* <TableHead className="text-white">Contract</TableHead> */}
+            <TableHead className="text-white">Partner</TableHead>
             <TableHead className="text-white text-center">
               Actions
             </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="bg-white">
+
+        <TableBody>
           {clients.map((c, i) => (
             <TableRow key={c.id}>
-              <TableCell className="align-top">{i + 1}</TableCell>
-              {["customer", "alliance", "contract", "partner"].map((type) => (
-                <TableCell key={type} className="align-top">
-                  {c.sections.filter((s) => s.section_type === type).length === 0 ? (
-                    <span className="text-gray-400">-</span>
-                  ) : (
-                    <ul className="list-disc list-inside space-y-1">
-                      {c.sections
-                        .filter((s) => s.section_type === type)
-                        .map((s, idx) => (
-                          <li key={idx} className="text-sm text-gray-700">
+              <TableCell>{i + 1}</TableCell>
+
+              {["customer", "alliance", "partner"].map((type) => (
+                <TableCell key={type}>
+                  {c.sections
+                    .filter((s) => s.section_type === type)
+                    .map((s, idx) => (
+                      <div key={idx}>
+                        {s.link ? (
+                          <a
+                            href={s.link}
+                            target="_blank"
+                            className="text-blue-600 underline"
+                          >
                             {s.name}
-                          </li>
-                        ))}
-                    </ul>
-                  )}
+                          </a>
+                        ) : (
+                          s.name
+                        )}
+                      </div>
+                    ))}
                 </TableCell>
               ))}
-              <TableCell className="align-top text-center space-x-2">
+
+              <TableCell className="text-center">
                 <Button size="icon" onClick={() => openEdit(c)}>
                   <Pencil className="w-4 h-4" />
                 </Button>
-                {/* <Button
-                  size="icon"
-                  variant="destructive"
-                  onClick={() => deleteItem(c.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button> */}
               </TableCell>
             </TableRow>
           ))}

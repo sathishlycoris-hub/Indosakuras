@@ -20,7 +20,8 @@ class SolutionPageController extends Controller
                 'title_ja',
                 'slug',
                 'hero_description',
-                'hero_description_ja'
+                'hero_description_ja',
+                'link'
             )
                 ->orderBy('id')
                 ->get(),

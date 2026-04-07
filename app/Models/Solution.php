@@ -18,6 +18,7 @@ class Solution extends Model
         'hero_description',
         'hero_description_ja',
         'hero_image',
+        'link',
     ];
 
     public function features()

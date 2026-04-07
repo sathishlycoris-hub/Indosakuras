@@ -32,6 +32,7 @@ class ClientController extends Controller
             'sections.*.type' => 'nullable|in:customer,alliance,contract,partner',
             'sections.*.name' => 'nullable|string|max:255',
             'sections.*.name_ja' => 'nullable|string|max:255',
+            'sections.*.link' => 'nullable|string|max:255',
         ]);
 
         $client = Client::create([
@@ -45,6 +46,7 @@ class ClientController extends Controller
                 'section_type' => $section['type'],
                 'name' => $section['name'],
                 'name_ja' => $section['name_ja'] ?? null,
+                'link' => $section['link'] ?? null,
                 'sort_order' => $index,
             ]);
         }
@@ -66,6 +68,7 @@ class ClientController extends Controller
             'sections.*.type' => 'nullable|in:customer,alliance,contract,partner',
             'sections.*.name' => 'nullable|string|max:255',
             'sections.*.name_ja' => 'nullable|string|max:255',
+            'sections.*.link' => 'nullable|string|max:255',
         ]);
 
         $client->update([
@@ -82,6 +85,7 @@ class ClientController extends Controller
                 'section_type' => $section['type'],
                 'name' => $section['name'],
                 'name_ja' => $section['name_ja'] ?? null,
+                'link' => $section['link'] ?? null,
                 'sort_order' => $index,
             ]);
         }

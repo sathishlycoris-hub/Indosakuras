@@ -47,7 +47,7 @@ class SolutionController extends Controller
             'hero_description' => 'nullable|string',
             'hero_description_ja' => 'nullable|string',
             'hero_image' => 'nullable|image|max:2048',
-
+            'link' => 'nullable|string',
             'features' => 'nullable',
             'features_ja' => 'nullable',
             'use_cases' => 'nullable',
@@ -80,12 +80,12 @@ class SolutionController extends Controller
 
             'subtitle' => $data['subtitle'] ?? null,
             'subtitle_ja' => $data['subtitle_ja'] ?? null,
-
+            
             'hero_description' => $data['hero_description'] ?? null,
             'hero_description_ja' => $data['hero_description_ja'] ?? null,
 
             'slug' => $data['slug'],
-
+            'link' => $data['link'] ?? null,
 
             'hero_image' => $data['hero_image'] ?? null,
         ]);
@@ -175,7 +175,7 @@ class SolutionController extends Controller
             'slug' => 'nullable|string|unique:solutions,slug,' . ($solution->id ?? 'NULL'),
 
             'hero_image' => 'nullable|image|max:2048',
-
+            'link' => 'nullable|string',
             'features' => 'nullable',
             'use_cases' => 'nullable',
             'case_studies' => 'nullable',
@@ -211,6 +211,7 @@ class SolutionController extends Controller
             'hero_description' => $data['hero_description'] ?? null,
             'hero_description_ja' => $data['hero_description_ja'] ?? null,
             'hero_image' => $data['hero_image'] ?? $solution->hero_image,
+            'link' => $data['link'] ?? null,
         ]);
 
         // 5️⃣ Sync children (delete → recreate)

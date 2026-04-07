@@ -43,7 +43,7 @@ export default function Casestudies({ caseStudies = [] }: PageProps) {
           data-aos="fade-right"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-2">
-            {getLangValue(lang, "Cases", "事例")}
+            {getLangValue(lang, "Insights", "事例")}
           </h1>
         </div>
       </section>

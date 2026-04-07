@@ -62,6 +62,7 @@ interface Solution {
   title: string;
   title_ja?: string;
   slug: string;
+  link: string; // NEW
   subtitle?: string;
   subtitle_ja?: string;
   hero_description?: string;
@@ -71,6 +72,7 @@ interface Solution {
   use_cases: UseCase[];
   industries: Industry[];
   case_studies: CaseStudy[];
+  
 }
 
 /* ================= COMPONENT ================= */
@@ -94,6 +96,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
 
     slug: "",
     hero_image: null as File | null,
+     link: "", // ✅ ADD
 
     features: [] as any[],
     use_cases: [] as any[],
@@ -118,7 +121,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
     setData({
       title: solution.title,
       title_ja: solution.title_ja || "",
-
+      link: solution.link || "",
       slug: solution.slug,
       subtitle: solution.subtitle || "",
       subtitle_ja: solution.subtitle_ja || "",
@@ -156,7 +159,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
 
     form.append("hero_description", data.hero_description);
     form.append("hero_description_ja", data.hero_description_ja);
-
+    form.append("link", data.link);
     // hero image ONLY
     if (data.hero_image) {
       form.append("hero_image", data.hero_image);
@@ -194,6 +197,7 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
 
     form.append("hero_description", data.hero_description);
     form.append("hero_description_ja", data.hero_description_ja);
+    form.append("link", data.link);
 
     if (data.hero_image) {
       form.append("hero_image", data.hero_image);
@@ -317,6 +321,16 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
                   onChange={(e) => setData("slug", e.target.value)}
                 />
               </div>
+              {/* Link */}
+              <div className="space-y-1">
+                <label className="font-medium">Link</label>
+                <Input
+                  placeholder="https://example.com"
+                  value={data.link}
+                  onChange={(e) => setData("link", e.target.value)}
+                />
+              </div>
+
 
               {/* Subtitle */}
               <div className="space-y-1">

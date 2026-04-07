@@ -71,12 +71,11 @@ const FloatingActions = () => {
               items-center
               justify-center
               rounded-full
-              bg-primary
+              bg-[#524A4E]
               text-primary-foreground
               shadow-lg
               transition
               hover:scale-110
-              hover:bg-accent
               focus-visible:outline-none
               focus-visible:ring-2
               focus-visible:ring-ring
@@ -104,12 +103,11 @@ const FloatingActions = () => {
           items-center
           justify-center
           rounded-full
-          bg-primary
+          bg-[#524A4E]
           text-primary-foreground
           shadow-lg
           transition
           hover:scale-110
-          hover:bg-accent
           focus-visible:outline-none
           focus-visible:ring-2
           focus-visible:ring-ring

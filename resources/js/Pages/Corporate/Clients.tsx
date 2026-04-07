@@ -7,6 +7,7 @@ interface ClientSection {
   section_type: "customer" | "alliance" | "contract" | "partner";
   name: string;
   name_ja?: string | null;
+  link?: string | null;
 }
 
 interface Client {
@@ -37,9 +38,19 @@ export default function Clients() {
       {companies.map((s, index) => (
         <div key={index} className="flex items-center gap-2 py-2">
           <div className="w-2 h-2 bg-primary flex-shrink-0" />
-          <span className="text-muted-foreground hover:text-primary transition-colors">
-            {getCompanyName(s)}
-          </span>
+          {s.link ? (
+            <a
+              href={s.link}
+              target={s.link.startsWith("http") ? "_blank" : "_self"}
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              {getCompanyName(s)}
+            </a>
+          ) : (
+            <span className="text-muted-foreground">
+              {getCompanyName(s)}
+            </span>
+          )}
         </div>
       ))}
     </div>
@@ -108,11 +119,11 @@ export default function Clients() {
             />
           )}
 
-          <p className="text-sm text-muted-foreground mt-8 text-center">
+          {/* <p className="text-sm text-muted-foreground mt-8 text-center">
             {lang === "en"
               ? "*Only companies that have permission to publish are listed. (Company names in alphabetical order, honorifics omitted)"
               : "※掲載許可をいただいた企業のみ掲載しています。（五十音順・敬称略）"}
-          </p>
+          </p> */}
         </div>
       </section>
 

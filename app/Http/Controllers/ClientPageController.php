@@ -12,7 +12,9 @@ class ClientPageController extends Controller
     {
         return Inertia::render('Corporate/Clients', [
             // usually you will have only ONE client record
-            'client' => Client::with('sections')->latest()->first(),
+            'client' => Client::with(['sections' => function ($q) {
+                $q->orderBy('name'); // ✅ alphabetical
+            }])->latest()->first(),
         ]);
     }
 }

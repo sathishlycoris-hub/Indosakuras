@@ -12,6 +12,7 @@ class ClientSection extends Model
         'name',
         'sort_order',
         'name_ja',
+        'link', 
     ];
 
     public function client()
