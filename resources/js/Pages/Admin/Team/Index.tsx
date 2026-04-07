@@ -29,9 +29,10 @@ import { Eye, Pencil, Trash2, Plus, Search } from "lucide-react";
 
 const teamCategories = [
   "Management Team",
+  "Sales & Marketing Team",
   "Technology & Innovation Leadership",
-  "Regional Leadership",
-  "Advisory Board",
+  
+  // "Advisory Board",
   "Strategic Alliance Partners",
 ];
 

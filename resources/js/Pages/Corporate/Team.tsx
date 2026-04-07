@@ -21,9 +21,10 @@ type TeamMember = {
 
 type TeamPageProps = {
   managementTeam: TeamMember[];
+  salesMarketingTeam: TeamMember[];
   technologyLeadership: TeamMember[];
-  regionalLeadership: TeamMember[];
-  advisoryBoard: TeamMember[];
+  // regionalLeadership: TeamMember[];
+  // advisoryBoard: TeamMember[];
   strategicAlliancePartners: TeamMember[];
 };
 /* =========================
@@ -34,9 +35,10 @@ export default function Team() {
   const { lang } = usePage().props as any;
   const {
     managementTeam,
+    salesMarketingTeam,
     technologyLeadership,
-    regionalLeadership,
-    advisoryBoard,
+    // regionalLeadership,
+    // advisoryBoard,
     strategicAlliancePartners,
   } = usePage<PageProps<TeamPageProps>>().props;
 
@@ -147,7 +149,10 @@ export default function Team() {
               title="Technology & Innovation Leadership"
               items={technologyLeadership}
             />
-            <SectionBlock
+              <SectionBlock              title="Sales & Marketing Team"
+              items={salesMarketingTeam}
+            /> 
+            {/* <SectionBlock
               title="Regional Leadership"
               items={regionalLeadership}
             />
@@ -155,7 +160,7 @@ export default function Team() {
               title="Advisory Board"
               items={advisoryBoard}
               noMarginBottom
-            />
+            /> */}
           </div>
         </div>
       </section>

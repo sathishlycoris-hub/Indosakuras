@@ -14,8 +14,9 @@ class TeamPageController extends Controller
         return Inertia::render('Corporate/Team', [
             'managementTeam' => $teams->where('category', 'Management Team')->values(),
             'technologyLeadership' => $teams->where('category', 'Technology & Innovation Leadership')->values(),
-            'regionalLeadership' => $teams->where('category', 'Regional Leadership')->values(),
-            'advisoryBoard' => $teams->where('category', 'Advisory Board')->values(),
+            'salesMarketingTeam' => $teams->where('category', 'Sales & Marketing Team')->values(),
+            // 'regionalLeadership' => $teams->where('category', 'Regional Leadership')->values(),
+            // 'advisoryBoard' => $teams->where('category', 'Advisory Board')->values(),
             'strategicAlliancePartners' => $teams->where('category', 'Strategic Alliance Partners')->values(),
         ]);
     }

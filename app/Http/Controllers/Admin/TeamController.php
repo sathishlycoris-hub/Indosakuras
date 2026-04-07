@@ -21,8 +21,9 @@ class TeamController extends Controller
                 'Executive Leadership',
                 'Management Team',
                 'Technology & Innovation Leadership',
-                'Regional Leadership',
-                'Advisory Board',
+                'Sales & Marketing Team',
+                // 'Regional Leadership',
+                // 'Advisory Board',
                 'Strategic Alliance Partners',
             ],
         ]);

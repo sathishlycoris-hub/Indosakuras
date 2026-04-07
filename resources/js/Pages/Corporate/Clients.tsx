@@ -34,11 +34,11 @@ export default function Clients() {
     client?.sections.filter((s) => s.section_type === type) ?? [];
 
   const renderCompanyList = (companies: ClientSection[]) => (
-    <div className="grid md:grid-cols-2 gap-x-12 gap-y-2">
+     <div className="columns-1 md:columns-2 gap-8">
       {companies.map((s, index) => (
         <div key={index} className="flex items-center gap-2 py-2">
           <div className="w-2 h-2 bg-primary flex-shrink-0" />
-          {s.link ? (
+          {/* {s.link ? (
             <a
               href={s.link}
               target={s.link.startsWith("http") ? "_blank" : "_self"}
@@ -50,7 +50,10 @@ export default function Clients() {
             <span className="text-muted-foreground">
               {getCompanyName(s)}
             </span>
-          )}
+          )} */}
+           <span className="text-muted-foreground">
+              {getCompanyName(s)}
+            </span>
         </div>
       ))}
     </div>

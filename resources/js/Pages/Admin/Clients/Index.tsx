@@ -164,13 +164,13 @@ export default function Index({ clients }: { clients: Client[] }) {
             />
 
             {/* Link */}
-            <Input
+            {/* <Input
               placeholder="https://example.com"
               value={data.sections[i].link || ""}
               onChange={(e) =>
                 updateSection(i, "link", e.target.value)
               }
-            />
+            /> */}
 
             {/* Remove */}
             <Button
