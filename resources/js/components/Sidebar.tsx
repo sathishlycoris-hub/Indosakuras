@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 
 export default function Sidebar() {
     return (
-        <aside className="w-72 bg-white shadow-lg border-r border-gray-200 p-6 hidden sm:flex flex-col h-screen">
+        <aside className="w-72 bg-white shadow-lg border-r border-gray-200 p-6 hidden sm:flex flex-col min-h-screen">
 
             {/* Scrollable menu */}
             <nav className="flex-1 space-y-2 overflow-y-auto pr-2">

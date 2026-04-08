@@ -41,7 +41,8 @@ export default function Index({ contacts }: any) {
         c.name_en,
         c.email,
         c.telephone,
-        c.company_name,
+        c.address,
+        c.product_service,
       ]
         .filter(Boolean)
         .some((field: string) =>
@@ -74,8 +75,9 @@ export default function Index({ contacts }: any) {
             <th>Name</th>
             <th>Email</th>
             <th>Mobile</th>
-            <th>Company</th>
-            <th>Enquired Date</th>
+            <th>Address</th>
+            <th>Project Details</th>
+            <th>Enquired</th>
             <th className="text-center">Actions</th>
           </tr>
         </thead>
@@ -95,7 +97,10 @@ export default function Index({ contacts }: any) {
               <td>{c.name_en}</td>
               <td>{c.email}</td>
               <td>{c.telephone}</td>
-              <td>{c.company_name}</td>
+              <td className="max-w-[150px] truncate whitespace-nowrap overflow-hidden text-ellipsis">
+  {c.address}
+</td>
+              <td>{c.product_service}</td>
               <td className="text-sm text-gray-600">
                 {formatDate(c.created_at)}
               </td>
@@ -138,38 +143,35 @@ export default function Index({ contacts }: any) {
     Inquiry Details
 ========================== */}
 <div className="space-y-4 mt-6">
-  <p>
-    <strong>Product / Service:</strong>{" "}
-    {viewContact.product_service || "-"}
-  </p>
+ 
 
-  <p>
+  {/* <p>
     <strong>Classification:</strong>{" "}
     {Array.isArray(viewContact.classification)
       ? viewContact.classification.join(", ")
       : JSON.parse(viewContact.classification || "[]").join(", ")}
-  </p>
+  </p> */}
 
-  <p>
+  {/* <p>
     <strong>Message:</strong>
     <span className="block mt-1">
       {viewContact.requests || "-"}
     </span>
-  </p>
+  </p> */}
 
-  <p>
+  {/* <p>
     <strong>Expected Date:</strong>{" "}
     {viewContact.expected_date || "-"}
-  </p>
+  </p> */}
 </div>
 
 {/* =========================
     Contact Information
 ========================== */}
 <div className="space-y-4 mt-8">
-  <p>
+  {/* <p>
     <strong>Company:</strong>{" "}
-    {viewContact.company_name || "-"}
+    {viewContact.product_service || "-"}
   </p>
 
   <p>
@@ -185,14 +187,14 @@ export default function Index({ contacts }: any) {
   <p>
     <strong>Post:</strong>{" "}
     {viewContact.post || "-"}
-  </p>
+  </p> */}
 
   <p>
     <strong>Name:</strong>{" "}
     {viewContact.name_en || "-"}
   </p>
 
-  <p>
+  {/* <p>
     <strong>Name (JP):</strong>{" "}
     {viewContact.name_ja || "-"}
   </p>
@@ -205,25 +207,35 @@ export default function Index({ contacts }: any) {
   <p>
     <strong>Post Code:</strong>{" "}
     {viewContact.zip_code || "-"}
-  </p>
+  </p> */}
 
-  <p>
-    <strong>Address:</strong>
-    <span className="block mt-1">
-      {viewContact.address || "-"}
-    </span>
-  </p>
+ 
 
-  <p>
-    <strong>Mobile:</strong>{" "}
-    {viewContact.telephone || "-"}
-  </p>
+  
 
   <p>
     <strong>Email:</strong>{" "}
     {viewContact.email || "-"}
   </p>
+  <p>
+    <strong>Mobile:</strong>{" "}
+    {viewContact.telephone || "-"}
+  </p>
+
+   <p>
+    <strong>Address:</strong>
+    
+      {viewContact.address || "-"}
+    
+  </p>
+
+   <p>
+    <strong>Project Details:</strong>{" "}
+    {viewContact.product_service || "-"}
+  </p>
 </div>
+
+
 
 {/* =========================
     Meta

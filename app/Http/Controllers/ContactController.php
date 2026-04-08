@@ -30,45 +30,63 @@ class ContactController extends Controller
     {   
         // dd($request->all());
         //
-        $data = $request->validate([
-            'productService' => 'required|string',
-            'classification' => 'required|array',
-            'expectedDate' => 'required|string',
-            'companyName' => 'required|string',
-            'lastNameEn' => 'required|string',
-            'firstNameEn' => 'required|string',
-            'lastNameJa' => 'required|string',
-            'firstNameJa' => 'required|string',
-            'zipCode' => 'required|string',
-            'address' => 'required|string',
-            'telephone' => 'required|string',
-            'email' => 'required|email',
-            'language' => 'required|in:en,ja',
-        ]);
+        // $data = $request->validate([
+        //     'productService' => 'required|string',
+        //     'classification' => 'nullable|array',
+        //     'expectedDate' => 'nullable|string',
+        //     'companyName' => 'nullable|string',
+        //     'lastNameEn' => 'required|string',
+        //     'firstNameEn' => 'nullable|string',
+        //     'lastNameJa' => 'nullable|string',
+        //     'firstNameJa' => 'nullable|string',
+        //     'zipCode' => 'nullable|string',
+        //     'address' => 'nullable|string',
+        //     'telephone' => 'required|string',
+        //     'email' => 'required|email',
+        //     'language' => 'nullable|in:en,ja',
+        // ]);
 
             // dd($data);
              
-        Contact::create([
-            'product_service' => $request->productService,
-            'classification' => json_encode($request->classification),
-            'requests' => $request->requests,
-            'expected_date' => $request->expectedDate,
-            'company_name' => $request->companyName,
-            'customer_position' => $request->customerPosition,
-            'department' => $request->departmentName,
-            'post' => $request->post,
-            'name_en' => $request->lastNameEn . ' ' . $request->firstNameEn,
-            'name_ja' => $request->lastNameJa . ' ' . $request->firstNameJa,
-            'address_type' => $request->addressType,
-            'zip_code' => $request->zipCode,
-            'prefecture' => $request->prefecture,
-            'address' => $request->address,
-            'telephone' => $request->telephone,
-            'email' => $request->email,
-            'language' => $request->language,
-        ]);
+        // Contact::create([
+        //     'product_service' => $request->productService,
+        //     'classification' => json_encode($request->classification),
+        //     'requests' => $request->requests,
+        //     'expected_date' => $request->expectedDate,
+        //     'company_name' => $request->companyName,
+        //     'customer_position' => $request->customerPosition,
+        //     'department' => $request->departmentName,
+        //     'post' => $request->post,
+        //     'name_en' => $request->lastNameEn . ' ' . $request->firstNameEn,
+        //     'name_ja' => $request->lastNameJa . ' ' . $request->firstNameJa,
+        //     'address_type' => $request->addressType,
+        //     'zip_code' => $request->zipCode,
+        //     'prefecture' => $request->prefecture,
+        //     'address' => $request->address,
+        //     'telephone' => $request->telephone,
+        //     'email' => $request->email,
+        //     'language' => $request->language,
+        // ]);
 
-        return redirect()->back();
+        // return redirect()->back();
+
+        $data = $request->validate([
+        'name_en' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'telephone' => 'required|string|max:20',
+        'address' => 'required|string|max:255',
+        'productService' => 'required|string',
+    ]);
+
+    Contact::create([
+        'name_en' => $data['name_en'],
+        'email' => $data['email'],
+        'telephone' => $data['telephone'],
+        'address' => $data['address'],
+        'product_service' => $data['productService'], // DB column
+    ]);
+
+    return redirect()->back()->with('success', 'Message sent successfully');
     }
 
     /**

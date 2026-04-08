@@ -242,7 +242,7 @@ Route::get('/services', [ServicePageController::class, 'index'])
 Route::get('/services/{slug}', [ServicePageController::class, 'show'])
     ->name('services.show');
 
-    Route::get('/corporate-info', [CorporateInfoPageController::class, 'index'])
+Route::get('/corporate-info', [CorporateInfoPageController::class, 'index'])
     ->name('corporate.index');
 
 /* =======================
@@ -254,18 +254,18 @@ Route::prefix('admin')
     ->group(function () {
 
 
-         Route::get('/corporate-info', [CorporateInfoController::class, 'index'])
-        ->name('corporate.index');
+        Route::get('/corporate-info', [CorporateInfoController::class, 'index'])
+            ->name('corporate.index');
 
-    Route::post('/corporate-info', [CorporateInfoController::class, 'store'])
-        ->name('corporate.store');
+        Route::post('/corporate-info', [CorporateInfoController::class, 'store'])
+            ->name('corporate.store');
 
-    Route::put('/corporate-info/{corporateInfo}', [CorporateInfoController::class, 'update'])
-        ->name('corporate.update');
+        Route::put('/corporate-info/{corporateInfo}', [CorporateInfoController::class, 'update'])
+            ->name('corporate.update');
 
-    Route::delete('/corporate-info/{corporateInfo}', [CorporateInfoController::class, 'destroy'])
-        ->name('corporate.destroy');
-        
+        Route::delete('/corporate-info/{corporateInfo}', [CorporateInfoController::class, 'destroy'])
+            ->name('corporate.destroy');
+
         Route::post('newsevent/{newsevent}', [NewseventController::class, 'update'])
             ->name('newsevent.update');
         Route::resource('newsevent', NewseventController::class)
@@ -279,8 +279,8 @@ Route::prefix('admin')
         Route::resource('team', TeamController::class)
             ->except(['update', 'show']);
 
-      
-            
+
+
 
         // Route::post('seminars/{seminar}', [SeminarController::class, 'update'])
         //     ->name('seminars.update');
@@ -304,6 +304,9 @@ Route::prefix('admin')
 
         Route::resource('jobs', JobController::class)
             ->names('jobs');
+
+        Route::post('jobs/reorder', [JobController::class, 'reorder'])->name('jobs.reorder');
+       
 
         /* Admin */
 
@@ -331,7 +334,7 @@ Route::prefix('admin')
 
         Route::post('profile/reorder', [AdminProfileController::class, 'reorder'])
             ->name('profile.reorder');
-            
+
 
         Route::resource('history', HistoryController::class)
             ->only(['index', 'store', 'update', 'destroy'])

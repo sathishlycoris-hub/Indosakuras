@@ -12,13 +12,12 @@ use Inertia\Inertia;
 class JobController extends Controller
 {
     /**
-     * List jobs (Admin table)
+     * List jobs (Admin table) — ordered by sort_order
      */
     public function index()
     {
         return Inertia::render('Admin/Jobs/Index', [
-            // IMPORTANT: load sections for edit/view
-            'jobs' => Job::with('sections')->latest()->get(),
+            'jobs' => Job::with('sections')->orderBy('sort_order')->get(),
         ]);
     }
 
@@ -27,7 +26,6 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->validate([
             'title' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
@@ -55,7 +53,6 @@ class JobController extends Controller
             'sections.*.content_ja' => 'nullable|string',
         ]);
 
-        // Create Job
         $job = Job::create([
             'title' => $data['title'] ?? null,
             'slug' => Str::slug($data['title'] ?? $data['title_ja']),
@@ -67,7 +64,6 @@ class JobController extends Controller
             'short_description' => $data['short_description'] ?? null,
             'about_role' => $data['about_role'] ?? null,
             'about_role_ja' => $data['about_role_ja'] ?? null,
-            
 
             'title_ja' => $data['title_ja'] ?? null,
             'department_ja' => $data['department_ja'] ?? null,
@@ -77,12 +73,11 @@ class JobController extends Controller
             'salary_ja' => $data['salary_ja'] ?? null,
             'short_description_ja' => $data['short_description_ja'] ?? null,
 
-
             'status' => $data['status'],
+            'sort_order' => Job::max('sort_order') + 1, // place new job at the end
         ]);
 
-        // Store sections
-        foreach ($data['sections'] as $index => $section) {
+        foreach ($data['sections'] ?? [] as $index => $section) {
             JobSection::create([
                 'job_id' => $job->id,
                 'section_type' => $section['type'],
@@ -122,53 +117,49 @@ class JobController extends Controller
             'short_description_ja' => 'nullable|string',
             'about_role_ja' => 'nullable|string',
 
-            // sections
             'sections' => 'nullable|array|min:1',
             'sections.*.type' => 'nullable|in:responsibilities,requirements,preferred,offer',
             'sections.*.content' => 'nullable|string',
             'sections.*.content_ja' => 'nullable|string',
         ]);
 
-        // Update Job
-       $job->update([
-    'title' => $data['title'] ?? null,
-    'slug' => Str::slug(
-        $data['title']
-            ?? $data['title_ja']
-            ?? $job->slug
-    ),
-    'department' => $data['department'] ?? null,
-    'department_ja' => $data['department_ja'] ?? null,
-    'location' => $data['location'] ?? null,
-    'location_ja' => $data['location_ja'] ?? null,
-    'employment_type' => $data['employment_type'] ?? null,
-    'employment_type_ja' => $data['employment_type_ja'] ?? null,
-    'experience' => $data['experience'] ?? null,
-    'salary' => $data['salary'] ?? null,
-    'short_description' => $data['short_description'] ?? null,
-    'about_role' => $data['about_role'] ?? null,
-    'title_ja' => $data['title_ja'] ?? null,
-    'experience_ja' => $data['experience_ja'] ?? null,
-    'salary_ja' => $data['salary_ja'] ?? null,
-    'short_description_ja' => $data['short_description_ja'] ?? null,
-    'about_role_ja' => $data['about_role_ja'] ?? null,
-    'status' => $data['status'] ?? 'draft',
-]);
+        $job->update([
+            'title' => $data['title'] ?? null,
+            'slug' => Str::slug(
+                $data['title'] ?? $data['title_ja'] ?? $job->slug
+            ),
+            'department' => $data['department'] ?? null,
+            'department_ja' => $data['department_ja'] ?? null,
+            'location' => $data['location'] ?? null,
+            'location_ja' => $data['location_ja'] ?? null,
+            'employment_type' => $data['employment_type'] ?? null,
+            'employment_type_ja' => $data['employment_type_ja'] ?? null,
+            'experience' => $data['experience'] ?? null,
+            'salary' => $data['salary'] ?? null,
+            'short_description' => $data['short_description'] ?? null,
+            'about_role' => $data['about_role'] ?? null,
+            'title_ja' => $data['title_ja'] ?? null,
+            'experience_ja' => $data['experience_ja'] ?? null,
+            'salary_ja' => $data['salary_ja'] ?? null,
+            'short_description_ja' => $data['short_description_ja'] ?? null,
+            'about_role_ja' => $data['about_role_ja'] ?? null,
+            'status' => $data['status'] ?? 'draft',
+        ]);
 
-        // Replace sections cleanly
         $job->sections()->delete();
 
-       if (!empty($data['sections'])) {
-    foreach ($data['sections'] as $index => $section) {
-        JobSection::create([
-            'job_id' => $job->id,
-            'section_type' => $section['type'] ?? null,
-            'content' => $section['content'] ?? null,
-            'content_ja' => $section['content_ja'] ?? null,
-            'sort_order' => $index,
-        ]);
-    }
-}
+        if (!empty($data['sections'])) {
+            foreach ($data['sections'] as $index => $section) {
+                JobSection::create([
+                    'job_id' => $job->id,
+                    'section_type' => $section['type'] ?? null,
+                    'content' => $section['content'] ?? null,
+                    'content_ja' => $section['content_ja'] ?? null,
+                    'sort_order' => $index,
+                ]);
+            }
+        }
+
         return redirect()
             ->route('admin.jobs.index')
             ->with('success', 'Job updated successfully');
@@ -184,25 +175,36 @@ class JobController extends Controller
         return back()->with('success', 'Job deleted successfully');
     }
 
+    /**
+     * Reorder jobs — called via axios from the admin drag-and-drop UI.
+     * Returns plain JSON (NOT Inertia) so axios handles it without errors.
+     */
+    public function reorder(Request $request)
+    {
+        $request->validate(['ids' => 'required|array']);
+
+        foreach ($request->ids as $index => $id) {
+            Job::where('id', $id)->update(['sort_order' => $index]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Public recruitment listing page
+     */
     public function recruitment()
     {
         return Inertia::render('Recruitment', [
             'jobs' => Job::where('status', 'published')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('sort_order') // respect admin ordering
                 ->get([
-                    'id',
-                    'title',
-                    'title_ja',
-                    'department',
-                    'department_ja',
-                    'location',
-                    'location_ja',
-                    'employment_type',
-                    'employment_type_ja',
-                    'experience',
-                    'experience_ja',
-                    'salary',
-                    'slug',
+                    'id', 'title', 'title_ja',
+                    'department', 'department_ja',
+                    'location', 'location_ja',
+                    'employment_type', 'employment_type_ja',
+                    'experience', 'experience_ja',
+                    'salary', 'slug',
                 ]),
         ]);
     }

@@ -45,7 +45,7 @@ const Subheader = ({ currentPage }: SubheaderProps) => {
       path: "/corporate/press-release",
     },
     {
-      name_en: "Clients/Biz Partners",
+      name_en: "Clients",
       name_ja: "取引先・ビジネスパートナー",
       path: "/corporate/clients",
     },

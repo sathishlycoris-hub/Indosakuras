@@ -84,9 +84,10 @@ const CorporateInfo = () => {
 
   return (
     <Layout>
-      <div className="sticky top-[102px] z-40 bg-white">
+       <div className="sticky top-[102px] z-40 bg-white">
         <Subheader />
       </div>
+
       {/* Hero Section */}
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
@@ -100,11 +101,11 @@ const CorporateInfo = () => {
       <section className="py-16 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid md:grid-cols-2 gap-6">
-     {sections.map((section) => {
+        {sections.map((section) => {
   const hasImage = !!section.image;
 
   return hasImage ? (
-    // === TALL CARD WITH IMAGE ===
+    // With Image Card
     <Link
       key={section.id}
       href={section.path || "#"}
@@ -121,17 +122,17 @@ const CorporateInfo = () => {
       <div className="flex items-center justify-between bg-white border-t min-h-[78px]">
         <div className="flex items-center gap-3 px-5 py-5">
           <Building className="w-5 h-5 text-gray-400" />
-          <span className="font-medium text-[17px] text-gray-800">
+          <span className="font-medium text-[17px] text-primary font-semibold">
             {lang === "ja" ? section.title_ja ?? section.title : section.title ?? section.title_ja}
           </span>
         </div>
-        <div className="bg-blue-600 w-[78px] h-full flex items-center justify-center group-hover:bg-blue-700 transition">
+        <div className="bg-pink-600 w-[78px] h-full flex items-center justify-center group-hover:bg-pink-700 transition">
           <ArrowRight className="w-6 h-6 text-white" />
         </div>
       </div>
     </Link>
   ) : (
-    // === SHORT CARD - NO IMAGE (Clean & Simple) ===
+    // NO IMAGE - Compact Card (Final Version)
     <Link
       key={section.id}
       href={section.path || "#"}
@@ -141,12 +142,12 @@ const CorporateInfo = () => {
         <div className="text-gray-400">
           <Building className="w-5 h-5" />
         </div>
-        <span className="font-medium text-[17px] text-gray-800">
+        <span className="font-medium text-[17px] text-primary font-semibold">
           {lang === "ja" ? section.title_ja ?? section.title : section.title ?? section.title_ja}
         </span>
       </div>
 
-      <div className="bg-pink-600 w-14 h-full flex items-center justify-center group-hover:bg-pink-700 transition-colors">
+      <div className="bg-pink-600 w-[78px] h-full flex items-center justify-center group-hover:bg-pink-700 transition">
         <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition" />
       </div>
     </Link>
@@ -161,4 +162,4 @@ const CorporateInfo = () => {
   );
 };
 
-export default CorporateInfo;
+export default CorporateInfo; 
