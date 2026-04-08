@@ -43,7 +43,8 @@ use App\Http\Controllers\SolutionPageController;
 use App\Http\Controllers\ServicePageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CaseStudyController;
-
+use App\Http\Controllers\CorporateInfoPageController;
+use App\Http\Controllers\Admin\CorporateInfoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -148,7 +149,7 @@ Route::get('/casestudies', [CaseStudyController::class, 'index']);
 
 Route::get('/casestudies/{slug}', [CaseStudyController::class, 'show']);
 /* Corporate info */
-Route::get('/corporate-info', fn() => Inertia::render('CorporateInfo'));
+// Route::get('/corporate-info', fn() => Inertia::render('CorporateInfo'));
 // Route::get('/corporate/greetings', fn() => Inertia::render('Corporate/Greetings'));
 // Route::get('/corporate/philosophy', fn() => Inertia::render('Corporate/Philosophy'));
 // Route::get('/corporate/profile', fn() => Inertia::render('Corporate/Profile'));
@@ -241,6 +242,9 @@ Route::get('/services', [ServicePageController::class, 'index'])
 Route::get('/services/{slug}', [ServicePageController::class, 'show'])
     ->name('services.show');
 
+    Route::get('/corporate-info', [CorporateInfoPageController::class, 'index'])
+    ->name('corporate.index');
+
 /* =======================
 | Admin Panel
 ======================= */
@@ -250,7 +254,18 @@ Route::prefix('admin')
     ->group(function () {
 
 
+         Route::get('/corporate-info', [CorporateInfoController::class, 'index'])
+        ->name('corporate.index');
 
+    Route::post('/corporate-info', [CorporateInfoController::class, 'store'])
+        ->name('corporate.store');
+
+    Route::put('/corporate-info/{corporateInfo}', [CorporateInfoController::class, 'update'])
+        ->name('corporate.update');
+
+    Route::delete('/corporate-info/{corporateInfo}', [CorporateInfoController::class, 'destroy'])
+        ->name('corporate.destroy');
+        
         Route::post('newsevent/{newsevent}', [NewseventController::class, 'update'])
             ->name('newsevent.update');
         Route::resource('newsevent', NewseventController::class)

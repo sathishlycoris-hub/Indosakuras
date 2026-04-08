@@ -92,7 +92,7 @@ export default function Clients() {
       </section>
 
       {/* Contract */}
-      <section className="py-8 bg-section-light">
+      {/* <section className="py-8 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-xl font-bold mb-6 pb-2 border-b border-primary">
             {lang === "en"
@@ -102,7 +102,7 @@ export default function Clients() {
 
           {renderCompanyList(getCompanies("contract"))}
         </div>
-      </section>
+      </section> */}
 
       {/* Partner */}
       <section className="py-8 bg-section-light">

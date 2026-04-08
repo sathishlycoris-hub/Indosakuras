@@ -109,6 +109,12 @@ export const sidebarItems: SidebarItem[] = [
     role: ["admin"],
     children: [
       {
+        label: "Corporate Top",
+        icon: MessageSquare,
+        href: route("admin.corporate.index"),
+        role: ["admin"],
+      },
+      {
         label: "Greetings",
         icon: MessageSquare,
         href: route("admin.greetings.index"),
