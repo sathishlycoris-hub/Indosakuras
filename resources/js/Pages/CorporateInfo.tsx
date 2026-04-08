@@ -72,8 +72,9 @@ const CorporateInfo = () => {
 
   return (
     <Layout>
-      <Subheader />
-
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader />
+      </div>
       {/* Hero Section */}
       <section className="hero-gradient text-primary-foreground py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8" data-aos="fade-right">

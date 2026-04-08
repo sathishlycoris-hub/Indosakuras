@@ -34,8 +34,8 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
     activeFilter === "All"
       ? news
       : news.filter((item) =>
-          getLangValue(lang, item.eventtype, item.eventtype_ja) === activeFilter
-        );
+        getLangValue(lang, item.eventtype, item.eventtype_ja) === activeFilter
+      );
 
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString(
@@ -44,9 +44,11 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
 
   return (
     <Layout>
-      <Subheader
-        currentPage={getLangValue(lang, "Press Release", "プレスリリース")}
-      />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader
+          currentPage={getLangValue(lang, "Press Release", "プレスリリース")}
+        />
+      </div>
 
       <section className="py-12 lg:py-16">
         <div className="container mx-auto px-4 lg:px-8">
@@ -60,11 +62,10 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
-                  activeFilter === filter
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${activeFilter === filter
                     ? "bg-primary text-white border-primary"
                     : "bg-white text-muted-foreground border-border hover:border-primary hover:text-primary"
-                }`}
+                  }`}
               >
                 {filter}
               </button>
@@ -94,7 +95,7 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
 
                 {/* TITLE */}
                 <div className="text-foreground">
-                  {getLangValue(lang,item.short, item.short_ja)}
+                  {getLangValue(lang, item.short, item.short_ja)}
                 </div>
 
                 {/* LINK */}

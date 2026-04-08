@@ -23,12 +23,13 @@ export default function Philosophy({
 
   return (
     <Layout>
-      {/* Subheader */}
-      <Subheader
-        currentPage={
-          lang === "ja" ? "企業理念" : "Corporate Philosophy"
-        }
-      />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader
+          currentPage={
+            lang === "ja" ? "企業理念" : "Corporate Philosophy"
+          }
+        />
+      </div>
 
       {/* Philosophy Sections */}
       {philosophies.map((item, index) => {
@@ -50,11 +51,10 @@ export default function Philosophy({
         return (
           <section
             key={item.id}
-            className={`py-20 ${
-              index % 2 === 0
+            className={`py-20 ${index % 2 === 0
                 ? "bg-section-light"
                 : "bg-primary/5"
-            }`}
+              }`}
           >
             <div className="container">
               <h2 className="text-3xl font-bold text-center text-primary mb-2">

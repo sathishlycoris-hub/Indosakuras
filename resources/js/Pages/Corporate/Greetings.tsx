@@ -13,7 +13,7 @@ interface Greeting {
 }
 
 export default function Greetings({ greeting }: { greeting: Greeting | null }) {
-  
+
   const { lang } = usePage<{ lang: "en" | "ja" }>().props;
 
   const title =
@@ -28,8 +28,9 @@ export default function Greetings({ greeting }: { greeting: Greeting | null }) {
 
   return (
     <Layout>
-      <Subheader currentPage={lang === "ja" ? "ご挨拶" : "Greetings"} />
-
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader currentPage={lang === "ja" ? "ご挨拶" : "Greetings"} />
+      </div>
       <section className="py-12 lg:py-16 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-start">

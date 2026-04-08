@@ -464,7 +464,7 @@ const Index = ({ seo = null, updates = [], services = [], solutions = [],  caseS
             </h2>
           </div>
 
-          <div className="container grid lg:grid-cols-[65%_35%] gap-12">
+          <div className="container grid lg:grid-cols-[65%_35%] gap-0">
 
             {/* LEFT */}
             <div>
