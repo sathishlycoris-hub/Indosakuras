@@ -117,8 +117,9 @@ export default function Team() {
 
   return (
     <Layout>
-      <Subheader currentPage="Management Team" />
-
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader currentPage="Management Team" />
+      </div>
       {/* Hero */}
       <section className="py-8 pb-4  bg-gradient-to-br from-primary/5 to-primary/10">
         <div className="container mx-auto px-4 lg:px-8">

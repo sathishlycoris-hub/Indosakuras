@@ -102,9 +102,11 @@ const History = ({
 
   return (
     <Layout>
-      <Subheader
-        currentPage={lang === "ja" ? "沿革" : "History"}
-      />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader
+          currentPage={lang === "ja" ? "沿革" : "History"}
+        />
+      </div>
 
       {/* HERO SECTION */}
       <section className="py-12 bg-gradient-to-br from-primary/5 to-primary/10">

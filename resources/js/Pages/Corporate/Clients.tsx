@@ -61,13 +61,15 @@ export default function Clients() {
 
   return (
     <Layout>
-      <Subheader
-        currentPage={
-          lang === "en"
-            ? "Clients / Biz Partners"
-            : "取引先・ビジネスパートナー"
-        }
-      />
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader
+          currentPage={
+            lang === "en"
+              ? "Clients / Biz Partners"
+              : "取引先・ビジネスパートナー"
+          }
+        />
+      </div>
 
       {/* Customer */}
       <section className="py-12">

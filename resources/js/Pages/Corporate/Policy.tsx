@@ -48,8 +48,9 @@ export default function PolicyPage({
 
   return (
     <Layout>
-      <Subheader currentPage="Policy Statements" />
-
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader currentPage="Policy Statements" />
+      </div>
       <section className="py-8">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -64,10 +65,9 @@ export default function PolicyPage({
                       router.get(route("policy.show", policy.slug))
                     }
                     className={`w-full flex items-center justify-between px-4 py-3 text-sm border-l-2 transition
-                      ${
-                        activePolicy.id === policy.id
-                          ? "border-primary text-primary bg-primary/5 font-medium"
-                          : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      ${activePolicy.id === policy.id
+                        ? "border-primary text-primary bg-primary/5 font-medium"
+                        : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
                       }`}
                   >
                     <span className="flex-1 text-left">

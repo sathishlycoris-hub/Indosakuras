@@ -107,11 +107,11 @@ services and more, ensuring your business stays ahead in innovation.`
 
   return (
     <Layout>
-      {/* Subheader Navigation */}
-      <Subheader
-        currentPage={lang === "ja" ? "会社概要" : "Corporate Profile"}
-      />
-
+      <div className="sticky top-[102px] z-40 bg-white">
+        <Subheader
+          currentPage={lang === "ja" ? "会社概要" : "Corporate Profile"}
+        />
+      </div>
 
 
 
@@ -234,7 +234,7 @@ services and more, ensuring your business stays ahead in innovation.`
             </h2>
           </div>
 
-          <div className="grid lg:grid-cols-[65%_35%] gap-8">
+          <div className="grid lg:grid-cols-[65%_35%] gap-0">
 
             {/* LEFT CONTENT */}
             <div>
