@@ -177,11 +177,11 @@ export default function Index({ items }: { items: CorporateItem[] }) {
               />
 
               {/* Path */}
-              <Input
+              {/* <Input
                 placeholder="/corporate/example"
                 value={data.path}
                 onChange={(e) => setData("path", e.target.value)}
-              />
+              /> */}
 
               {/* Image */}
               {mode === "edit" && current?.image && (
@@ -197,6 +197,9 @@ export default function Index({ items }: { items: CorporateItem[] }) {
                   setData("image", e.target.files?.[0] ?? null)
                 }
               />
+              <span className="text-xs text-gray-500 whitespace-nowrap">
+                    Max: 2048 KB (628px x 320px)
+                  </span>
 
               <Button
                 disabled={processing}

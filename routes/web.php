@@ -45,6 +45,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CaseStudyController;
 use App\Http\Controllers\CorporateInfoPageController;
 use App\Http\Controllers\Admin\CorporateInfoController;
+use App\Http\Controllers\InfographicPageController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -245,6 +247,11 @@ Route::get('/services/{slug}', [ServicePageController::class, 'show'])
 Route::get('/corporate-info', [CorporateInfoPageController::class, 'index'])
     ->name('corporate.index');
 
+Route::get('/infographics', [InfographicPageController::class, 'index'])
+    ->name('infographics.index');
+Route::get('/infographics/{infographic}', [InfographicPageController::class, 'show'])
+    ->name('infographics.show');
+
 /* =======================
 | Admin Panel
 ======================= */
@@ -253,6 +260,8 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
+     Route::resource('/infographics', \App\Http\Controllers\Admin\InfographicController::class)
+     ->names('infographics');
 
         Route::get('/corporate-info', [CorporateInfoController::class, 'index'])
             ->name('corporate.index');
@@ -306,7 +315,7 @@ Route::prefix('admin')
             ->names('jobs');
 
         Route::post('jobs/reorder', [JobController::class, 'reorder'])->name('jobs.reorder');
-       
+
 
         /* Admin */
 

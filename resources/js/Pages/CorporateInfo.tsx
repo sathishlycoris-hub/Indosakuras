@@ -100,7 +100,7 @@ const CorporateInfo = () => {
       {/* Grid Section */}
       <section className="py-16 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-6">
+         <div className="grid md:grid-cols-2 gap-x-20 gap-y-12">
         {sections.map((section) => {
   const hasImage = !!section.image;
 
@@ -109,9 +109,9 @@ const CorporateInfo = () => {
     <Link
       key={section.id}
       href={section.path || "#"}
-      className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all flex flex-col"
+      className="group bg-white border border-gray-200 overflow-hidden hover:shadow-xl transition-all flex flex-col"
     >
-      <div className="relative w-full h-56 overflow-hidden">
+      <div className="relative w-full h-80 overflow-hidden">
         <img
           src={`/storage/${section.image}`}
           alt={section.title}
@@ -136,7 +136,7 @@ const CorporateInfo = () => {
     <Link
       key={section.id}
       href={section.path || "#"}
-      className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-all flex items-center h-[82px]"
+      className="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-all flex items-center h-[82px]"
     >
       <div className="flex-1 flex items-center gap-4 px-6">
         <div className="text-gray-400">

@@ -35,7 +35,7 @@ export default function Insightshead() {
     },
     {
       label: getValue("Infographics", "インフォグラフィックス"),
-      path: "#",
+      path: "/infographics",
       exact: true,
     },
     

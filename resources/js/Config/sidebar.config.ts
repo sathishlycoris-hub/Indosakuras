@@ -104,6 +104,13 @@ export const sidebarItems: SidebarItem[] = [
   },
 
   {
+    label: "Infographics",
+    icon: Briefcase,
+    href: route("admin.infographics.index"),
+    role: ["admin"],
+  },
+
+  {
     label: "Corporate Info",
     icon: Factory, // you can change icon
     role: ["admin"],
