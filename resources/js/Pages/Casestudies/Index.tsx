@@ -36,7 +36,7 @@ export default function Casestudies({ caseStudies = [] }: PageProps) {
 
   return (
     <Layout>
-      <div className="sticky top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
         <Insightshead />
       </div>
 

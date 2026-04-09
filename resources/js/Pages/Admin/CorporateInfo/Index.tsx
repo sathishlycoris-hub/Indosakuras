@@ -198,7 +198,7 @@ export default function Index({ items }: { items: CorporateItem[] }) {
                 }
               />
               <span className="text-xs text-gray-500 whitespace-nowrap">
-                    Max: 2048 KB (628px x 320px)
+                    Max: 2048 KB (625px x 242px)
                   </span>
 
               <Button

@@ -28,7 +28,7 @@ export default function Greetings({ greeting }: { greeting: Greeting | null }) {
 
   return (
     <Layout>
-      <div className="sticky top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
         <Subheader currentPage={lang === "ja" ? "ご挨拶" : "Greetings"} />
       </div>
       <section className="py-12 lg:py-16 bg-section-light">

@@ -48,7 +48,7 @@ export default function PolicyPage({
 
   return (
     <Layout>
-      <div className="sticky top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
         <Subheader currentPage="Policy Statements" />
       </div>
       <section className="py-8">

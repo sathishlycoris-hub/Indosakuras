@@ -44,9 +44,9 @@ export default function Blogs() {
   });
   return (
     <Layout>
-      <div className="sticky top-[102px] z-40 bg-white">
-        <Insightshead />
-      </div>
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
+  <Insightshead />
+</div>
 
       <section className="bg-primary py-20 text-white">
         <div className="container mx-auto px-4" data-aos="fade-right">

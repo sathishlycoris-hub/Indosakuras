@@ -107,7 +107,7 @@ services and more, ensuring your business stays ahead in innovation.`
 
   return (
     <Layout>
-      <div className="sticky top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
         <Subheader
           currentPage={lang === "ja" ? "会社概要" : "Corporate Profile"}
         />

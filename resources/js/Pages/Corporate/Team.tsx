@@ -117,7 +117,7 @@ export default function Team() {
 
   return (
     <Layout>
-      <div className="sticky top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
         <Subheader currentPage="Management Team" />
       </div>
       {/* Hero */}

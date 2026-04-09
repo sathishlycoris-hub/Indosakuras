@@ -16,6 +16,18 @@ import { Link, usePage } from "@inertiajs/react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+// 1. Define the Icon Pool
+const CORPORATE_ICONS = [
+  Building,
+  Lightbulb,
+  MessageSquare,
+  Clock,
+  Users,
+  Newspaper,
+  Handshake,
+  FileText,
+];
+
 AOS.init({
   duration: 1000,
   easing: "ease-in-out",
@@ -36,55 +48,11 @@ const CorporateInfo = () => {
   };
 
   const { props } = usePage<{ items: CorporateItem[] }>();
-
   const sections = props.items || [];
-
-  // const sections = [
-  //   {
-  //     icon: <MessageSquare className="w-6 h-6" />,
-  //     title: lang === "en" ? "Greetings" : "ご挨拶",
-  //     path: "/corporate/greetings",
-  //   },
-  //   {
-  //     icon: <Lightbulb className="w-6 h-6" />,
-  //     title: lang === "en" ? "Corporate Philosophy" : "企業理念",
-  //     path: "/corporate/philosophy",
-  //   },
-  //   {
-  //     icon: <Building className="w-6 h-6" />,
-  //     title: lang === "en" ? "Corporate Profile" : "会社概要",
-  //     path: "/corporate/profile",
-  //   },
-  //   {
-  //     icon: <Clock className="w-6 h-6" />,
-  //     title: lang === "en" ? "History" : "沿革",
-  //     path: "/corporate/history",
-  //   },
-  //   {
-  //     icon: <Users className="w-6 h-6" />,
-  //     title: lang === "en" ? "Management Team" : "経営陣",
-  //     path: "/corporate/team",
-  //   },
-  //   {
-  //     icon: <Newspaper className="w-6 h-6" />,
-  //     title: lang === "en" ? "Press Release" : "プレスリリース",
-  //     path: "/corporate/press-release",
-  //   },
-  //   {
-  //     icon: <Handshake className="w-6 h-6" />,
-  //     title: lang === "en" ? "Clients / Business Partners" : "主要取引先",
-  //     path: "/corporate/clients",
-  //   },
-  //   {
-  //     icon: <FileText className="w-6 h-6" />,
-  //     title: lang === "en" ? "Policy Statements" : "各種方針",
-  //     path: "/corporate/policy",
-  //   },
-  // ];
 
   return (
     <Layout>
-       <div className="sticky top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
         <Subheader />
       </div>
 
@@ -100,59 +68,74 @@ const CorporateInfo = () => {
       {/* Grid Section */}
       <section className="py-16 bg-section-light">
         <div className="container mx-auto px-4 lg:px-8">
-         <div className="grid md:grid-cols-2 gap-x-20 gap-y-12">
-        {sections.map((section) => {
-  const hasImage = !!section.image;
+          <div className="grid md:grid-cols-2 gap-x-20 gap-y-12">
+            {sections.map((section, index) => {
+              const hasImage = !!section.image;
 
-  return hasImage ? (
-    // With Image Card
-    <Link
-      key={section.id}
-      href={section.path || "#"}
-      className="group bg-white border border-gray-200 overflow-hidden hover:shadow-xl transition-all flex flex-col"
-    >
-      <div className="relative w-full h-80 overflow-hidden">
-        <img
-          src={`/storage/${section.image}`}
-          alt={section.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-      </div>
+              // 2. Select the icon based on the current index
+              const IconComponent = CORPORATE_ICONS[index % CORPORATE_ICONS.length];
 
-      <div className="flex items-center justify-between bg-white border-t min-h-[78px]">
-        <div className="flex items-center gap-3 px-5 py-5">
-          <Building className="w-5 h-5 text-gray-400" />
-          <span className="font-medium text-[17px] text-primary font-semibold">
-            {lang === "ja" ? section.title_ja ?? section.title : section.title ?? section.title_ja}
-          </span>
-        </div>
-        <div className="bg-pink-600 w-[78px] h-full flex items-center justify-center group-hover:bg-pink-700 transition">
-          <ArrowRight className="w-6 h-6 text-white" />
-        </div>
-      </div>
-    </Link>
-  ) : (
-    // NO IMAGE - Compact Card (Final Version)
-    <Link
-      key={section.id}
-      href={section.path || "#"}
-      className="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-all flex items-center h-[82px]"
-    >
-      <div className="flex-1 flex items-center gap-4 px-6">
-        <div className="text-gray-400">
-          <Building className="w-5 h-5" />
-        </div>
-        <span className="font-medium text-[17px] text-primary font-semibold">
-          {lang === "ja" ? section.title_ja ?? section.title : section.title ?? section.title_ja}
-        </span>
-      </div>
+              const displayTitle = lang === "ja"
+                ? section.title_ja ?? section.title
+                : section.title ?? section.title_ja;
 
-      <div className="bg-pink-600 w-[78px] h-full flex items-center justify-center group-hover:bg-pink-700 transition">
-        <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition" />
-      </div>
-    </Link>
-  );
-})}
+              return hasImage ? (
+                /* WITH IMAGE CARD */
+                <Link
+                  key={section.id}
+                  href={section.path || "#"}
+                  className="group bg-white border border-gray-200 overflow-hidden hover:shadow-xl transition-all flex flex-col"
+                >
+                  {/* IMAGE SECTION: Changed from h-80 to h-40 (half) */}
+                  {/* Added aspect-video for better responsiveness */}
+                  <div className="relative w-full h-60 md:aspect-video overflow-hidden">
+                    <img
+                      src={`/storage/${section.image}`}
+                      alt={displayTitle}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Suble overlay to make it look premium */}
+                    <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors" />
+                  </div>
+
+                  {/* CONTENT SECTION */}
+                  <div className="flex items-center justify-between bg-white border-t min-h-[78px]">
+                    <div className="flex items-center gap-3 px-5 py-5">
+                      <IconComponent className="w-8 h-8 text-gray-400 group-hover:text-pink-600 transition-colors" />
+                      <span className="font-medium text-[20px] text-primary font-semibold">
+                        {displayTitle}
+                      </span>
+                    </div>
+
+                    {/* Action Square */}
+                    <div className="bg-pink-600 w-[78px] flex items-center justify-center group-hover:bg-pink-700 transition self-stretch">
+                      <ArrowRight className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                /* NO IMAGE CARD */
+                <Link
+                  key={section.id}
+                  href={section.path || "#"}
+                  className="group bg-white border border-gray-200 overflow-hidden hover:shadow-lg transition-all flex items-center h-[82px]"
+                >
+                  <div className="flex-1 flex items-center gap-4 px-5 py-4">
+                    
+                      {/* Icon used here */}
+                      <IconComponent className="w-8 h-8 text-gray-400 group-hover:text-pink-600 transition-colors" />
+                   
+                    <span className="font-medium text-[20px] text-primary font-semibold">
+                      {displayTitle}
+                    </span>
+                  </div>
+
+                  <div className="bg-pink-600 w-[78px] h-full flex items-center justify-center group-hover:bg-pink-700 transition self-stretch">
+                    <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -162,4 +145,4 @@ const CorporateInfo = () => {
   );
 };
 
-export default CorporateInfo; 
+export default CorporateInfo;
