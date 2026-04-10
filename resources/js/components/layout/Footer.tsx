@@ -45,7 +45,7 @@ const Footer = () => {
     },
     {
       name: getValue("Insights", "導入事例"),
-      path: "/casestudies",
+      path: "/blogs",
     },
     {
       name: getValue("Careers", "採用情報"),
@@ -60,7 +60,7 @@ const Footer = () => {
   const resources = [
     {
       name: getValue("Blog", "ブログ"),
-      path: "/blogs-index",
+      path: "/blogs",
     },
     {
       name: getValue("Support", "サポート"),

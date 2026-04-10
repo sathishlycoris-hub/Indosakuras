@@ -24,7 +24,7 @@ const Header = () => {
     {
       label_en: "Insights",
       label_ja: "導入事例",
-      href: "/blogs-index",
+      href: "/blogs",
     },
     {
       label_en: "Corporate Info",
@@ -68,12 +68,16 @@ const Header = () => {
       return url === "/services" || url.startsWith("/services/");
     }
 
-    if (href === "/casestudies") {
-      return url === "/casestudies" || url.startsWith("/casestudies/");
-    }
+    // if (href === "/casestudies") {
+    //   return url === "/casestudies" || url.startsWith("/casestudies/");
+    // }
 
     if (href === "/recruitment") {
       return url === "/recruitment" || url.startsWith("/recruitment/");
+    }
+
+    if (href === "/blogs") {
+      return url === "/blogs-" || url.startsWith("/blogs/");
     }
 
     return false;
@@ -117,8 +121,8 @@ const Header = () => {
         <img
           src="/image/logo.png"
           alt="logo"
-          // Reduced padding-bottom to keep it centered in the header
-          className="w-24 h-auto lg:w-32 object-contain hover:scale-105 transition-transform"
+          // Reduced padding-bottom to keep it centered  in the header
+          className="w-24 h-20 lg:w-32 object-contain hover:scale-105 transition-transform"
         />
       </Link>
 

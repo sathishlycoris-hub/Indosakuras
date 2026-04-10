@@ -166,7 +166,7 @@ export default function InfographicDetails() {
           {/* ── BACK LINK ── */}
           <div className="mt-12 pt-8 border-t">
             <Link
-              href={route("infographics.index")}
+               href={`/blogs/infographics`}
               className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
             >
               <ArrowLeft size={18} />
@@ -189,7 +189,7 @@ export default function InfographicDetails() {
               {related.map((item) => (
                 <Link
                   key={item.id}
-                  href={route("infographics.show", item.id)}
+                   href={`/blogs/infographics/${item.id}`}
                   className="group bg-white border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   {/* Larger image for related posts */}

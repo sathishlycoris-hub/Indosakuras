@@ -141,7 +141,7 @@ const Casestudies = () => {
               <Link data-aos="fade-up"
                   data-aos-delay={index * 80}
                 key={study.id}
-                href={`/casestudies/${study.id}`}
+                href={`/blogs/casestudies/${study.id}`}
                 className="bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow group"
               >
                 <div className="aspect-video overflow-hidden">

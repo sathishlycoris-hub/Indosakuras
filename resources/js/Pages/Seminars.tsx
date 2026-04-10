@@ -5,6 +5,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { Calendar, Clock, MapPin, Tag } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Insightshead from "@/components/layout/InsightsHead";
 interface Seminar {
   id: number;
   title: string;
@@ -54,7 +55,7 @@ export default function Seminars() {
 
   return (
     <Layout>
-      <Serviceshead />
+      <Insightshead />
 
       {/* HERO */}
       <section className="bg-primary py-20 text-white">
@@ -82,7 +83,7 @@ export default function Seminars() {
               {upcomingSeminars.map((s) => (
                 <Link
                   key={s.id}
-                  href={`/seminars/${s.id}`}
+                  href={`/blogs/seminars/${s.id}`}
                   className="border rounded-lg overflow-hidden hover:shadow-lg"
                 >
                   <img
@@ -137,7 +138,7 @@ export default function Seminars() {
               {archivedSeminars.map((s) => (
                 <Link
                   key={s.id}
-                  href={`/seminars/${s.id}`}
+                  href={`/blogs/seminars/${s.id}`}
                   className="border rounded-lg overflow-hidden"
                 >
                   <div className="relative">

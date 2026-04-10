@@ -147,9 +147,14 @@ Route::get('/usage', fn() => Inertia::render('Usage'));
 //     };
 // });
 
-Route::get('/casestudies', [CaseStudyController::class, 'index']);
+Route::get('/blogs/casestudies', [CaseStudyController::class, 'index']);
 
-Route::get('/casestudies/{slug}', [CaseStudyController::class, 'show']);
+Route::get('/blogs/casestudies/{slug}', [CaseStudyController::class, 'show']);
+
+Route::get('/blogs/infographics/', [InfographicPageController::class, 'index']);
+    
+Route::get('/blogs/infographics/{infographic}', [InfographicPageController::class, 'show']);
+   
 /* Corporate info */
 // Route::get('/corporate-info', fn() => Inertia::render('CorporateInfo'));
 // Route::get('/corporate/greetings', fn() => Inertia::render('Corporate/Greetings'));
@@ -190,15 +195,15 @@ Route::get('/corporate/team', [TeamPageController::class, 'index'])
     ->name('team.page');
 
 // PUBLIC Seminar page
-Route::get('services/seminars-index', [SeminarPageController::class, 'index']);
-Route::get('/seminars/{seminar}', [SeminarPageController::class, 'show']);
+Route::get('/blogs/seminars-index', [SeminarPageController::class, 'index']);
+Route::get('/blogs/seminars/{seminar}', [SeminarPageController::class, 'show']);
 
 // PUBLIC Contact form submit
 Route::post('/contact/save', [ContactController::class, 'store'])
     ->name('contact.store');
 
-Route::get('/blogs-index', [BlogPageController::class, 'index'])->name('blogs.index');
-Route::get('/blogs/{blog}', [BlogPageController::class, 'show'])->name('blogs.show');
+Route::get('/blogs', [BlogPageController::class, 'index']);
+Route::get('/blogs/{blog}', [BlogPageController::class, 'show']);
 
 Route::get('/recruitment', [JobController::class, 'recruitment'])
     ->name('recruitment');
@@ -247,10 +252,9 @@ Route::get('/services/{slug}', [ServicePageController::class, 'show'])
 Route::get('/corporate-info', [CorporateInfoPageController::class, 'index'])
     ->name('corporate.index');
 
-Route::get('/infographics', [InfographicPageController::class, 'index'])
-    ->name('infographics.index');
-Route::get('/infographics/{infographic}', [InfographicPageController::class, 'show'])
-    ->name('infographics.show');
+
+
+   
 
 /* =======================
 | Admin Panel
@@ -289,7 +293,8 @@ Route::prefix('admin')
             ->except(['update', 'show']);
 
 
-
+        Route::post('team/reorder-categories', [TeamController::class, 'reorderCategories'])
+    ->name('team.reorderCategories');
 
         // Route::post('seminars/{seminar}', [SeminarController::class, 'update'])
         //     ->name('seminars.update');

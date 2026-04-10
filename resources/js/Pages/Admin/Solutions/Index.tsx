@@ -259,10 +259,10 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
   return (
     <Authenticated header={<h2 className="font-bold text-xl">Solutions</h2>}>
       <div className="mb-5 flex justify-between">
-        <h1 className="text-2xl font-bold">Solutions</h1>
+        <h1 className="text-2xl font-bold">Products</h1>
         <Button onClick={openAdd}>
           <Plus className="w-4 h-4 mr-2" />
-          Add Solution
+          Add Product
         </Button>
       </div>
 
@@ -271,9 +271,9 @@ export default function Index({ solutions }: { solutions: Solution[] }) {
         <SheetContent className="w-[95%] sm:max-w-5xl overflow-y-auto">
           <SheetHeader>
             <SheetTitle>
-              {mode === "add" && "Add Solution"}
-              {mode === "edit" && "Edit Solution"}
-              {mode === "view" && "Solution Details"}
+              {mode === "add" && "Add Product"}
+              {mode === "edit" && "Edit Product"}
+              {mode === "view" && "Product Details"}
             </SheetTitle>
           </SheetHeader>
 

@@ -47,7 +47,7 @@ export default function Casestudies({ caseStudies = [] }: PageProps) {
           data-aos="fade-right"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-2">
-            {getLangValue(lang, "Insights", "事例")}
+            {getLangValue(lang, "Case Studies", "事例")}
           </h1>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default function Casestudies({ caseStudies = [] }: PageProps) {
 
                 <Link
                   key={study.id}
-                  href={`/casestudies/${study.slug}`}
+                  href={`/blogs/casestudies/${study.slug}`}
                   data-aos="fade-up"
                   data-aos-delay={index * 80}
                   className="bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow group"

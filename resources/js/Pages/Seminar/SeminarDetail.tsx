@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import Layout from "@/components/layout/Layout";
 import Serviceshead from "@/components/layout/Serviceshead";
+import Insightshead from "@/components/layout/InsightsHead";
 
 
 export default function SeminarDetail() {
@@ -129,7 +130,7 @@ const { seminar, lang } = usePage<{
 
   return (
     <Layout>
-      <Serviceshead />
+      <Insightshead />
 
       {/* HERO */}
       <section className="bg-primary py-24 text-white">

@@ -401,7 +401,7 @@ export default function AdminInfographicsIndex() {
               <TableCell className="max-w-xs truncate">{item.title}</TableCell>
               {/* <TableCell>{item.category}</TableCell> */}
               <TableCell>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${item.status === "published" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-medium ${item.status === "published" ? "bg-white-100 text-gray-700" : "bg-white  -100 text-gray-700"}`}>
                   {item.status}
                 </span>
               </TableCell>

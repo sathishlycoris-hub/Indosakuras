@@ -70,7 +70,8 @@ export default function Infographics() {
           {/* ── Featured card — full width horizontal (matches reference top card) ── */}
           {featured && (
             <Link
-              href={route("infographics.show", featured.id)}
+
+              href={`/blogs/infographics/${featured.id}`}
               className="group flex flex-col md:flex-row border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow mb-10 bg-white"
               data-aos="fade-up"
             >
@@ -109,10 +110,10 @@ export default function Infographics() {
                       {getValue(featured.author, featured.author_ja)}
                     </span>
                   )}
-                  <span className="flex items-center gap-1">
+                  {/* <span className="flex items-center gap-1">
                     <Calendar size={13} />
                     {formatDate(featured.published_date)}
-                  </span>
+                  </span> */}
                 </div>
               </div>
             </Link>
@@ -124,7 +125,7 @@ export default function Infographics() {
               {rest.map((item, i) => (
                 <Link
                   key={item.id}
-                  href={route("infographics.show", item.id)}
+                  href={`/blogs/infographics/${item.id}`}
                   className="group border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white"
                   data-aos="fade-up"
                   data-aos-delay={i * 60}
@@ -157,10 +158,10 @@ export default function Infographics() {
                           {getValue(item.author, item.author_ja)}
                         </span>
                       )}
-                      <span className="flex items-center gap-1">
+                      {/* <span className="flex items-center gap-1">
                         <Calendar size={11} />
                         {formatDate(item.published_date)}
-                      </span>
+                      </span> */}
                     </div>
                   </div>
                 </Link>

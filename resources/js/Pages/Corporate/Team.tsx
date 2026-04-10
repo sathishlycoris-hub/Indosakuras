@@ -145,14 +145,15 @@ export default function Team() {
             </p>
 
             <SectionBlock title="Management Team" items={managementTeam} />
+             <SectionBlock              title="Sales & Marketing Team"
+              items={salesMarketingTeam}
+            /> 
             <SectionBlock
 
               title="Technology & Innovation Leadership"
               items={technologyLeadership}
             />
-              <SectionBlock              title="Sales & Marketing Team"
-              items={salesMarketingTeam}
-            /> 
+             
             {/* <SectionBlock
               title="Regional Leadership"
               items={regionalLeadership}

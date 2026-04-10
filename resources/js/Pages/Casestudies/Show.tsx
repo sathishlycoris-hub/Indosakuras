@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import { Link, usePage } from "@inertiajs/react";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import { getLangValue } from "@/utils/lang";
+import Insightshead from "@/components/layout/InsightsHead";
 
 interface CaseStudy {
   title: string;
@@ -43,7 +44,9 @@ export default function Show({
 
   return (
     <Layout>
-
+      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
+        <Insightshead />
+      </div>
       {/* HERO */}
       <section className="relative bg-primary py-10">
         <div className="container mx-auto px-4 text-white">
@@ -93,58 +96,58 @@ export default function Show({
             caseStudy.benefit_ja ||
             caseStudy.implementation ||
             caseStudy.implementation_ja) && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
 
-              {/* Subject */}
-              {(caseStudy.benefit || caseStudy.benefit_ja) && (
-                <div className="bg-pink-50 border border-pink-200 rounded-lg p-6">
+                {/* Subject */}
+                {(caseStudy.benefit || caseStudy.benefit_ja) && (
+                  <div className="bg-pink-50 border border-pink-200 rounded-lg p-6">
 
-                  <h3 className="font-bold text-pink-600 mb-4 flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
-                    {getLangValue(lang, "Subject", "課題")}
-                  </h3>
+                    <h3 className="font-bold text-pink-600 mb-4 flex items-center gap-2">
+                      <AlertCircle className="w-5 h-5" />
+                      {getLangValue(lang, "Subject", "課題")}
+                    </h3>
 
-                  <div
-                    className="text-sm text-muted-foreground"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        getLangValue(
-                          lang,
-                          caseStudy.benefit,
-                          caseStudy.benefit_ja
-                        ) || "",
-                    }}
-                  />
+                    <div
+                      className="text-sm text-muted-foreground"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          getLangValue(
+                            lang,
+                            caseStudy.benefit,
+                            caseStudy.benefit_ja
+                          ) || "",
+                      }}
+                    />
 
-                </div>
-              )}
+                  </div>
+                )}
 
-              {/* Implementation */}
-              {(caseStudy.implementation || caseStudy.implementation_ja) && (
-                <div className="bg-pink-50 border border-pink-200 rounded-lg p-6">
+                {/* Implementation */}
+                {(caseStudy.implementation || caseStudy.implementation_ja) && (
+                  <div className="bg-pink-50 border border-pink-200 rounded-lg p-6">
 
-                  <h3 className="font-bold text-pink-600 mb-4 flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
-                    {getLangValue(lang, "Implementation Effect", "導入効果")}
-                  </h3>
+                    <h3 className="font-bold text-pink-600 mb-4 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5" />
+                      {getLangValue(lang, "Implementation Effect", "導入効果")}
+                    </h3>
 
-                  <div
-                    className="text-sm text-muted-foreground"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        getLangValue(
-                          lang,
-                          caseStudy.implementation,
-                          caseStudy.implementation_ja
-                        ) || "",
-                    }}
-                  />
+                    <div
+                      className="text-sm text-muted-foreground"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          getLangValue(
+                            lang,
+                            caseStudy.implementation,
+                            caseStudy.implementation_ja
+                          ) || "",
+                      }}
+                    />
 
-                </div>
-              )}
+                  </div>
+                )}
 
-            </div>
-          )}
+              </div>
+            )}
 
           {/* Secondary Image */}
           {caseStudy.secondary_image && (
@@ -188,7 +191,7 @@ export default function Show({
             {relatedCases.map((item) => (
               <Link
                 key={item.slug}
-                href={`/casestudies/${item.slug}`}
+                href={`/blogs/casestudies/${item.slug}`}
                 className="group"
               >
 
@@ -211,7 +214,7 @@ export default function Show({
 
           <div className="text-center mt-12">
             <Link
-              href="/casestudies"
+              href="/blogs/casestudies"
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded hover:bg-primary/90 transition-colors"
             >
               {getLangValue(lang, "List of Case Studies", "事例一覧")}

@@ -101,7 +101,7 @@ export default function BlogDetails() {
             {/* Back */}
             <div className="mt-16 pt-8 border-t">
               <Link
-                href={route("blogs.index")}
+                href="/blogs"
                 className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
               >
                 <ArrowLeft size={18} />

@@ -32,11 +32,11 @@ export default function Serviceshead() {
       label: getValue(service.title, service.title_ja),
       path: `/services/${service.slug}`,
     })),
-    {
-      label: getValue("Seminar (Events)", "セミナー"),
-      path: "/services/seminars-index",
-      exact: true,
-    },
+    // {
+    //   label: getValue("Seminar (Events)", "セミナー"),
+    //   path: "/services/seminars-index",
+    //   exact: true,
+    // },
     /* {
       label: getValue("Blogs", "ブログ"),
       path: "/blogs-index",

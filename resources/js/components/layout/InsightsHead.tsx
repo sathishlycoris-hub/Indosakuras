@@ -18,36 +18,54 @@ export default function Insightshead() {
     return lang === "ja" ? ja || en : en;
   };
 
-  const insightNav = Array.isArray(props.insightNav)
-    ? props.insightNav
-    : [];
-
   const tabs = [
     {
       label: getValue("Blogs", "ブログ"),
-      path: "/blogs-index",
-      exact: true,
+      path: "/blogs", // Removed trailing slash for consistent matching
     },
     {
       label: getValue("Case Studies", "事例紹介"),
-      path: "/casestudies",
-      exact: true,
+      path: "/blogs/casestudies",
     },
     {
       label: getValue("Infographics", "インフォグラフィックス"),
-      path: "/infographics",
-      exact: true,
+      path: "/blogs/infographics",
     },
-    
+    {
+      label: getValue("Seminar (Events)", "セミナー"),
+      path: "/blogs/seminars-index",
+    },
   ];
 
-  const isActive = (item: { path: string; exact?: boolean }) => {
-    if (item.exact) {
-      return url === item.path;
-    }
-    return url.startsWith(item.path);
-  };
+/* ================= ACTIVE LINK LOGIC ================= */
+  /* ================= ACTIVE LINK LOGIC ================= */
+/* ================= ACTIVE LINK LOGIC ================= */
+const isActive = (path: string) => {
+  const currentUrl = url.replace(/\/$/, "") || "/";
+  const targetPath = path.replace(/\/$/, "");
 
+  // 1. Special Case for Seminars (because index and show paths differ)
+  if (targetPath === "/blogs/seminars-index") {
+    return currentUrl === "/blogs/seminars-index" || currentUrl.startsWith("/blogs/seminars/");
+  }
+
+  // 2. Handle the "Blogs" (General) tab
+  if (targetPath === "/blogs") {
+    const isOtherTab = tabs.some(tab => {
+      if (tab.path === "/blogs") return false;
+      // Also check against the /blogs/seminars base for the exclusion
+      if (tab.path === "/blogs/seminars-index") {
+        return currentUrl.startsWith("/blogs/seminars");
+      }
+      return currentUrl.startsWith(tab.path.replace(/\/$/, ""));
+    });
+    
+    return (currentUrl === "/blogs" || currentUrl.startsWith("/blogs/")) && !isOtherTab;
+  }
+
+  // 3. For standard sub-categories (Case Studies, Infographics)
+  return currentUrl === targetPath || currentUrl.startsWith(`${targetPath}/`);
+};
   return (
     <div className="bg-muted/30 border-b border-border">
       <div className="container mx-auto px-4">
@@ -57,7 +75,7 @@ export default function Insightshead() {
               <Link
                 href={item.path}
                 className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(item)
+                  isActive(item.path)
                     ? "text-primary border-b-2 border-primary"
                     : "text-muted-foreground"
                 }`}

@@ -115,7 +115,7 @@ export default function Index({ items }: { items: CorporateItem[] }) {
 
         <Button onClick={openAdd}>
           <Plus className="w-4 h-4 mr-2" />
-          Add Item
+          Add Info
         </Button>
       </div>
 

@@ -67,7 +67,7 @@ export default function Blogs() {
           {blogs.map((b) => (
             <Link
               key={b.id}
-              href={route("blogs.show", b.id)}
+              href={`/blogs/${b.id}`}
               className="border rounded-lg overflow-hidden hover:shadow-lg group"
             >
               <img

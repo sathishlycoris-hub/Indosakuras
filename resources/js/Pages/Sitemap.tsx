@@ -107,7 +107,7 @@ const Sitemap = () => {
             <ul className="space-y-2 ml-4">
               <li><Link href="/corporate/greetings" className="text-grey hover:underline inline-flex items-center gap-1">Greetings<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/corporate-info" className="text-grey hover:underline inline-flex items-center gap-1">Corporate Info<ChevronRight className="w-4 h-4" /></Link></li>
-              <li><Link href="/casestudies" className="text-grey hover:underline inline-flex items-center gap-1">Case Studies<ChevronRight className="w-4 h-4" /></Link></li>
+              <li><Link href="/blogs/casestudies" className="text-grey hover:underline inline-flex items-center gap-1">Case Studies<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/recruitment" className="text-grey hover:underline inline-flex items-center gap-1">Careers<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/contact" className="text-grey hover:underline inline-flex items-center gap-1">Contact<ChevronRight className="w-4 h-4" /></Link></li>
             </ul>
@@ -121,7 +121,7 @@ const Sitemap = () => {
             </h2>
 
             <ul className="space-y-2 ml-4">
-              <li><Link href="/blogs-index" className="text-grey hover:underline inline-flex items-center gap-1">Blog<ChevronRight className="w-4 h-4" /></Link></li>
+              <li><Link href="/blogs" className="text-grey hover:underline inline-flex items-center gap-1">Blog<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/contact" className="text-grey hover:underline inline-flex items-center gap-1">Support<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/corporate/policy" className="text-grey hover:underline inline-flex items-center gap-1">Privacy Policy<ChevronRight className="w-4 h-4" /></Link></li>
               <li><Link href="/usage" className="text-grey hover:underline inline-flex items-center gap-1">Terms of Service<ChevronRight className="w-4 h-4" /></Link></li>

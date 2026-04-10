@@ -50,7 +50,7 @@ export const sidebarItems: SidebarItem[] = [
 
 
   {
-    label: "Solutions",
+    label: "Products",
     icon: Puzzle,
     href: route("admin.solutions.index"),
     role: ["admin"],
@@ -59,7 +59,7 @@ export const sidebarItems: SidebarItem[] = [
 
   {
     label: "Services",
-    icon: IdCard, // you can change icon
+    icon: HelpCircle, // you can change icon
     role: ["admin"],
     children: [
       {
@@ -86,29 +86,40 @@ export const sidebarItems: SidebarItem[] = [
         href: route("admin.seminars.index"),
         role: ["admin"],
       },
+    ],
+  },
+
+  {
+    label: "Insights",
+    icon: IdCard, // you can change icon
+    role: ["admin"],
+    children: [
       {
         label: "Blogs",
         icon: PenSquare,
         href: route("admin.blogs.index"),
         role: ["admin"],
       },
+      {
+        label: "CaseStudies",
+        icon: Briefcase,
+        href: route("admin.casestudies.index"),
+        role: ["admin"],
+      },
+      {
+        label: "Infographics",
+        icon: Briefcase,
+        href: route("admin.infographics.index"),
+        role: ["admin"],
+      },
+
 
     ],
   },
 
-  {
-    label: "CaseStudies",
-    icon: Briefcase,
-    href: route("admin.casestudies.index"),
-    role: ["admin"],
-  },
 
-  {
-    label: "Infographics",
-    icon: Briefcase,
-    href: route("admin.infographics.index"),
-    role: ["admin"],
-  },
+
+
 
   {
     label: "Corporate Info",
