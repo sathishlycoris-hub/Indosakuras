@@ -21,7 +21,7 @@ type TeamMember = {
 
 type TeamPageProps = {
   managementTeam: TeamMember[];
-  salesMarketingTeam: TeamMember[];
+  ourgrowthLeaders: TeamMember[];
   technologyLeadership: TeamMember[];
   // regionalLeadership: TeamMember[];
   // advisoryBoard: TeamMember[];
@@ -35,7 +35,7 @@ export default function Team() {
   const { lang } = usePage().props as any;
   const {
     managementTeam,
-    salesMarketingTeam,
+    ourgrowthLeaders,
     technologyLeadership,
     // regionalLeadership,
     // advisoryBoard,
@@ -145,8 +145,9 @@ export default function Team() {
             </p>
 
             <SectionBlock title="Management Team" items={managementTeam} />
-             <SectionBlock              title="Sales & Marketing Team"
-              items={salesMarketingTeam}
+             <SectionBlock              
+              title="Our Growth Leaders"
+              items={ourgrowthLeaders}
             /> 
             <SectionBlock
 

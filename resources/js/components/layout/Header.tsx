@@ -114,7 +114,7 @@ const Header = () => {
     </div>
 
     {/* ================= MAIN NAV BAR (Logo + Links) ================= */}
-    <div className="flex items-center justify-between h-16 lg:h-20">
+    <div className="flex items-center justify-between h-16 lg:h-24">
       
       {/* LOGO */}
       <Link href="/" className="flex items-center">

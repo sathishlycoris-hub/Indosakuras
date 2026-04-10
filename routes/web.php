@@ -293,9 +293,8 @@ Route::prefix('admin')
             ->except(['update', 'show']);
 
 
-        Route::post('team/reorder-categories', [TeamController::class, 'reorderCategories'])
-    ->name('team.reorderCategories');
 
+        
         // Route::post('seminars/{seminar}', [SeminarController::class, 'update'])
         //     ->name('seminars.update');
 
