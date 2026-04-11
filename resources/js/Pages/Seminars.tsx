@@ -55,7 +55,10 @@ export default function Seminars() {
 
   return (
     <Layout>
-      <Insightshead />
+      <div className="sticky top-16 lg:top-[101px] z-40 bg-white">
+        <Insightshead />
+      </div>
+      
 
       {/* HERO */}
       <section className="bg-primary py-20 text-white">

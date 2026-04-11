@@ -52,7 +52,7 @@ class ProfileController extends Controller
 
         $profile->update($data);
 
-        return redirect()
+        return redirect() 
             ->route('admin.profile.index')
             ->with('success', 'Profile updated successfully');
     }

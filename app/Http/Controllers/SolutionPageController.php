@@ -23,7 +23,7 @@ class SolutionPageController extends Controller
                 'hero_description_ja',
                 'link'
             )
-                ->orderBy('id')
+                ->orderBy('id') 
                 ->get(),
 
             'solutionNav' => Solution::select(

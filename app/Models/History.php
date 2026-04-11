@@ -10,7 +10,7 @@ class History extends Model
     use HasFactory;
     protected $fillable = [
         'year',
-        // 'year_ja',
+        'year_ja',
         'month',
         'month_ja',
         'description',

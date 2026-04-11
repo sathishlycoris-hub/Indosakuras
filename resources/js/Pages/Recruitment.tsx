@@ -79,7 +79,7 @@ export default function Recruitment({ jobs }: { jobs: Job[] }) {
 
   return (
     <Layout>
-      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[101px] z-40 bg-white">
         <Recruitmenthead
           jobs={jobs.map(({ id, title, title_ja, slug }) => ({
             id,

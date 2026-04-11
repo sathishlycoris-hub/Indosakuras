@@ -555,10 +555,10 @@ export default function Index({ jobs: initialJobs }: { jobs: Job[] }) {
               <TableCell>{job.department ?? "-"}</TableCell>
               <TableCell>
                 <span
-                  className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                  className={`inline-flex items-center px-2 py-0.5 rounded text-sm font-medium ${
                     job.status === "published"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
+                      ? "bg-green-100 text-grey-700"
+                      : "bg-yellow-100 text-grey-700"
                   }`}
                 >
                   {job.status}

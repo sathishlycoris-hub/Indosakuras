@@ -77,7 +77,7 @@ const Header = () => {
     }
 
     if (href === "/blogs") {
-      return url === "/blogs-" || url.startsWith("/blogs/");
+      return url === "/blogs" || url.startsWith("/blogs/");
     }
 
     return false;
@@ -114,20 +114,21 @@ const Header = () => {
     </div>
 
     {/* ================= MAIN NAV BAR (Logo + Links) ================= */}
-    <div className="flex items-center justify-between h-16 lg:h-24">
+    <div className="flex items-center justify-between h-16">
       
       {/* LOGO */}
-      <Link href="/" className="flex items-center">
+       <Link href="/" className="flex items-center gap-3">
+
         <img
           src="/image/logo.png"
           alt="logo"
           // Reduced padding-bottom to keep it centered  in the header
-          className="w-24 h-20 lg:w-32 object-contain hover:scale-105 transition-transform"
+          className="w-24 h-16 lg:w-32 object-contain -translate-y-1 hover:scale-105 transition-transform"
         />
       </Link>
 
       {/* DESKTOP MAIN NAV */}
-      <nav className="hidden lg:flex items-center gap-8">
+      <nav className="hidden lg:flex items-center gap-10">
         {navItems.map((item) => (
           <Link
             key={item.href}

@@ -23,7 +23,7 @@ export default function Philosophy({
 
   return (
     <Layout>
-      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[101px] z-40 bg-white">
         <Subheader
           currentPage={
             lang === "ja" ? "企業理念" : "Corporate Philosophy"

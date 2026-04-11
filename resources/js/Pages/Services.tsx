@@ -236,7 +236,7 @@ function Services({
         )}
       </Head>
 
-      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[101px] z-40 bg-white">
         <Serviceshead />
       </div>
 
@@ -425,7 +425,7 @@ function Services({
               </div>
             </Link>
             <Link
-              href="services/seminars-index"
+              href="/blogs/seminars-index"
               className="group relative h-64 rounded-lg overflow-hidden"
             >
               <img

@@ -130,7 +130,12 @@ const { seminar, lang } = usePage<{
 
   return (
     <Layout>
-      <Insightshead />
+
+      {/* NAV */}
+      <div className="sticky top-16 lg:top-[101px] z-40 bg-white">
+        <Insightshead />
+      </div>
+      
 
       {/* HERO */}
       <section className="bg-primary py-24 text-white">

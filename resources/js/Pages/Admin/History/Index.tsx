@@ -25,6 +25,7 @@ import "react-quill/dist/quill.snow.css";
 interface History {
   id: number;
   year: string;
+  year_ja?: string | null;
   month: string;
   month_ja?: string | null;
   description: string;
@@ -42,12 +43,14 @@ export default function Index({ histories }: { histories: History[] }) {
     description: string;
     month_ja?: string | null;
     description_ja?: string | null;
+    year_ja?: string | null;
   }>({
     year: "",
     month: "",
     description: "",
     month_ja: "",
     description_ja: "",
+    year_ja: "",
   });
 
   /* ================= OPEN ADD ================= */
@@ -70,6 +73,7 @@ export default function Index({ histories }: { histories: History[] }) {
       year: item.year,
       month: item.month,
       month_ja: item.month_ja || "",
+      year_ja: item.year_ja || "",
       description: item.description || "",
       description_ja: item.description_ja || "",
     });
@@ -185,8 +189,16 @@ export default function Index({ histories }: { histories: History[] }) {
               </div>
               <label className="font-medium text-sm">Year</label>
               <Input
-                value={data.year ?? ""}
-                onChange={(e) => setData("year", e.target.value)}
+                value={
+                  activeLang === "en"
+                    ? data.year ?? ""
+                    : data.year_ja ?? ""
+                }
+                onChange={(e) =>
+                  activeLang === "en"
+                    ? setData("year", e.target.value)
+                    : setData("year_ja", e.target.value)
+                }
               />
               <label className="font-medium text-sm">Month</label>
               <Input

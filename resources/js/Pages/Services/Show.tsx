@@ -95,7 +95,7 @@ useEffect(() => {
 
   return (
     <Layout>
-      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[101px] z-40 bg-white">
         <Serviceshead />
       </div>
 

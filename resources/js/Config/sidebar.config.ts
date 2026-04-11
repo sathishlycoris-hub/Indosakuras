@@ -48,11 +48,22 @@ export const sidebarItems: SidebarItem[] = [
     role: ["admin"],
   },
 
-
+  {
+    label: "Homepage",
+    icon: Puzzle,
+    href: route("admin.homepage.index"),
+    role: ["admin"],
+  },
   {
     label: "Products",
     icon: Puzzle,
     href: route("admin.solutions.index"),
+    role: ["admin"],
+  },
+ {
+    label: "Corp Profile",
+    icon: Puzzle,
+    href: route("admin.corpprofile.index"),
     role: ["admin"],
   },
 

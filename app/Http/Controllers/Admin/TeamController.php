@@ -1,59 +1,35 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\Team;
+use App\Models\TeamCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class TeamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-         return Inertia::render('Admin/Team/Index', [
-            'teams' => Team::orderBy('id', 'desc')->get(),
-            'categories' => [
-                'Executive Leadership',
-                'Management Team',
-                'Technology & Innovation Leadership',
-                'Our Growth Leaders',
-                // 'Regional Leadership',
-                // 'Advisory Board',
-                'Strategic Alliance Partners',
-            ],
+        return Inertia::render('Admin/Team/Index', [
+            'teams'      => Team::orderBy('id', 'desc')->get(),
+            'categories' => TeamCategory::orderBy('sort_order')->get(),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-
-         $data = $request->validate([
-            'language' => 'nullable',
-            'name_ja' => 'nullable',
-            'name' => 'nullable',
-            'designation' => 'nullable',
-            'designation_ja' => 'nullable',
-            'category' => 'nullable',
-            'description' => 'nullable',
-            'description_ja' => 'nullable',
-            'image' => 'nullable|image',
+        $data = $request->validate([
+            'name'           => 'nullable|string',
+            'name_ja'        => 'nullable|string',
+            'designation'    => 'nullable|string',
+            'designation_ja' => 'nullable|string',
+            'category'       => 'nullable|string',
+            'description'    => 'nullable|string',
+            'description_ja' => 'nullable|string',
+            'image'          => 'nullable|image',
         ]);
 
         if ($request->hasFile('image')) {
@@ -65,38 +41,17 @@ class TeamController extends Controller
         return back()->with('success', 'Team member added');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Team $team)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Team $team)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Team $team)
     {
-        //
         $data = $request->validate([
-            'language' => 'nullable',
-            'name_ja' => 'nullable',
-            'name' => 'nullable',
-            'designation' => 'nullable',
-            'designation_ja' => 'nullable',
-            'category' => 'nullable',
-            'description' => 'nullable',
-            'description_ja' => 'nullable',
-            'image' => 'nullable|image',
+            'name'           => 'nullable|string',
+            'name_ja'        => 'nullable|string',
+            'designation'    => 'nullable|string',
+            'designation_ja' => 'nullable|string',
+            'category'       => 'nullable|string',
+            'description'    => 'nullable|string',
+            'description_ja' => 'nullable|string',
+            'image'          => 'nullable|image',
         ]);
 
         if (!$request->hasFile('image')) {
@@ -113,19 +68,14 @@ class TeamController extends Controller
         return back()->with('success', 'Team member updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Team $team)
     {
-        //
-         if ($team->image) {
+        if ($team->image) {
             Storage::disk('public')->delete($team->image);
         }
 
         $team->delete();
 
         return back()->with('success', 'Team member deleted');
-        
     }
 }

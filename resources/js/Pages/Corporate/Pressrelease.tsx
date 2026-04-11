@@ -44,7 +44,7 @@ export default function Pressrelease({ news = [], filters = [] }: PageProps) {
 
   return (
     <Layout>
-      <div className="sticky top-16 lg:top-[102px] z-40 bg-white">
+      <div className="sticky top-16 lg:top-[101px] z-40 bg-white">
         <Subheader
           currentPage={getLangValue(lang, "Press Release", "プレスリリース")}
         />

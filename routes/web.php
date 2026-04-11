@@ -46,6 +46,9 @@ use App\Http\Controllers\CaseStudyController;
 use App\Http\Controllers\CorporateInfoPageController;
 use App\Http\Controllers\Admin\CorporateInfoController;
 use App\Http\Controllers\InfographicPageController;
+use App\Http\Controllers\Admin\HomepageController;
+use App\Http\Controllers\Admin\CorpProfileSettingsController;
+use App\Http\Controllers\Admin\TeamCategoryController;
 
 
 /*
@@ -152,9 +155,9 @@ Route::get('/blogs/casestudies', [CaseStudyController::class, 'index']);
 Route::get('/blogs/casestudies/{slug}', [CaseStudyController::class, 'show']);
 
 Route::get('/blogs/infographics/', [InfographicPageController::class, 'index']);
-    
+
 Route::get('/blogs/infographics/{infographic}', [InfographicPageController::class, 'show']);
-   
+
 /* Corporate info */
 // Route::get('/corporate-info', fn() => Inertia::render('CorporateInfo'));
 // Route::get('/corporate/greetings', fn() => Inertia::render('Corporate/Greetings'));
@@ -254,7 +257,7 @@ Route::get('/corporate-info', [CorporateInfoPageController::class, 'index'])
 
 
 
-   
+
 
 /* =======================
 | Admin Panel
@@ -264,8 +267,19 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-     Route::resource('/infographics', \App\Http\Controllers\Admin\InfographicController::class)
-     ->names('infographics');
+        Route::get('homepage', [HomepageController::class, 'index'])
+            ->name('homepage.index');
+        Route::post('homepage', [HomepageController::class, 'update'])
+            ->name('homepage.update');
+
+        Route::get('corpprofile', [CorpProfileSettingsController::class, 'index'])
+            ->name('corpprofile.index');
+        Route::post('corpprofile', [CorpProfileSettingsController::class, 'update'])
+            ->name('corpprofile.update');
+
+
+        Route::resource('/infographics', \App\Http\Controllers\Admin\InfographicController::class)
+            ->names('infographics');
 
         Route::get('/corporate-info', [CorporateInfoController::class, 'index'])
             ->name('corporate.index');
@@ -292,9 +306,14 @@ Route::prefix('admin')
         Route::resource('team', TeamController::class)
             ->except(['update', 'show']);
 
+        Route::post('/team-category',         [TeamCategoryController::class, 'store'])->name('team-category.store');
+        Route::put('/team-category/{teamCategory}', [TeamCategoryController::class, 'update'])->name('team-category.update');
+        Route::delete('/team-category/{teamCategory}', [TeamCategoryController::class, 'destroy'])->name('team-category.destroy');
 
 
-        
+
+
+
         // Route::post('seminars/{seminar}', [SeminarController::class, 'update'])
         //     ->name('seminars.update');
 
