@@ -57,7 +57,7 @@ const Sitemap = () => {
           <div className="mb-10">
             <div className="border-t-2 border-primary w-full mb-3" />
             <h2 className="text-xl font-bold text-foreground mb-4">
-              {language === "en" ? "Solutions" : "ソリューション"}
+              {language === "en" ? "Products" : "ソリューション"}
             </h2>
 
             <ul className="space-y-2 ml-4">

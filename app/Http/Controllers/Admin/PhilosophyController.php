@@ -26,7 +26,7 @@ class PhilosophyController extends Controller
             'content_ja' => 'nullable|string',
             'description' => 'nullable|string',
             'description_ja' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:4096',
         ]);
 
         if ($request->hasFile('image')) {
@@ -50,7 +50,7 @@ class PhilosophyController extends Controller
             'content_ja' => 'nullable|string',
             'description' => 'nullable|string',
             'description_ja' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:4096',
         ]);
 
         if ($request->hasFile('image')) {

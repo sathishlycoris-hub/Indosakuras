@@ -49,23 +49,25 @@ export const sidebarItems: SidebarItem[] = [
   },
 
   {
-    label: "Homepage",
-    icon: Puzzle,
+    label: "Home page",
+    icon: ShieldCheck,
     href: route("admin.homepage.index"),
     role: ["admin"],
   },
+{
+    label: "Site settings",
+    icon: ShieldCheck,
+    href: route("admin.site-settings.index"),
+    role: ["admin"],
+  },
+
   {
     label: "Products",
     icon: Puzzle,
     href: route("admin.solutions.index"),
     role: ["admin"],
   },
- {
-    label: "Corp Profile",
-    icon: Puzzle,
-    href: route("admin.corpprofile.index"),
-    role: ["admin"],
-  },
+
 
 
   {
@@ -159,6 +161,13 @@ export const sidebarItems: SidebarItem[] = [
         label: "Profile",
         icon: IdCard,
         href: route("admin.profile.index"),
+        role: ["admin"],
+      },
+
+      {
+        label: "Strength & Location",
+        icon: Puzzle,
+        href: route("admin.corpprofile.index"),
         role: ["admin"],
       },
       {

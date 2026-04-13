@@ -1,545 +1,463 @@
-import { useState, useMemo } from "react";
-import { useForm, router } from "@inertiajs/react";
+import { useState } from "react";
+import { useForm, router, usePage } from "@inertiajs/react";
+import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Eye } from "lucide-react";
-import { DatePicker } from "@/components/ui/date-picker";
-
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+  Sheet, SheetContent, SheetHeader, SheetTitle,
 } from "@/components/ui/sheet";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Pencil, Trash2, Plus, Search } from "lucide-react";
-import { format } from "date-fns";
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from "@/components/ui/table";
+import { Eye, Pencil, Trash2, Plus, Search, Tags } from "lucide-react";
+
+// ── Types ──────────────────────────────────────────────────
+interface EventType {
+  id: number;
+  name: string;
+  name_ja: string | null;
+}
 
 interface NewsEvent {
   id: number;
   date: string;
   eventtype: string;
+  eventtype_ja: string | null;
   short: string;
-  description: string;
-  short_ja?: string | null;
-  image?: string | null;
-  description_ja?: string | null;
-  // pdf?: string | null;
+  short_ja: string | null;
+  description: string | null;
+  description_ja: string | null;
+  image: string | null;
+  pdf: string | null;
 }
 
-interface PageProps {
-  events: NewsEvent[];
-  eventTypes: string[];
+// ── Sub-components outside parent (prevents focus-loss bug) ─
+
+function EventRow({ item, lang, onView, onEdit, onDelete }: {
+  item: NewsEvent;
+  lang: "en" | "ja";
+  onView: (i: NewsEvent) => void;
+  onEdit: (i: NewsEvent) => void;
+  onDelete: (id: number) => void;
+}) {
+  return (
+    <TableRow>
+      <TableCell className="text-sm text-muted-foreground">{item.date}</TableCell>
+      <TableCell>
+        <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
+          {lang === "ja" ? item.eventtype_ja || item.eventtype : item.eventtype}
+        </span>
+      </TableCell>
+      <TableCell className="max-w-[300px] truncate">
+        {lang === "ja" ? item.short_ja || item.short : item.short}
+      </TableCell>
+      <TableCell className="text-center">
+        <div className="flex justify-center gap-2">
+          <Button size="icon" title="View" onClick={() => onView(item)}><Eye className="w-4 h-4" /></Button>
+          <Button size="icon" title="Edit" onClick={() => onEdit(item)}><Pencil className="w-4 h-4" /></Button>
+          <Button size="icon" variant="destructive" title="Delete"
+            onClick={() => { if (confirm("Delete this news item?")) onDelete(item.id); }}>
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
 }
 
-export default function Index({ events, eventTypes }: PageProps) {
+function TypeRow({ type, onEdit, onDelete }: {
+  type: EventType;
+  onEdit: (t: EventType) => void;
+  onDelete: (id: number) => void;
+}) {
+  return (
+    <TableRow>
+      <TableCell className="font-medium">{type.name}</TableCell>
+      <TableCell className="text-muted-foreground">{type.name_ja ?? "—"}</TableCell>
+      <TableCell className="text-center">
+        <div className="flex justify-center gap-2">
+          {/* <Button size="icon" variant="outline" onClick={() => onEdit(type)}><Pencil className="w-4 h-4" /></Button> */}
+          <Button size="icon" variant="destructive"
+            onClick={() => { if (confirm(`Delete type "${type.name}"?`)) onDelete(type.id); }}>
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
 
+// ── Page ───────────────────────────────────────────────────
+export default function NewseventIndex() {
+  const { events, eventTypes } = usePage<{
+    events: NewsEvent[];
+    eventTypes: EventType[];
+  }>().props;
+
+  type MainTab = "events" | "types";
+  const [mainTab, setMainTab] = useState<MainTab>("events");
   const [activeLang, setActiveLang] = useState<"en" | "ja">("en");
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [editItem, setEditItem] = useState<NewsEvent | null>(null);
-  const [existingImage, setExistingImage] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const { data, setData, post, reset, processing } = useForm({
-    date: "",
-    eventtype: "Press Release",
-    short: "",
-    short_ja: "",
-    description: "",
-    description_ja: "",
+  // ── Event sheet ────────────────────────────────────────
+  const [eventOpen, setEventOpen] = useState(false);
+  const [eventMode, setEventMode] = useState<"add" | "edit" | "view">("add");
+  const [currentEvent, setCurrentEvent] = useState<NewsEvent | null>(null);
+
+  const {
+    data: eData, setData: setEData,
+    post: postEvent, reset: resetEvent,
+  } = useForm({
+    date: "", eventtype: "", eventtype_ja: "",
+    short: "", short_ja: "",
+    description: "", description_ja: "",
     image: null as File | null,
+    pdf: null as File | null,
   });
 
-  const fileUrl = (path?: string | null) => {
-    if (!path) return null;
+  // ── EventType sheet ────────────────────────────────────
+  const [typeOpen, setTypeOpen] = useState(false);
+  const [typeMode, setTypeMode] = useState<"add" | "edit">("add");
+  const [currentType, setCurrentType] = useState<EventType | null>(null);
 
-    // Already absolute
-    if (path.startsWith("http")) return path;
+  const {
+    data: tData, setData: setTData,
+    post: postType, reset: resetType,
+  } = useForm({ name: "", name_ja: "" });
 
-    // Laravel public storage
-    return `/storage/${path}`;
-  };
-
-  /* ================= SEARCH FILTER ================= */
-  const filteredEvents = useMemo(() => {
-    if (!search) return events;
-
+  // ── Filtered events ────────────────────────────────────
+  const filtered = events.filter((e) => {
+    if (!search) return true;
     const q = search.toLowerCase();
-
-    return events.filter((e) =>
-      [
-        e.eventtype,
-        e.short,
-        e.short_ja,
-        e.description,
-        e.description_ja,
-        format(new Date(e.date), "yyyy-MM-dd"),
-      ]
-        .filter(Boolean)
-        .some((field) =>
-          field!.toLowerCase().includes(q)
-        )
+    return (
+      e.short?.toLowerCase().includes(q) ||
+      e.eventtype?.toLowerCase().includes(q) ||
+      e.date?.includes(q)
     );
-  }, [search, events]);
+  });
 
-  /* ================= ADD ================= */
-  const submitAdd = () => {
-    post(route("admin.newsevent.store"), {
-      forceFormData: true,
-      onSuccess: () => {
-        reset();
-        setIsAddOpen(false);
-      },
-    });
+  // ── Event CRUD ─────────────────────────────────────────
+  const openAddEvent = () => {
+    resetEvent();
+    setEventMode("add");
+    setCurrentEvent(null);
+    setEventOpen(true);
   };
 
-  /* ================= EDIT ================= */
-  const openEdit = (item: NewsEvent) => {
-    setEditItem(item);
-    setExistingImage(item.image ?? null);
-    setData({
-      date: item.date,
-      eventtype: item.eventtype,
-      short: item.short,
+  const openEditEvent = (item: NewsEvent) => {
+    setCurrentEvent(item);
+    setEventMode("edit");
+    setEData({
+      date: item.date ?? "",
+      eventtype: item.eventtype ?? "",
+      eventtype_ja: item.eventtype_ja ?? "",
+      short: item.short ?? "",
       short_ja: item.short_ja ?? "",
-      description: item.description,
+      description: item.description ?? "",
       description_ja: item.description_ja ?? "",
       image: null,
+      pdf: null,
     });
+    setEventOpen(true);
   };
 
-  const [viewItem, setViewItem] = useState<NewsEvent | null>(null);
-
-
-  const submitUpdate = () => {
-    if (!editItem) return;
-
-    post(route("admin.newsevent.update", editItem.id), {
-      forceFormData: true,
-      data: { _method: "PUT" },
-      onSuccess: () => {
-        setEditItem(null);
-        reset();
-      },
-    });
+  const openViewEvent = (item: NewsEvent) => {
+    setCurrentEvent(item);
+    setEventMode("view");
+    setEventOpen(true);
   };
 
-  /* ================= DELETE ================= */
-  const deleteItem = (id: number) => {
-    if (confirm("Are you sure you want to delete this record?")) {
-      router.delete(route("admin.newsevent.destroy", id));
+  const submitEvent = () => {
+    if (eventMode === "add") {
+      postEvent(route("admin.newsevent.store"), { forceFormData: true });
+    } else {
+      postEvent(route("admin.newsevent.update", currentEvent!.id), {
+        forceFormData: true,
+        data: {
+          _method: "PUT",
+          ...eData,
+        },
+      });
+    }
+    setEventOpen(false);
+  };
+
+  // ── EventType CRUD ─────────────────────────────────────
+  const openAddType = () => {
+    resetType();
+    setTypeMode("add");
+    setCurrentType(null);
+    setTypeOpen(true);
+  };
+
+  const openEditType = (t: EventType) => {
+    setCurrentType(t);
+    setTypeMode("edit");
+    setTData({ name: t.name, name_ja: t.name_ja ?? "" });
+    setTypeOpen(true);
+  };
+
+  const submitType = () => {
+    if (typeMode === "add") {
+      postType(route("admin.event-type.store"), {
+        onSuccess: () => {
+          resetType();
+          setTypeOpen(false);
+        },
+      });
+    } else {
+      postType(route("admin.event-type.update", currentType!.id), {
+        forceFormData: true,   // ⭐ IMPORTANT
+        data: {
+          _method: "PUT",
+          ...tData,
+        },
+        onSuccess: () => {
+          resetType();
+          setTypeOpen(false);
+        },
+      });
     }
   };
 
   return (
-    <Authenticated header={<h2 className="font-bold text-xl">Solution Master</h2>}>
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">News / Events</h1>
+    <Authenticated header={<h2 className="text-xl font-bold">News & Events</h2>}>
 
-        <Sheet open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <SheetTrigger asChild>
-            <Button
-              onClick={() => {
-                reset();
-                setEditItem(null);
-              }}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add News
-            </Button>
-          </SheetTrigger>
-
-          {/* ADD SHEET */}
-          <SheetContent side="right" className="w-[90%] sm:max-w-3xl overflow-y-auto">
-            <SheetHeader>
-              <SheetTitle>Add News</SheetTitle>
-            </SheetHeader>
-
-            <div className="space-y-4 mt-6">
-              <div className="flex gap-2 mb-4">
-                <Button
-                  type="button"
-                  variant={activeLang === "ja" ? "default" : "outline"}
-                  onClick={() => setActiveLang("ja")}
-                >
-                  Japanese
-                </Button>
-                <Button
-                  type="button"
-                  variant={activeLang === "en" ? "default" : "outline"}
-                  onClick={() => setActiveLang("en")}
-                >
-                  English
-                </Button>
-
-
-              </div>
-              <Label>Short Description *</Label>
-              <Textarea
-                value={activeLang === "en" ? data.short : data.short_ja}
-                onChange={(e) =>
-                  activeLang === "en"
-                    ? setData("short", e.target.value)
-                    : setData("short_ja", e.target.value)
-                }
-              />
-
-              <Label>Description *</Label>
-              <ReactQuill
-              key={activeLang}
-              
-                theme="snow"
-                style={{ height: "200px", marginBottom: "50px" }}
-                value={activeLang === "en" ? data.description : data.description_ja}
-                onChange={(value) =>
-                  activeLang === "en"
-                    ? setData("description", value)
-                    : setData("description_ja", value)
-                }
-                className="bg-white"
-              />
-
-              <Label>Event Type *</Label>
-              <Select
-                value={data.eventtype}
-                onValueChange={(v) => setData("eventtype", v)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {eventTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Label>Date *</Label>
-              <DatePicker
-                value={data.date}
-                onChange={(value) => setData("date", value)}
-              />
-
-
-              {/* IMAGE */}
-              <Label>Image (optional)</Label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setData("image", e.target.files?.[0] || null)}
-              />
-
-              {/* PDF */}
-              {/* <Label>PDF (optional)</Label>
-  <Input
-    type="file"
-    accept="application/pdf"
-    onChange={(e) => setData("pdf", e.target.files?.[0] || null)}
-  /> */}
-
-              <Button
-                className="w-full"
-                onClick={submitAdd}
-                disabled={processing}
-              >
-                Save
-              </Button>
-            </div>
-
-          </SheetContent>
-        </Sheet>
+      {/* MAIN TABS */}
+      <div className="flex gap-1 border-b mb-6">
+        {[
+          { key: "events" as MainTab, label: "News / Events" },
+          { key: "types" as MainTab, label: "Event Types", icon: <Tags className="w-4 h-4" /> },
+        ].map((t) => (
+          <button key={t.key} onClick={() => setMainTab(t.key)}
+            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${mainTab === t.key ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}>
+            {t.icon}{t.label}
+          </button>
+        ))}
       </div>
 
-      {/* 🔍 SEARCH */}
-      <div className="mb-4 max-w-sm relative">
-        <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-        <input
-          type="text"
-          placeholder="Search news & events..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      {/* TABLE */}
-      <Table>
-        <TableHeader className="bg-primary">
-          <TableRow>
-            <TableHead className="text-white">#</TableHead>
-            <TableHead className="text-white">Type</TableHead>
-            <TableHead className="text-white">Short</TableHead>
-            <TableHead className="text-white">Date</TableHead>
-            <TableHead className="text-white text-center">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody className="bg-white">
-          {filteredEvents.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={5} className="text-center py-6">
-                No matching records found
-              </TableCell>
-            </TableRow>
-          )}
-
-          {filteredEvents.map((e, i) => (
-            <TableRow key={e.id}>
-              <TableCell>{i + 1}</TableCell>
-              <TableCell>{e.eventtype}</TableCell>
-              <TableCell className="max-w-md truncate">{activeLang === "en"
-                ? e.short
-                : e.short_ja || e.short}</TableCell>
-              <TableCell>
-                {format(new Date(e.date), "yyyy-MM-dd")}
-              </TableCell>
-              <TableCell className="space-x-2 text-center">
-                <Button size="icon" onClick={() => setViewItem(e)}>
-                  <Eye className="w-4 h-4" />
-                </Button>
-                <Button size="icon" onClick={() => openEdit(e)}>
-                  <Pencil className="w-4 h-4" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="destructive"
-                  onClick={() => deleteItem(e.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      {/* EDIT SHEET (unchanged) */}
-      <Sheet
-        open={!!editItem}
-        onOpenChange={(open) => {
-          if (!open) {
-            setEditItem(null);
-            setExistingImage(null);
-            reset();
-          }
-        }}
-      >
-        <SheetContent side="right" className="w-[90%] sm:max-w-3xl overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>Edit News</SheetTitle>
-          </SheetHeader>
-
-          <div className="space-y-4 mt-6">
-
-            <div className="flex gap-2 mb-4">
-              <Button
-                type="button"
-                variant={activeLang === "en" ? "default" : "outline"}
-                onClick={() => setActiveLang("en")}
-              >
-                English
-              </Button>
-
-              <Button
-                type="button"
-                variant={activeLang === "ja" ? "default" : "outline"}
-                onClick={() => setActiveLang("ja")}
-              >
-                Japanese
-              </Button>
-            </div>
-
-            <Label>Short *</Label>
-            <Textarea
-              value={activeLang === "en" ? data.short : data.short_ja}
-              onChange={(e) =>
-                activeLang === "en"
-                  ? setData("short", e.target.value)
-                  : setData("short_ja", e.target.value)
-              }
-            />
-
-            <Label>Description *</Label>
-            <ReactQuill
-              key={activeLang}
-              theme="snow"
-              style={{ height: "200px", marginBottom: "50px" }}
-              value={activeLang === "en" ? data.description : data.description_ja}
-              onChange={(value) =>
-                activeLang === "en"
-                  ? setData("description", value)
-                  : setData("description_ja", value)
-              }
-              className="bg-white"
-            />
-
-            <Label>Event Type *</Label>
-            <Select
-              value={data.eventtype}
-              onValueChange={(v) => setData("eventtype", v)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {eventTypes.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* ✅ ADD THIS */}
-            <Label>Date *</Label>
-            <DatePicker
-              value={data.date}
-              onChange={(value) => setData("date", value)}
-            />
-
-
-            {/* EXISTING IMAGE */}
-            {existingImage && (
-              <div className="space-y-2">
-                <Label>Existing Image</Label>
-                <img
-                  src={fileUrl(existingImage)!}
-                  alt="Existing"
-                  className="rounded-md max-h-40 border object-contain"
-                />
+      {/* ════ TAB: EVENTS ════════════════════════════════ */}
+      {mainTab === "events" && (
+        <>
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-2xl font-bold">News & Events</h1>
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1">
+                  <Button type="button" size="sm" variant={activeLang === "en" ? "default" : "outline"} onClick={() => setActiveLang("en")}>EN</Button>
+                  <Button type="button" size="sm" variant={activeLang === "ja" ? "default" : "outline"} onClick={() => setActiveLang("ja")}>JA</Button>
+                </div>
+                <Button onClick={openAddEvent}><Plus className="w-4 h-4 mr-2" />Add News</Button>
               </div>
-            )}
-
-
-            {/* UPDATE IMAGE */}
-            <Label>Replace Image</Label>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setData("image", e.target.files?.[0] || null)}
-            />
-
-            {/* UPDATE PDF */}
-            {/* <Label>Replace PDF</Label>
-  <Input
-    type="file"
-    accept="application/pdf"
-    onChange={(e) => setData("pdf", e.target.files?.[0] || null)}
-  /> */}
-
-            <Button
-              className="w-full"
-              onClick={submitUpdate}
-              disabled={processing}
-            >
-              Update
-            </Button>
+            </div>
+            <div className="mb-4 max-w-sm relative">
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+              <input type="text" placeholder="Search by title, type, date…" value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
           </div>
 
-        </SheetContent>
-      </Sheet>
-      {/* ================= VIEW SHEET ================= */}
-      <Sheet
-        open={!!viewItem}
-        onOpenChange={(open) => {
-          if (!open) setViewItem(null);
-        }}
-      >
+          <Table>
+            <TableHeader className="bg-primary">
+              <TableRow>
+                <TableHead className="text-white">Date</TableHead>
+                <TableHead className="text-white">Type</TableHead>
+                <TableHead className="text-white">Title / Short</TableHead>
+                <TableHead className="text-white text-center">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="bg-white">
+              {filtered.length === 0 && (
+                <TableRow><TableCell colSpan={4} className="text-center py-6 text-muted-foreground">No records found</TableCell></TableRow>
+              )}
+              {filtered.map((item) => (
+                <EventRow key={item.id} item={item} lang={activeLang}
+                  onView={openViewEvent} onEdit={openEditEvent}
+                  onDelete={(id) => router.delete(route("admin.newsevent.destroy", id))} />
+              ))}
+            </TableBody>
+          </Table>
+        </>
+      )}
+
+      {/* ════ TAB: EVENT TYPES ═══════════════════════════ */}
+      {mainTab === "types" && (
+        <>
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h1 className="text-2xl font-bold">Event Types</h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Types appear as filter tags on the Press Release page and as badges on news items. The Japanese name is shown when the site language is set to Japanese.
+              </p>
+            </div>
+            <Button onClick={openAddType}><Plus className="w-4 h-4 mr-2" />Add Type</Button>
+          </div>
+
+          <Table>
+            <TableHeader className="bg-primary">
+              <TableRow>
+                <TableHead className="text-white">Name (EN)</TableHead>
+                <TableHead className="text-white">Name (JA)</TableHead>
+                <TableHead className="text-white text-center">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="bg-white">
+              {eventTypes.length === 0 && (
+                <TableRow><TableCell colSpan={3} className="text-center py-6 text-muted-foreground">No types yet — add one above.</TableCell></TableRow>
+              )}
+              {eventTypes.map((t) => (
+                <TypeRow key={t.id} type={t}
+                  onEdit={openEditType}
+                  onDelete={(id) => router.delete(route("admin.event-type.destroy", id))} />
+              ))}
+            </TableBody>
+          </Table>
+        </>
+      )}
+
+      {/* ════ EVENT SHEET ════════════════════════════════ */}
+      <Sheet open={eventOpen} onOpenChange={setEventOpen}>
         <SheetContent side="right" className="w-[90%] sm:max-w-3xl overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>News / Event Details</SheetTitle>
+            <SheetTitle>
+              {eventMode === "add" ? "Add News / Event" : eventMode === "edit" ? "Edit News / Event" : "View Details"}
+            </SheetTitle>
           </SheetHeader>
 
-          {viewItem && (
-            <div className="space-y-6 mt-6">
+          {eventMode === "view" ? (
+            <div className="space-y-4 mt-6">
+              <div className="flex gap-2 mb-4">
+                <Button type="button" size="sm" variant={activeLang === "en" ? "default" : "outline"} onClick={() => setActiveLang("en")}>English</Button>
+                <Button type="button" size="sm" variant={activeLang === "ja" ? "default" : "outline"} onClick={() => setActiveLang("ja")}>Japanese</Button>
+              </div>
+              <p><strong>Date:</strong> {currentEvent?.date}</p>
+              <p><strong>Type:</strong> {activeLang === "ja" ? currentEvent?.eventtype_ja || currentEvent?.eventtype : currentEvent?.eventtype}</p>
+              <p><strong>Short:</strong> {activeLang === "ja" ? currentEvent?.short_ja || currentEvent?.short : currentEvent?.short}</p>
+              {currentEvent?.description && <div><strong>Description:</strong><p className="mt-1">{activeLang === "ja" ? currentEvent.description_ja || currentEvent.description : currentEvent.description}</p></div>}
+              {currentEvent?.image && <div><strong>Image:</strong><img src={`/storage/${currentEvent.image}`} className="mt-2 h-32 rounded border object-cover" alt="" /></div>}
+              {currentEvent?.pdf && <div><strong>PDF:</strong> <a href={`/storage/${currentEvent.pdf}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">View PDF</a></div>}
+            </div>
+          ) : (
+            <div className="space-y-5 mt-6">
+              <div className="flex gap-2">
+                <Button type="button" size="sm" variant={activeLang === "en" ? "default" : "outline"} onClick={() => setActiveLang("en")}>English</Button>
+                <Button type="button" size="sm" variant={activeLang === "ja" ? "default" : "outline"} onClick={() => setActiveLang("ja")}>Japanese</Button>
+              </div>
 
-              {/* META */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <p><strong>Type:</strong> {viewItem.eventtype}</p>
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {format(new Date(viewItem.date), "yyyy-MM-dd")}
+              {/* Date */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Date</label>
+                <Input type="date" value={eData.date} onChange={(e) => setEData("date", e.target.value)} />
+              </div>
+
+              {/* Event Type — from DB */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Event Type</label>
+                <Select value={eData.eventtype} onValueChange={(v) => {
+                  // Auto-fill eventtype_ja if available
+                  const match = eventTypes.find(t => t.name === v);
+                  setEData("eventtype", v);
+                  if (match?.name_ja) setEData("eventtype_ja", match.name_ja);
+                }}>
+                  <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
+                  <SelectContent>
+                    {eventTypes.map((t) => (
+                      <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Japanese type label auto-fills from Event Types tab. Override below if needed.
                 </p>
               </div>
 
-              {/* SHORT */}
-              <div>
-                <h3 className="font-semibold mb-1">Short Description</h3>
-                <p>
-                  {activeLang === "en"
-                    ? viewItem.short
-                    : viewItem.short_ja || viewItem.short}
-                </p>
+              {/* Event Type JA override */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Event Type (JA) <span className="text-xs text-muted-foreground">— auto-filled, override if needed</span></label>
+                <Input value={eData.eventtype_ja} onChange={(e) => setEData("eventtype_ja", e.target.value)} placeholder="e.g. プレスリリース" />
               </div>
 
-              {/* DESCRIPTION */}
-              <div>
-                <h3 className="font-semibold mb-2">Description</h3>
-                <div
-                  className="prose max-w-none"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      activeLang === "en"
-                        ? viewItem.description
-                        : viewItem.description_ja || viewItem.description,
-                  }}
+              {/* Short title */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">
+                  Short Title <span className="text-xs text-primary">({activeLang.toUpperCase()})</span>
+                </label>
+                <Input
+                  value={activeLang === "en" ? eData.short : eData.short_ja}
+                  onChange={(e) => activeLang === "en" ? setEData("short", e.target.value) : setEData("short_ja", e.target.value)}
+                  placeholder="Brief headline"
                 />
               </div>
 
-              {/* IMAGE */}
-              {viewItem.image && (
-                <div>
-                  <h3 className="font-semibold mb-2">Image</h3>
-                  <img
-                    src={fileUrl(viewItem.image)!}
-                    alt="News"
-                    className="rounded-md max-h-64 border object-contain"
-                  />
+              {/* Description */}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">
+                  Full Description <span className="text-xs text-primary">({activeLang.toUpperCase()})</span>
+                </label>
+                <Textarea rows={5}
+                  value={activeLang === "en" ? eData.description : eData.description_ja}
+                  onChange={(e) => activeLang === "en" ? setEData("description", e.target.value) : setEData("description_ja", e.target.value)}
+                />
+              </div>
+
+              {/* Image */}
+              {eventMode === "edit" && currentEvent?.image && (
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Current Image</label>
+                  <img src={`/storage/${currentEvent.image}`} className="h-24 rounded border object-cover" alt="" />
                 </div>
               )}
-
+              <div className="space-y-1">
+                <label className="text-sm font-medium">{eventMode === "edit" ? "Replace Image" : "Upload Image"}</label>
+                <Input type="file" accept="image/*" onChange={(e) => setEData("image", e.target.files?.[0] || null)} />
+              </div>
 
               {/* PDF */}
-              {/* {viewItem.pdf && (
-  <div>
-    <h3 className="font-semibold mb-2">PDF</h3>
-    <a
-      href={fileUrl(viewItem.pdf)!}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-primary underline"
-    >
-      View PDF
-    </a>
-  </div>
-)} */}
+              {eventMode === "edit" && currentEvent?.pdf && (
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Current PDF</label>
+                  <a href={`/storage/${currentEvent.pdf}`} target="_blank" rel="noopener noreferrer" className="text-primary text-sm underline block">View current PDF</a>
+                </div>
+              )}
+              <div className="space-y-1">
+                <label className="text-sm font-medium">{eventMode === "edit" ? "Replace PDF" : "Upload PDF"}</label>
+                <Input type="file" accept=".pdf" onChange={(e) => setEData("pdf", e.target.files?.[0] || null)} />
+              </div>
 
-
+              <Button onClick={submitEvent} className="w-full">
+                {eventMode === "add" ? "Add News" : "Update News"}
+              </Button>
             </div>
           )}
+        </SheetContent>
+      </Sheet>
+
+      {/* ════ EVENT TYPE SHEET ═══════════════════════════ */}
+      <Sheet open={typeOpen} onOpenChange={setTypeOpen}>
+        <SheetContent side="right" className="w-[90%] sm:max-w-md overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>{typeMode === "add" ? "Add Event Type" : "Edit Event Type"}</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-5 mt-6">
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Type Name (English)</label>
+              <Input placeholder="e.g. Press Release" value={tData.name} onChange={(e) => setTData("name", e.target.value)} />
+              <p className="text-xs text-muted-foreground">Used as the value stored in news items. Changing this won't update existing items.</p>
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Type Name (Japanese)</label>
+              <Input placeholder="e.g. プレスリリース" value={tData.name_ja} onChange={(e) => setTData("name_ja", e.target.value)} />
+            </div>
+            <Button onClick={submitType} className="w-full">
+              {typeMode === "add" ? "Add Type" : "Update Type"}
+            </Button>
+          </div>
         </SheetContent>
       </Sheet>
 

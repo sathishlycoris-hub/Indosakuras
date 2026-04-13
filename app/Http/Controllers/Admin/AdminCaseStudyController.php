@@ -41,7 +41,7 @@ class AdminCaseStudyController extends Controller
 
     'tags' => 'nullable|string',
 
-    'hero_image' => 'nullable|image|max:2048',
+    'hero_image' => 'nullable|image|max:4096',
 ]);
 
         if ($request->hasFile('hero_image')) {
@@ -81,9 +81,9 @@ class AdminCaseStudyController extends Controller
 
     'tags' => 'nullable|string',
 
-    'hero_image' => 'nullable|image|max:2048',
+    'hero_image' => 'nullable|image|max:4096',
 
-    'secondary_image' => 'nullable|image|max:2048',   // NEW
+    'secondary_image' => 'nullable|image|max:4096',   // NEW
 ]);
 
         if ($request->hasFile('hero_image')) {

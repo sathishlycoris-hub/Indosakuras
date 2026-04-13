@@ -84,7 +84,7 @@ class SeminarController extends Controller
             'cooperation_ja' => 'nullable|string',
 
             'tags' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:4096',
         ]);
 
         if ($request->tags) {
@@ -140,7 +140,7 @@ class SeminarController extends Controller
             'cooperation_ja' => 'nullable|string',
 
             'tags' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:4096',
         ]);
 
         if ($request->filled('tags')) {

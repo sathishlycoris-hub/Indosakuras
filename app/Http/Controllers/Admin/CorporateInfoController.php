@@ -22,7 +22,7 @@ class CorporateInfoController extends Controller
             'title' => 'nullable|string',
             'title_ja' => 'nullable|string',
             'path' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:max:4096',
         ]);
 
         if ($request->hasFile('image')) {
@@ -40,7 +40,7 @@ class CorporateInfoController extends Controller
         'title' => 'nullable|string',
         'title_ja' => 'nullable|string',
         'path' => 'nullable|string',
-        'image' => 'nullable|image|max:2048',
+        'image' => 'nullable|image|max:4096',
     ]);
 
     // ✅ If new image uploaded

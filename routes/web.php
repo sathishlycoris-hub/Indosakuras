@@ -49,6 +49,8 @@ use App\Http\Controllers\InfographicPageController;
 use App\Http\Controllers\Admin\HomepageController;
 use App\Http\Controllers\Admin\CorpProfileSettingsController;
 use App\Http\Controllers\Admin\TeamCategoryController;
+use App\Http\Controllers\Admin\SiteSettingsController;
+use App\Http\Controllers\Admin\EventTypeController;
 
 
 /*
@@ -266,6 +268,15 @@ Route::prefix('admin')
     ->middleware(['auth'])
     ->name('admin.')
     ->group(function () {
+
+        Route::post('event-type',               [EventTypeController::class, 'store'])->name('event-type.store');
+        Route::put('event-type/{eventType}',   [EventTypeController::class, 'update'])->name('event-type.update');
+        Route::delete('event-type/{eventType}',   [EventTypeController::class, 'destroy'])->name('event-type.destroy');
+
+
+        Route::get('site-settings', [SiteSettingsController::class, 'index'])->name('site-settings.index');
+        Route::post('site-settings', [SiteSettingsController::class, 'update'])->name('site-settings.update');
+
 
         Route::get('homepage', [HomepageController::class, 'index'])
             ->name('homepage.index');

@@ -12,13 +12,9 @@ class Newsevent extends Model
     protected $table = 'newsevents';
 
     protected $fillable = [
-        'date',
-        'eventtype',
-        'short',
-        'short_ja',
-        'description',
-        'description_ja',
-        'image',
-        'pdf',
-    ];
+    'date', 'eventtype', 'eventtype_ja',
+    'short', 'short_ja',
+    'description', 'description_ja',
+    'image', 'pdf',
+];
 }

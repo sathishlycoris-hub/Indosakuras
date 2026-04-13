@@ -28,7 +28,7 @@ class GreetingController extends Controller
         $data = $request->validate([
             'title'       => 'nullable|string|max:255',
             'title_ja'        => 'nullable|string|max:255',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image|max:4096',
             'description_ja'  => 'nullable|string',
             'description' => 'nullable|string',
         ]);
@@ -54,7 +54,7 @@ class GreetingController extends Controller
         'title_ja' => 'nullable|string|max:255',
         'description' => 'nullable|string',
         'description_ja' => 'nullable|string',
-        'image' => 'nullable|image|max:2048',
+        'image' => 'nullable|image|max:4096',
     ]);
 
     // If new image uploaded

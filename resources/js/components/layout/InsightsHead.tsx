@@ -1,71 +1,67 @@
 import { Link, usePage } from "@inertiajs/react";
 
-interface InsightNavItem {
-  title: string;
-  title_ja?: string;
-  slug: string;
-}
-
 export default function Insightshead() {
   const { url, props } = usePage<{
-    insightNav?: InsightNavItem[];
     lang: "en" | "ja";
+    siteSettings?: Record<string, string>;
   }>();
 
-  const { lang } = props;
+  const { lang, siteSettings } = props;
+  const s = siteSettings ?? {};
 
-  const getValue = (en?: string, ja?: string) => {
-    return lang === "ja" ? ja || en : en;
-  };
+  const t = (en: string, ja: string) => (lang === "ja" ? ja || en : en);
 
+  // Build tabs from CMS — fall back to hardcoded defaults if not set
   const tabs = [
     {
-      label: getValue("Blogs", "ブログ"),
-      path: "/blogs", // Removed trailing slash for consistent matching
+      label: t(s.ins1_en || "Blogs",            s.ins1_ja || "ブログ"),
+      path:  s.ins1_href || "/blogs",
     },
     {
-      label: getValue("Case Studies", "事例紹介"),
-      path: "/blogs/casestudies",
+      label: t(s.ins2_en || "Case Studies",      s.ins2_ja || "事例紹介"),
+      path:  s.ins2_href || "/blogs/casestudies",
     },
     {
-      label: getValue("Infographics", "インフォグラフィックス"),
-      path: "/blogs/infographics",
+      label: t(s.ins3_en || "Infographics",      s.ins3_ja || "インフォグラフィックス"),
+      path:  s.ins3_href || "/blogs/infographics",
     },
     {
-      label: getValue("Seminar (Events)", "セミナー"),
-      path: "/blogs/seminars-index",
+      label: t(s.ins4_en || "Seminar (Events)",  s.ins4_ja || "セミナー"),
+      path:  s.ins4_href || "/blogs/seminars-index",
     },
   ];
 
-/* ================= ACTIVE LINK LOGIC ================= */
-  /* ================= ACTIVE LINK LOGIC ================= */
-/* ================= ACTIVE LINK LOGIC ================= */
-const isActive = (path: string) => {
-  const currentUrl = url.replace(/\/$/, "") || "/";
-  const targetPath = path.replace(/\/$/, "");
+  /* ── Active link logic ── */
+  const isActive = (path: string) => {
+    const currentUrl = url.replace(/\/$/, "") || "/";
+    const targetPath = path.replace(/\/$/, "");
 
-  // 1. Special Case for Seminars (because index and show paths differ)
-  if (targetPath === "/blogs/seminars-index") {
-    return currentUrl === "/blogs/seminars-index" || currentUrl.startsWith("/blogs/seminars/");
-  }
+    // Seminars: match index or any /blogs/seminars/* path
+    if (targetPath === "/blogs/seminars-index" || targetPath.includes("seminars")) {
+      return (
+        currentUrl === "/blogs/seminars-index" ||
+        currentUrl.startsWith("/blogs/seminars/")
+      );
+    }
 
-  // 2. Handle the "Blogs" (General) tab
-  if (targetPath === "/blogs") {
-    const isOtherTab = tabs.some(tab => {
-      if (tab.path === "/blogs") return false;
-      // Also check against the /blogs/seminars base for the exclusion
-      if (tab.path === "/blogs/seminars-index") {
-        return currentUrl.startsWith("/blogs/seminars");
-      }
-      return currentUrl.startsWith(tab.path.replace(/\/$/, ""));
-    });
-    
-    return (currentUrl === "/blogs" || currentUrl.startsWith("/blogs/")) && !isOtherTab;
-  }
+    // General Blogs tab — active only when NOT on another sub-tab
+    if (targetPath === "/blogs") {
+      const isOtherTab = tabs.some((tab) => {
+        if (tab.path === "/blogs") return false;
+        const tp = tab.path.replace(/\/$/, "");
+        if (tp.includes("seminars")) return currentUrl.startsWith("/blogs/seminars");
+        return currentUrl.startsWith(tp);
+      });
+      return (
+        (currentUrl === "/blogs" || currentUrl.startsWith("/blogs/")) &&
+        !isOtherTab
+      );
+    }
 
-  // 3. For standard sub-categories (Case Studies, Infographics)
-  return currentUrl === targetPath || currentUrl.startsWith(`${targetPath}/`);
-};
+    // Standard sub-categories
+    return currentUrl === targetPath || currentUrl.startsWith(`${targetPath}/`);
+  };
+
   return (
     <div className="bg-muted/30 border-b border-border">
       <div className="container mx-auto px-4">
@@ -82,7 +78,6 @@ const isActive = (path: string) => {
               >
                 {item.label}
               </Link>
-
               {index < tabs.length - 1 && (
                 <span className="text-muted-foreground/50 mx-1">/</span>
               )}

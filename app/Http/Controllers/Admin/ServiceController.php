@@ -38,7 +38,7 @@ class ServiceController extends Controller
             'hero_description_ja' => 'nullable|string',
             'how_it_works' => 'nullable|string',
             'how_it_works_ja' => 'nullable|string',
-            'hero_image' => 'nullable|image|max:2048',
+            'hero_image' => 'nullable|image|max:4096',
 
             'highlights' => 'nullable',
             'benefits' => 'nullable',
@@ -131,7 +131,7 @@ class ServiceController extends Controller
             'hero_description_ja' => 'nullable|string',
             'how_it_works' => 'nullable|string',
             'how_it_works_ja' => 'nullable|string',
-            'hero_image' => 'nullable|image|max:2048',
+            'hero_image' => 'nullable|image|max:4096',
 
             'highlights' => 'nullable',
             'benefits' => 'nullable',

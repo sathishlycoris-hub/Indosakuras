@@ -46,7 +46,7 @@ class SolutionController extends Controller
             'subtitle_ja' => 'nullable|string',
             'hero_description' => 'nullable|string',
             'hero_description_ja' => 'nullable|string',
-            'hero_image' => 'nullable|image|max:2048',
+            'hero_image' => 'nullable|image|max:4096',
             'link' => 'nullable|string',
             'features' => 'nullable',
             'features_ja' => 'nullable',
@@ -174,7 +174,7 @@ class SolutionController extends Controller
 
             'slug' => 'nullable|string|unique:solutions,slug,' . ($solution->id ?? 'NULL'),
 
-            'hero_image' => 'nullable|image|max:2048',
+            'hero_image' => 'nullable|image|max:4096',
             'link' => 'nullable|string',
             'features' => 'nullable',
             'use_cases' => 'nullable',
